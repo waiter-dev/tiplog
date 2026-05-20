@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="ShiftTrack">
-<title>ShiftTrack v0.06</title>
+<title>ShiftTrack v0.07</title>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -46,7 +46,6 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 /* ── DASHBOARD ── */
 .dash-wrap{padding:10px 16px 20px;display:flex;flex-direction:column;gap:12px;}
 
-/* Hero — Ø Tip */
 .tip-hero{background:linear-gradient(140deg,#16102e 0%,#0a1e1c 60%,#0d0a1e 100%);border:1px solid rgba(162,155,254,0.22);border-radius:24px;padding:clamp(16px,4vw,24px);position:relative;overflow:hidden;}
 .tip-hero::before{content:'';position:absolute;top:-50px;right:-50px;width:160px;height:160px;background:radial-gradient(circle,rgba(162,155,254,.25) 0%,transparent 70%);pointer-events:none;}
 .tip-hero::after{content:'';position:absolute;bottom:-40px;left:10px;width:130px;height:130px;background:radial-gradient(circle,rgba(0,245,212,.12) 0%,transparent 70%);pointer-events:none;}
@@ -58,7 +57,6 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 .tip-pct-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(162,155,254,.12);border:1px solid rgba(162,155,254,.2);border-radius:20px;padding:4px 11px;font-size:clamp(10px,3vw,12px);font-weight:700;color:var(--accent-l);margin-top:6px;}
 .tip-hero-sub{font-size:clamp(11px,3vw,13px);color:var(--text2);margin-top:4px;}
 
-/* Two-stat row */
 .stat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:clamp(14px,4vw,18px);display:flex;flex-direction:column;gap:4px;animation:fadeUp .4s ease both;}
 .stat-card:nth-child(1){animation-delay:.05s}
@@ -69,7 +67,6 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 .stat-card-val{font-size:clamp(20px,6vw,26px);font-weight:900;letter-spacing:-0.5px;font-family:'DM Mono',monospace;margin:2px 0;}
 .stat-card-sub{font-size:clamp(9px,2.5vw,11px);color:var(--text3);}
 
-/* Chart card */
 .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:clamp(14px,4vw,18px);overflow:hidden;}
 .chart-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
 .chart-title{font-size:clamp(13px,3.5vw,15px);font-weight:800;}
@@ -79,7 +76,6 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 .legend-item{display:flex;align-items:center;gap:5px;font-size:clamp(9px,2.5vw,11px);color:var(--text2);}
 .legend-dot{width:7px;height:7px;border-radius:50%;}
 
-/* Details card */
 .details-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;overflow:hidden;}
 .details-hdr{display:flex;align-items:center;justify-content:space-between;padding:clamp(14px,4vw,18px);border-bottom:1px solid var(--border);}
 .details-hdr-title{font-size:clamp(13px,4vw,15px);font-weight:800;}
@@ -90,7 +86,6 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 .detail-item{padding:clamp(12px,3.5vw,16px);border-bottom:1px solid var(--border);border-right:1px solid var(--border);}
 .detail-item:nth-child(even){border-right:none;}
 .detail-item:nth-last-child(-n+2){border-bottom:none;}
-
 .detail-item-label{font-size:clamp(9px,2.5vw,10px);color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;font-weight:700;margin-bottom:4px;}
 .detail-item-label .bh{filter:hue-rotate(270deg) saturate(2) brightness(1.1);display:inline-block;}
 .detail-item-val{font-size:clamp(15px,4.5vw,18px);font-weight:800;font-family:'DM Mono',monospace;}
@@ -156,16 +151,25 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 
 /* ── SCAN ── */
 .scan-wrap{padding:10px 16px 20px;display:flex;flex-direction:column;gap:14px;}
-.apikey-card{background:var(--surface);border:1px solid var(--border2);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:12px;}
-.apikey-title{font-size:clamp(14px,4vw,16px);font-weight:800;}
-.apikey-sub{font-size:clamp(11px,3vw,13px);color:var(--text2);line-height:1.55;}
-.apikey-input{background:var(--surface2);border:1px solid var(--border2);border-radius:12px;color:var(--text);padding:13px 14px;font-family:'DM Mono',monospace;font-size:clamp(11px,3vw,13px);outline:none;width:100%;transition:border-color .2s;-webkit-appearance:none;}
-.apikey-input:focus{border-color:var(--accent);}
-.apikey-input::placeholder{color:var(--text3);}
-.apikey-save-btn{width:100%;padding:13px;background:var(--accent);border:none;border-radius:12px;color:#fff;font-family:'Figtree',sans-serif;font-size:clamp(14px,4vw,15px);font-weight:800;cursor:pointer;}
-.apikey-status{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:clamp(11px,3vw,13px);font-weight:700;padding:10px 14px;border-radius:11px;}
-.apikey-status.ok{background:rgba(0,205,176,.1);color:var(--green-b);border:1px solid rgba(0,205,176,.2);}
-.apikey-clear-btn{background:none;border:none;color:var(--text3);font-family:'Figtree',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-decoration:underline;flex-shrink:0;}
+
+/* Worker-Status-Banner */
+.worker-banner{border-radius:14px;padding:12px 16px;display:flex;align-items:center;gap:10px;font-size:clamp(11px,3vw,13px);font-weight:700;}
+.worker-banner.ok{background:rgba(0,205,176,.08);border:1px solid rgba(0,205,176,.2);color:var(--green-b);}
+.worker-banner.warn{background:rgba(255,211,42,.08);border:1px solid rgba(255,211,42,.2);color:var(--yellow);}
+.worker-banner.err{background:rgba(255,71,87,.08);border:1px solid rgba(255,71,87,.2);color:var(--red);}
+.worker-banner-icon{font-size:18px;flex-shrink:0;}
+.worker-banner-body{display:flex;flex-direction:column;gap:2px;}
+.worker-banner-sub{font-size:clamp(9px,2.5vw,11px);opacity:.8;font-weight:500;}
+
+/* Worker-URL Konfiguration (nur wenn nötig) */
+.worker-config-card{background:var(--surface);border:1px solid var(--border2);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:12px;}
+.worker-config-title{font-size:clamp(14px,4vw,16px);font-weight:800;}
+.worker-config-sub{font-size:clamp(11px,3vw,13px);color:var(--text2);line-height:1.55;}
+.worker-url-input{background:var(--surface2);border:1px solid var(--border2);border-radius:12px;color:var(--text);padding:13px 14px;font-family:'DM Mono',monospace;font-size:clamp(11px,3vw,13px);outline:none;width:100%;transition:border-color .2s;-webkit-appearance:none;}
+.worker-url-input:focus{border-color:var(--accent);}
+.worker-url-input::placeholder{color:var(--text3);}
+.worker-save-btn{width:100%;padding:13px;background:var(--accent);border:none;border-radius:12px;color:#fff;font-family:'Figtree',sans-serif;font-size:clamp(14px,4vw,15px);font-weight:800;cursor:pointer;}
+
 .scan-upload-area{border:2px dashed rgba(162,155,254,0.3);border-radius:20px;padding:clamp(24px,6vw,36px) 20px;display:flex;flex-direction:column;align-items:center;gap:10px;background:rgba(108,92,231,0.05);cursor:pointer;transition:all .2s;text-align:center;}
 .scan-upload-area:active{background:rgba(108,92,231,0.12);border-color:var(--accent-l);}
 .scan-upload-icon{font-size:clamp(38px,10vw,50px);}
@@ -203,7 +207,7 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 <div class="topbar">
   <div>
     <div class="topbar-title">ShiftTrack 🍽️</div>
-    <div class="topbar-sub" id="topbar-sub">v0.06 · Bereit</div>
+    <div class="topbar-sub" id="topbar-sub">v0.07 · Bereit</div>
   </div>
   <div class="topbar-date" id="topbar-date"></div>
 </div>
@@ -211,8 +215,6 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 <!-- ═══ DASHBOARD ═══ -->
 <div class="screen active" id="screen-home">
   <div class="dash-wrap">
-
-    <!-- Hero: Ø Tip -->
     <div class="tip-hero">
       <div class="tip-hero-eyebrow">⌀ Trinkgeld pro Schicht</div>
       <div class="tip-hero-main">
@@ -222,8 +224,6 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
       <div class="tip-pct-badge" id="h-tip-pct">0.0% vom Ø Umsatz</div>
       <div class="tip-hero-sub" id="h-shifts-lbl">— Schichten diesen Monat</div>
     </div>
-
-    <!-- Tip diesen Monat + Schichten -->
     <div class="stat-row">
       <div class="stat-card">
         <div class="stat-card-icon">💜</div>
@@ -238,8 +238,6 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
         <div class="stat-card-sub" id="s-shifts-sub">alle Zeiten</div>
       </div>
     </div>
-
-    <!-- Chart: Trinkgeld diesen Monat -->
     <div class="chart-card">
       <div class="chart-head">
         <div class="chart-title">Trinkgeld — dieser Monat</div>
@@ -250,8 +248,6 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
         <div class="legend-item"><div class="legend-dot" style="background:var(--accent-l)"></div>Trinkgeld</div>
       </div>
     </div>
-
-    <!-- Details -->
     <div class="details-card">
       <div class="details-hdr">
         <div class="details-hdr-title">📊 Details</div>
@@ -261,57 +257,20 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
         </div>
       </div>
       <div class="details-grid">
-        <div class="detail-item">
-          <div class="detail-item-label">Gesamtumsatz</div>
-          <div class="detail-item-val col-green" id="d-umsatz">€0</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-item-label">Tip gesamt</div>
-          <div class="detail-item-val col-purple" id="d-tip">€0</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-item-label">Bar gesamt</div>
-          <div class="detail-item-val col-yellow" id="d-bar">€0</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-item-label">Abgabe gesamt</div>
-          <div class="detail-item-val col-red" id="d-abgabe">€0</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-item-label">🏠 Drinnen</div>
-          <div class="detail-item-val col-purple" id="d-drinnen">0 Schichten</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-item-label">🌳 Draußen</div>
-          <div class="detail-item-val col-green" id="d-draussen">0 Schichten</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-item-label">Bester Tip-Tag</div>
-          <div class="detail-item-val col-yellow" id="d-best-tip">—</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-item-label">Ø Tip %</div>
-          <div class="detail-item-val col-purple" id="d-tip-pct">0.0%</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-item-label">💜 Größter Tip</div>
-          <div class="detail-item-val col-purple" id="d-tip-max">—</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-item-label"><span class="bh">💔</span> Kleinster Tip</div>
-          <div class="detail-item-val col-purple" id="d-tip-min">—</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-item-label">📈 Größter Umsatz</div>
-          <div class="detail-item-val col-green" id="d-umsatz-max">—</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-item-label">📉 Kleinster Umsatz</div>
-          <div class="detail-item-val col-green" id="d-umsatz-min">—</div>
-        </div>
+        <div class="detail-item"><div class="detail-item-label">Gesamtumsatz</div><div class="detail-item-val col-green" id="d-umsatz">€0</div></div>
+        <div class="detail-item"><div class="detail-item-label">Tip gesamt</div><div class="detail-item-val col-purple" id="d-tip">€0</div></div>
+        <div class="detail-item"><div class="detail-item-label">Bar gesamt</div><div class="detail-item-val col-yellow" id="d-bar">€0</div></div>
+        <div class="detail-item"><div class="detail-item-label">Abgabe gesamt</div><div class="detail-item-val col-red" id="d-abgabe">€0</div></div>
+        <div class="detail-item"><div class="detail-item-label">🏠 Drinnen</div><div class="detail-item-val col-purple" id="d-drinnen">0 Schichten</div></div>
+        <div class="detail-item"><div class="detail-item-label">🌳 Draußen</div><div class="detail-item-val col-green" id="d-draussen">0 Schichten</div></div>
+        <div class="detail-item"><div class="detail-item-label">Bester Tip-Tag</div><div class="detail-item-val col-yellow" id="d-best-tip">—</div></div>
+        <div class="detail-item"><div class="detail-item-label">Ø Tip %</div><div class="detail-item-val col-purple" id="d-tip-pct">0.0%</div></div>
+        <div class="detail-item"><div class="detail-item-label">💜 Größter Tip</div><div class="detail-item-val col-purple" id="d-tip-max">—</div></div>
+        <div class="detail-item"><div class="detail-item-label"><span class="bh">💔</span> Kleinster Tip</div><div class="detail-item-val col-purple" id="d-tip-min">—</div></div>
+        <div class="detail-item"><div class="detail-item-label">📈 Größter Umsatz</div><div class="detail-item-val col-green" id="d-umsatz-max">—</div></div>
+        <div class="detail-item"><div class="detail-item-label">📉 Kleinster Umsatz</div><div class="detail-item-val col-green" id="d-umsatz-min">—</div></div>
       </div>
     </div>
-
     <div style="height:4px"></div>
   </div>
 </div>
@@ -354,7 +313,7 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 <div class="screen" id="screen-scan">
   <div class="scan-wrap">
     <div class="section-hdr" style="padding:4px 0 6px;"><div class="section-hdr-title">📷 Bon scannen</div></div>
-    <div id="apikey-section"></div>
+    <div id="scan-worker-status"></div>
     <div id="scan-upload-area" style="display:none;flex-direction:column;gap:14px;">
       <div id="scan-dropzone" class="scan-upload-area" onclick="document.getElementById('scan-file').click()">
         <div class="scan-upload-icon">📄</div>
@@ -392,6 +351,14 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
     </div>
     <div class="settings-card">
       <div class="settings-row">
+        <div class="settings-row-left"><div class="settings-row-title">🤖 Cloudflare Worker</div><div class="settings-row-sub" id="set-worker-url-display">—</div></div>
+        <button class="settings-btn btn-export" onclick="promptWorkerUrl()">Ändern</button>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-left"><div class="settings-row-title">🔑 API Key</div><div class="settings-row-sub" id="set-apikey-display">—</div></div>
+        <button class="settings-btn btn-export" id="set-apikey-btn" onclick="promptApiKey()">Ändern</button>
+      </div>
+      <div class="settings-row">
         <div class="settings-row-left"><div class="settings-row-title">📊 Einträge gesamt</div><div class="settings-row-sub" id="set-count">0 Schichten</div></div>
       </div>
       <div class="settings-row">
@@ -399,7 +366,7 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
         <button class="settings-btn btn-danger" onclick="clearAll()">Löschen</button>
       </div>
     </div>
-    <div class="settings-version">ShiftTrack v0.06</div>
+    <div class="settings-version">ShiftTrack v0.07 · Cloudflare Worker Edition</div>
   </div>
 </div>
 
@@ -416,16 +383,29 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 <input type="file" id="import-file" accept=".json" onchange="importData(event)">
 
 <script>
+// ── Config ──
+// Trage hier deine Worker-URL ein, BEVOR du deployest.
+// Wird auch zur Laufzeit via localStorage überschrieben (für Updates ohne Redeployment).
+const WORKER_URL_DEFAULT = 'https://shifttrack.DEIN-ACCOUNT.workers.dev';
+
 const STORAGE_KEY = 'shifttrack_data';
-let entries = JSON.parse(localStorage.getItem('shifttrack_data') || localStorage.getItem('st_v2') || localStorage.getItem('st_v001') || '[]');
+const WORKER_KEY  = 'st_worker_url';
+
+let entries = JSON.parse(
+  localStorage.getItem('shifttrack_data') ||
+  localStorage.getItem('st_v2') ||
+  localStorage.getItem('st_v001') || '[]'
+);
 localStorage.setItem('shifttrack_data', JSON.stringify(entries));
-let logFilter = 'all';
+
+let logFilter    = 'all';
 let detailsPeriod = 'month';
-let scannedItems = [];
+let scannedItems  = [];
 
 const today = new Date();
 document.getElementById('f-datum').value = today.toISOString().split('T')[0];
-document.getElementById('topbar-date').textContent = today.toLocaleDateString('de-AT',{day:'2-digit',month:'short'});
+document.getElementById('topbar-date').textContent =
+  today.toLocaleDateString('de-AT',{day:'2-digit',month:'short'});
 
 const fmt  = v => '€' + (+v).toFixed(2).replace('.',',');
 const fmtS = v => '€' + Math.round(+v);
@@ -437,73 +417,85 @@ function getThisMonth(){
   return entries.filter(e=>new Date(e.datum)>=start);
 }
 
+// ── Worker URL ──
+function getWorkerUrl(){
+  return (localStorage.getItem(WORKER_KEY)||'').trim() || WORKER_URL_DEFAULT;
+}
+function getApiKey(){ return localStorage.getItem('st_apikey')||''; }
+function isWorkerConfigured(){
+  const url = getWorkerUrl();
+  return url && !url.includes('DEIN-ACCOUNT') && url.startsWith('https://');
+}
+function isScanReady(){
+  return isWorkerConfigured() || !!getApiKey();
+}
+function promptWorkerUrl(){
+  const current = localStorage.getItem(WORKER_KEY) || '';
+  const val = prompt('Cloudflare Worker URL eingeben:', current || 'https://shifttrack.DEIN-ACCOUNT.workers.dev');
+  if(val === null) return;
+  const trimmed = val.trim();
+  if(!trimmed){ localStorage.removeItem(WORKER_KEY); showToast('⚠️ Worker URL entfernt'); }
+  else if(!trimmed.startsWith('https://')){ showToast('⚠️ URL muss mit https:// beginnen'); return; }
+  else { localStorage.setItem(WORKER_KEY, trimmed); showToast('✅ Worker URL gespeichert'); }
+  renderScanWorkerStatus();
+  renderSettings();
+}
+
 // ── Render Dashboard ──
 function renderHome(){
   const monthData = getThisMonth();
-  const allData = entries;
+  const allData   = entries;
   const cnt = monthData.length;
-  const n = cnt||1;
+  const n   = cnt||1;
   const tipMonth = sum(monthData,'tip');
-  const uMonth = sum(monthData,'umsatz');
-  const avgTip = tipMonth/n;
-  const avgU = uMonth/n;
+  const uMonth   = sum(monthData,'umsatz');
+  const avgTip   = tipMonth/n;
+  const avgU     = uMonth/n;
 
-  // Hero
-  document.getElementById('h-avg-tip').textContent = fmtS(avgTip);
-  document.getElementById('h-tip-pct').textContent = avgU>0?(avgTip/avgU*100).toFixed(1)+'% vom Ø Umsatz':'0.0% vom Ø Umsatz';
+  document.getElementById('h-avg-tip').textContent    = fmtS(avgTip);
+  document.getElementById('h-tip-pct').textContent    = avgU>0?(avgTip/avgU*100).toFixed(1)+'% vom Ø Umsatz':'0.0% vom Ø Umsatz';
   document.getElementById('h-shifts-lbl').textContent = cnt+(cnt===1?' Schicht':' Schichten')+' diesen Monat';
-  document.getElementById('topbar-sub').textContent = cnt+' Schichten · Ø Tip '+fmtS(avgTip);
-
-  // Stat cards
-  document.getElementById('s-tip-month').textContent = fmtS(tipMonth);
+  document.getElementById('topbar-sub').textContent   = cnt+' Schichten · Ø Tip '+fmtS(avgTip);
+  document.getElementById('s-tip-month').textContent  = fmtS(tipMonth);
   document.getElementById('s-tip-month-count').textContent = cnt+' Schichten';
-  document.getElementById('s-shifts-total').textContent = allData.length;
-  document.getElementById('s-shifts-sub').textContent = 'alle Zeiten';
-
-  // Chart total
-  document.getElementById('chart-total-val').textContent = fmtS(tipMonth);
-
+  document.getElementById('s-shifts-total').textContent    = allData.length;
+  document.getElementById('s-shifts-sub').textContent      = 'alle Zeiten';
+  document.getElementById('chart-total-val').textContent   = fmtS(tipMonth);
   renderDetails();
   drawChart();
 }
 
 function setDetailsPeriod(p){
-  detailsPeriod = p;
-  document.getElementById('dtoggle-month').classList.toggle('active', p==='month');
-  document.getElementById('dtoggle-all').classList.toggle('active', p==='all');
+  detailsPeriod=p;
+  document.getElementById('dtoggle-month').classList.toggle('active',p==='month');
+  document.getElementById('dtoggle-all').classList.toggle('active',p==='all');
   renderDetails();
 }
 
 function renderDetails(){
-  const data = detailsPeriod==='month' ? getThisMonth() : entries;
-  const uAll = sum(data,'umsatz');
-  const tAll = sum(data,'tip');
-  const bAll = sum(data,'bar');
-  const aAll = sum(data,'abgabe');
-  const drinnen = data.filter(e=>e.station==='drinnen').length;
+  const data  = detailsPeriod==='month' ? getThisMonth() : entries;
+  const uAll  = sum(data,'umsatz'), tAll=sum(data,'tip'), bAll=sum(data,'bar'), aAll=sum(data,'abgabe');
+  const drinnen  = data.filter(e=>e.station==='drinnen').length;
   const draussen = data.filter(e=>e.station==='draussen').length;
-
-  // Best tip day
   const dayMap={};
   data.forEach(e=>{dayMap[e.datum]=(dayMap[e.datum]||0)+(+e.tip||0);});
-  const bestDay = Object.entries(dayMap).sort((a,b)=>b[1]-a[1])[0];
+  const bestDay=Object.entries(dayMap).sort((a,b)=>b[1]-a[1])[0];
 
-  document.getElementById('d-umsatz').textContent = fmtS(uAll);
-  document.getElementById('d-tip').textContent = fmtS(tAll);
-  document.getElementById('d-bar').textContent = fmtS(bAll);
-  document.getElementById('d-abgabe').textContent = fmtS(aAll);
+  document.getElementById('d-umsatz').textContent  = fmtS(uAll);
+  document.getElementById('d-tip').textContent     = fmtS(tAll);
+  document.getElementById('d-bar').textContent     = fmtS(bAll);
+  document.getElementById('d-abgabe').textContent  = fmtS(aAll);
   document.getElementById('d-drinnen').textContent = drinnen+' Schichten';
-  document.getElementById('d-draussen').textContent = draussen+' Schichten';
-  document.getElementById('d-best-tip').textContent = bestDay
-    ? fmtS(bestDay[1])+' ('+new Date(bestDay[0]).toLocaleDateString('de-AT',{day:'2-digit',month:'short'})+')'
-    : '—';
+  document.getElementById('d-draussen').textContent= draussen+' Schichten';
+  document.getElementById('d-best-tip').textContent= bestDay
+    ?fmtS(bestDay[1])+' ('+new Date(bestDay[0]).toLocaleDateString('de-AT',{day:'2-digit',month:'short'})+')'
+    :'—';
   document.getElementById('d-tip-pct').textContent = uAll>0?(tAll/uAll*100).toFixed(1)+'%':'0.0%';
 
   if(data.length){
-    const tips = data.map(e=>+e.tip||0);
-    const umsaetze = data.map(e=>+e.umsatz||0);
-    document.getElementById('d-tip-max').textContent = fmtS(Math.max(...tips));
-    document.getElementById('d-tip-min').textContent = fmtS(Math.min(...tips));
+    const tips=data.map(e=>+e.tip||0), umsaetze=data.map(e=>+e.umsatz||0);
+    document.getElementById('d-tip-max').textContent    = fmtS(Math.max(...tips));
+    document.getElementById('d-tip-min').textContent    = fmtS(Math.min(...tips));
     document.getElementById('d-umsatz-max').textContent = fmtS(Math.max(...umsaetze));
     document.getElementById('d-umsatz-min').textContent = fmtS(Math.min(...umsaetze));
   } else {
@@ -511,45 +503,36 @@ function renderDetails(){
   }
 }
 
-// ── Chart: Tip this month by day ──
 function drawChart(){
-  const canvas = document.getElementById('mainChart');
-  const dpr = window.devicePixelRatio||1;
-  const rect = canvas.parentElement.getBoundingClientRect();
-  const H = rect.height||100;
-  canvas.width = rect.width*dpr; canvas.height = H*dpr;
-  canvas.style.width = rect.width+'px'; canvas.style.height = H+'px';
-  const ctx = canvas.getContext('2d');
-  ctx.scale(dpr,dpr);
-  const W = rect.width;
-  ctx.clearRect(0,0,W,H);
-
-  const now = new Date();
-  const dim = new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
-  const labels=[], tArr=[];
+  const canvas=document.getElementById('mainChart');
+  const dpr=window.devicePixelRatio||1;
+  const rect=canvas.parentElement.getBoundingClientRect();
+  const H=rect.height||100;
+  canvas.width=rect.width*dpr; canvas.height=H*dpr;
+  canvas.style.width=rect.width+'px'; canvas.style.height=H+'px';
+  const ctx=canvas.getContext('2d'); ctx.scale(dpr,dpr);
+  const W=rect.width; ctx.clearRect(0,0,W,H);
+  const now=new Date();
+  const dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
+  const labels=[],tArr=[];
   for(let d=1;d<=dim;d++){
     const ds=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     labels.push(d%7===1?d:'');
-    const de=entries.filter(e=>e.datum===ds);
-    tArr.push(sum(de,'tip'));
+    const de=entries.filter(e=>e.datum===ds); tArr.push(sum(de,'tip'));
   }
-
-  const maxVal = Math.max(...tArr,1);
-  const n = labels.length;
-  const pad = {l:28,r:8,t:8,b:22};
+  const maxVal=Math.max(...tArr,1);
+  const n=labels.length, pad={l:28,r:8,t:8,b:22};
   const cW=W-pad.l-pad.r, cH=H-pad.t-pad.b;
   const gap=cW/n, bw=Math.max(3,Math.min(14,gap*0.55));
-
-  ctx.strokeStyle='rgba(255,255,255,0.05)';ctx.lineWidth=1;
+  ctx.strokeStyle='rgba(255,255,255,0.05)'; ctx.lineWidth=1;
   for(let i=0;i<=3;i++){
     const y=pad.t+cH-(i/3)*cH;
     ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke();
     if(i>0){ctx.fillStyle='rgba(255,255,255,0.2)';ctx.font='9px Figtree';ctx.textAlign='right';ctx.fillText(fmtS(maxVal*i/3),pad.l-3,y+3);}
   }
-
   tArr.forEach((val,i)=>{
     const cx=pad.l+i*gap+gap/2;
-    const bh=Math.max(2,(val/maxVal)*cH), by=pad.t+cH-bh;
+    const bh=Math.max(2,(val/maxVal)*cH),by=pad.t+cH-bh;
     const g=ctx.createLinearGradient(0,by,0,by+bh);
     g.addColorStop(0,'#a29bfedd');g.addColorStop(1,'#a29bfe22');
     ctx.fillStyle=g;ctx.beginPath();ctx.roundRect(cx-bw/2,by,bw,bh,[3,3,0,0]);ctx.fill();
@@ -564,18 +547,17 @@ function showScreen(name){
     const tab=document.getElementById('tab-'+s);
     if(tab) tab.classList.toggle('active',s===name);
   });
-  if(name==='home') renderHome();
-  if(name==='log') renderLog();
+  if(name==='home')     renderHome();
+  if(name==='log')      renderLog();
   if(name==='settings') renderSettings();
-  if(name==='scan') renderApiKeySection();
+  if(name==='scan')     renderScanWorkerStatus();
 }
 
 // ── Log ──
 function setFilter(f,btn){
   logFilter=f;
   document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderLog();
+  btn.classList.add('active'); renderLog();
 }
 
 function renderLog(){
@@ -620,14 +602,12 @@ function addEntry(){
   const tip=+document.getElementById('f-tip').value||0;
   if(!datum||umsatz<=0){showToast('⚠️ Bitte Datum & Umsatz eingeben');return;}
   entries.push({datum,station,umsatz,bar,tip,abgabe:+(umsatz*0.04).toFixed(2)});
-  save();
-  showToast('✅ Schicht gespeichert!');
+  save(); showToast('✅ Schicht gespeichert!');
   document.getElementById('f-umsatz').value='';
   document.getElementById('f-bar').value='';
   document.getElementById('f-tip').value='';
   document.getElementById('f-datum').value=new Date().toISOString().split('T')[0];
-  updatePreview();
-  showScreen('home');
+  updatePreview(); showScreen('home');
 }
 
 function deleteEntry(idx){entries.splice(idx,1);save();renderLog();showToast('🗑️ Eintrag gelöscht');}
@@ -638,8 +618,7 @@ function exportData(){
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
   a.href=url;a.download=`shifttrack-backup-${new Date().toISOString().split('T')[0]}.json`;
-  a.click();URL.revokeObjectURL(url);
-  showToast('💾 Backup gespeichert!');
+  a.click();URL.revokeObjectURL(url);showToast('💾 Backup gespeichert!');
 }
 
 function importData(event){
@@ -659,101 +638,403 @@ function importData(event){
 
 function clearAll(){
   if(!confirm('Alle '+entries.length+' Einträge wirklich löschen?'))return;
-  entries=[];save();renderHome();renderLog();renderSettings();
-  showToast('🗑️ Alle Daten gelöscht');
+  entries=[];save();renderHome();renderLog();renderSettings();showToast('🗑️ Alle Daten gelöscht');
 }
 
-function renderSettings(){document.getElementById('set-count').textContent=entries.length+' Schichten gespeichert';}
+function renderSettings(){
+  document.getElementById('set-count').textContent=entries.length+' Schichten gespeichert';
+  const url=localStorage.getItem(WORKER_KEY)||'—';
+  const el=document.getElementById('set-worker-url-display');
+  if(el) el.textContent=url.length>40?url.slice(0,40)+'…':url;
 
-// ── API Key ──
-function getApiKey(){ return localStorage.getItem('st_apikey')||''; }
-
-function renderApiKeySection(){
-  const key=getApiKey();
-  const sec=document.getElementById('apikey-section');
-  const upload=document.getElementById('scan-upload-area');
-  if(key){
-    sec.innerHTML=`<div class="apikey-status ok">✅ API Key aktiv <button class="apikey-clear-btn" onclick="doDeleteKey()">Entfernen</button></div>`;
-    upload.style.display='flex';
-  } else {
-    sec.innerHTML=`
-      <div class="apikey-card">
-        <div class="apikey-title">🔑 API Key einrichten</div>
-        <div class="apikey-sub">Einmalig eintragen — wird sicher auf diesem Gerät gespeichert. Key holen unter <strong>console.anthropic.com</strong> → API Keys.</div>
-        <input class="apikey-input" type="password" id="apikey-field" placeholder="sk-ant-..." autocomplete="off" autocorrect="off" spellcheck="false">
-        <button class="apikey-save-btn" onclick="doSaveKey()">Key speichern & loslegen ✓</button>
-      </div>`;
-    upload.style.display='none';
+  const apiKey=localStorage.getItem('st_apikey')||'';
+  const keyEl=document.getElementById('set-apikey-display');
+  const keyBtn=document.getElementById('set-apikey-btn');
+  if(keyEl){
+    if(apiKey){
+      keyEl.textContent='sk-ant-…'+apiKey.slice(-6)+' (Fallback aktiv)';
+      keyEl.style.color='var(--green-b)';
+      if(keyBtn) keyBtn.textContent='Entfernen';
+    } else {
+      keyEl.textContent='Nicht gesetzt — Worker wird verwendet';
+      keyEl.style.color='';
+      if(keyBtn) keyBtn.textContent='Setzen';
+    }
   }
 }
 
-function doSaveKey(){
-  const val=document.getElementById('apikey-field')?.value?.trim();
-  if(!val||!val.startsWith('sk-')){showToast('⚠️ Ungültiger Key — beginnt mit sk-ant-…');return;}
-  localStorage.setItem('st_apikey',val);
-  renderApiKeySection();
-  showToast('✅ Key gespeichert!');
+function promptApiKey(){
+  const current=localStorage.getItem('st_apikey')||'';
+  if(current){
+    if(confirm('API Key entfernen?')){
+      localStorage.removeItem('st_apikey');
+      renderSettings();
+      renderScanWorkerStatus();
+      showToast('🗑️ Key entfernt');
+    }
+    return;
+  }
+  const val=prompt('Anthropic API Key (sk-ant-…):','');
+  if(!val) return;
+  const trimmed=val.trim();
+  if(!trimmed.startsWith('sk-')){showToast('⚠️ Key beginnt mit sk-ant-…');return;}
+  localStorage.setItem('st_apikey',trimmed);
+  renderSettings();
+  renderScanWorkerStatus();
+  showToast('✅ Key gespeichert');
 }
 
-function doDeleteKey(){
-  if(!confirm('API Key wirklich entfernen?'))return;
-  localStorage.removeItem('st_apikey');
-  renderApiKeySection();
-  showToast('🗑️ Key entfernt');
+// ── Scan Worker Status ──
+function renderScanWorkerStatus(){
+  const statusEl = document.getElementById('scan-worker-status');
+  const uploadEl = document.getElementById('scan-upload-area');
+
+  if(isWorkerConfigured()){
+    const url=getWorkerUrl();
+    const short=url.replace('https://','').replace(/\/.*$/,'');
+    statusEl.innerHTML=`
+      <div class="worker-banner ok">
+        <div class="worker-banner-icon">⚡</div>
+        <div class="worker-banner-body">
+          <div>Worker aktiv — kein API Key nötig</div>
+          <div class="worker-banner-sub">${short}</div>
+        </div>
+      </div>`;
+    uploadEl.style.display='flex';
+  } else if(getApiKey()){
+    statusEl.innerHTML=`
+      <div class="worker-banner warn">
+        <div class="worker-banner-icon">🔑</div>
+        <div class="worker-banner-body">
+          <div>Direktmodus — eigener API Key</div>
+          <div class="worker-banner-sub">Worker empfohlen · Key unter Daten verwalten</div>
+        </div>
+      </div>`;
+    uploadEl.style.display='flex';
+  } else {
+    statusEl.innerHTML=`
+      <div class="worker-banner warn">
+        <div class="worker-banner-icon">⚙️</div>
+        <div class="worker-banner-body">
+          <div>Worker noch nicht konfiguriert</div>
+          <div class="worker-banner-sub">URL unter Daten → Worker eintragen</div>
+        </div>
+      </div>
+      <div class="worker-config-card">
+        <div class="worker-config-title">🔗 Worker URL eintragen</div>
+        <div class="worker-config-sub">Deine Cloudflare Worker URL — einmalig eintragen, für alle Geräte.</div>
+        <input class="worker-url-input" type="url" id="worker-url-field"
+          placeholder="https://shifttrack.DEIN-ACCOUNT.workers.dev"
+          autocomplete="off" autocorrect="off" spellcheck="false">
+        <button class="worker-save-btn" onclick="doSaveWorkerUrl()">Worker speichern & loslegen ✓</button>
+      </div>`;
+    uploadEl.style.display='none';
+  }
 }
 
-// ── Scan ──
+function doSaveWorkerUrl(){
+  const val=(document.getElementById('worker-url-field')?.value||'').trim();
+  if(!val||!val.startsWith('https://')){showToast('⚠️ URL muss mit https:// beginnen');return;}
+  localStorage.setItem(WORKER_KEY,val);
+  renderScanWorkerStatus();
+  renderSettings();
+  showToast('✅ Worker URL gespeichert!');
+}
+
+// ── Image compression (keeps under Anthropic 5 MB base64 limit) ──
+function compressImage(dataUrl){
+  return new Promise(resolve=>{
+    const img=new Image();
+    img.onload=()=>{
+      const MAX_BYTES=4.5*1024*1024; // 4.5 MB base64 target
+      let w=img.width, h=img.height;
+      // Scale down if very large
+      const MAX_DIM=2048;
+      if(w>MAX_DIM||h>MAX_DIM){
+        const ratio=Math.min(MAX_DIM/w,MAX_DIM/h);
+        w=Math.round(w*ratio); h=Math.round(h*ratio);
+      }
+      const canvas=document.createElement('canvas');
+      canvas.width=w; canvas.height=h;
+      const ctx=canvas.getContext('2d');
+      ctx.drawImage(img,0,0,w,h);
+      // Try quality 0.85 first, then reduce until under limit
+      let quality=0.85;
+      const attempt=(q)=>{
+        const result=canvas.toDataURL('image/jpeg',q);
+        const b64=result.split(',')[1];
+        if(b64.length<=MAX_BYTES||q<=0.3){
+          resolve({base64:b64, mimeType:'image/jpeg'});
+        } else {
+          attempt(Math.max(q-0.15,0.3));
+        }
+      };
+      attempt(quality);
+    };
+    img.src=dataUrl;
+  });
+}
+
+// ── Image Quality Check ──
+function analyzeImageQuality(dataUrl){
+  return new Promise(resolve=>{
+    const img=new Image();
+    img.onload=()=>{
+      const w=img.width, h=img.height;
+      const canvas=document.createElement('canvas');
+      // Sample at reduced size for performance
+      const sw=Math.min(w,320), sh=Math.round(h*(sw/w));
+      canvas.width=sw; canvas.height=sh;
+      const ctx=canvas.getContext('2d');
+      ctx.drawImage(img,0,0,sw,sh);
+
+      const imgData=ctx.getImageData(0,0,sw,sh).data;
+      let rSum=0,gSum=0,bSum=0,varSum=0;
+      const px=imgData.length/4;
+      const grays=[];
+
+      for(let i=0;i<imgData.length;i+=4){
+        const r=imgData[i],g=imgData[i+1],b=imgData[i+2];
+        rSum+=r; gSum+=g; bSum+=b;
+        grays.push(0.299*r+0.587*g+0.114*b);
+      }
+
+      const avgBrightness=(rSum+gSum+bSum)/(px*3);
+      // Sharpness via variance of grayscale
+      const mean=grays.reduce((a,v)=>a+v,0)/grays.length;
+      grays.forEach(v=>varSum+=(v-mean)**2);
+      const sharpness=varSum/grays.length;
+
+      // Aspect ratio check: receipt is tall (height >> width)
+      const aspect=h/w;
+
+      const issues=[];
+      const tips=[];
+
+      if(avgBrightness<60){
+        issues.push({icon:'🌑',label:'Zu dunkel',severe:true});
+        tips.push('Mehr Licht — Zimmerbeleuchtung einschalten oder ans Fenster gehen');
+      } else if(avgBrightness<100){
+        issues.push({icon:'🌘',label:'Etwas dunkel',severe:false});
+        tips.push('Heller wäre besser — Taschenlampe des Handys anmachen');
+      }
+
+      if(w<600||h<600){
+        issues.push({icon:'🔍',label:'Zu niedrige Auflösung',severe:true});
+        tips.push('Näher an den Bon herangehen oder höhere Auflösung verwenden');
+      } else if(w<900||h<900){
+        issues.push({icon:'🔎',label:'Auflösung knapp',severe:false});
+        tips.push('Etwas näher herangehen für bessere Ergebnisse');
+      }
+
+      if(sharpness<120){
+        issues.push({icon:'💫',label:'Unscharf / verwackelt',severe:true});
+        tips.push('Handy auf dem Tisch abstützen und warten bis die Kamera fokussiert hat');
+      } else if(sharpness<300){
+        issues.push({icon:'🫧',label:'Leicht unscharf',severe:false});
+        tips.push('Ruhiger halten und auf den Text fokussieren lassen');
+      }
+
+      if(aspect<1.5){
+        issues.push({icon:'📐',label:'Bon zu breit / abgeschnitten',severe:false});
+        tips.push('Bon hochkant fotografieren, damit der ganze Text sichtbar ist');
+      }
+
+      resolve({w,h,avgBrightness,sharpness,aspect,issues,tips,hasSevere:issues.some(i=>i.severe)});
+    };
+    img.src=dataUrl;
+  });
+}
+
+function showQualityWarning(quality, onProceed, onRetry){
+  // Remove any existing overlay
+  document.getElementById('quality-overlay')?.remove();
+
+  const severeIssues=quality.issues.filter(i=>i.severe);
+  const minorIssues=quality.issues.filter(i=>!i.severe);
+
+  const overlay=document.createElement('div');
+  overlay.id='quality-overlay';
+  overlay.style.cssText=`
+    position:fixed;inset:0;z-index:200;
+    background:rgba(8,8,14,0.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+    display:flex;align-items:flex-end;justify-content:center;
+    padding:0 0 calc(var(--tabh) + var(--sab) + 16px);
+  `;
+
+  const card=document.createElement('div');
+  card.style.cssText=`
+    background:var(--surface);border:1px solid var(--border2);border-radius:24px 24px 20px 20px;
+    padding:22px 20px 20px;width:100%;max-width:480px;display:flex;flex-direction:column;gap:14px;
+  `;
+
+  const header=quality.hasSevere
+    ? `<div style="display:flex;align-items:center;gap:10px">
+        <div style="font-size:28px">⚠️</div>
+        <div>
+          <div style="font-size:16px;font-weight:800;color:var(--red)">Foto-Qualität mangelhaft</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:2px">KI könnte den Bon nicht richtig lesen</div>
+        </div>
+       </div>`
+    : `<div style="display:flex;align-items:center;gap:10px">
+        <div style="font-size:28px">💡</div>
+        <div>
+          <div style="font-size:16px;font-weight:800;color:var(--yellow)">Qualität könnte besser sein</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:2px">Ergebnis evtl. ungenau</div>
+        </div>
+       </div>`;
+
+  const issueList=quality.issues.map(i=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;
+      border-radius:10px;background:${i.severe?'rgba(255,71,87,.1)':'rgba(255,211,42,.07)'};
+      border:1px solid ${i.severe?'rgba(255,71,87,.2)':'rgba(255,211,42,.15)'}">
+      <span style="font-size:18px">${i.icon}</span>
+      <span style="font-size:13px;font-weight:700;color:${i.severe?'var(--red)':'var(--yellow)'}">${i.label}</span>
+    </div>`).join('');
+
+  const tipList=quality.tips.map(t=>`
+    <div style="display:flex;gap:8px;align-items:flex-start">
+      <span style="color:var(--accent-l);font-size:13px;flex-shrink:0;margin-top:1px">→</span>
+      <span style="font-size:13px;color:var(--text2);line-height:1.5">${t}</span>
+    </div>`).join('');
+
+  const statsBar=`
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;text-align:center">
+      <div style="background:var(--surface2);border-radius:10px;padding:8px 4px">
+        <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;font-weight:700">Helligkeit</div>
+        <div style="font-size:15px;font-weight:800;font-family:'DM Mono',monospace;color:${quality.avgBrightness<80?'var(--red)':quality.avgBrightness<110?'var(--yellow)':'var(--green-b)'}">${Math.round(quality.avgBrightness)}</div>
+      </div>
+      <div style="background:var(--surface2);border-radius:10px;padding:8px 4px">
+        <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;font-weight:700">Schärfe</div>
+        <div style="font-size:15px;font-weight:800;font-family:'DM Mono',monospace;color:${quality.sharpness<150?'var(--red)':quality.sharpness<350?'var(--yellow)':'var(--green-b)'}">${Math.round(quality.sharpness)}</div>
+      </div>
+      <div style="background:var(--surface2);border-radius:10px;padding:8px 4px">
+        <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;font-weight:700">Auflösung</div>
+        <div style="font-size:15px;font-weight:800;font-family:'DM Mono',monospace;color:${(quality.w<600||quality.h<600)?'var(--red)':'var(--green-b)'}">${quality.w}×${quality.h}</div>
+      </div>
+    </div>`;
+
+  card.innerHTML=`
+    ${header}
+    <div style="display:flex;flex-direction:column;gap:6px">${issueList}</div>
+    ${statsBar}
+    <div style="display:flex;flex-direction:column;gap:6px;padding:4px 0">${tipList}</div>
+    <div style="display:flex;gap:8px">
+      <button id="qw-retry" style="flex:1;padding:13px;border-radius:13px;background:var(--accent);border:none;color:#fff;font-family:'Figtree',sans-serif;font-size:15px;font-weight:800;cursor:pointer">
+        📷 Neu fotografieren
+      </button>
+      <button id="qw-proceed" style="flex:1;padding:13px;border-radius:13px;background:var(--surface2);border:1px solid var(--border2);color:var(--text2);font-family:'Figtree',sans-serif;font-size:13px;font-weight:700;cursor:pointer">
+        Trotzdem scannen
+      </button>
+    </div>`;
+
+  overlay.appendChild(card);
+  document.body.appendChild(overlay);
+
+  document.getElementById('qw-retry').onclick=()=>{overlay.remove();onRetry();};
+  document.getElementById('qw-proceed').onclick=()=>{overlay.remove();onProceed();};
+  // Tap backdrop to dismiss
+  overlay.onclick=(ev)=>{if(ev.target===overlay){overlay.remove();onRetry();}};
+}
+// ── Decimal normalizer ──
+function normalizeDecimals(text){
+  // Fix German/Austrian decimal: 1.281,80 → 1281.80
+  return text.replace(/(\d{1,3}(?:\.\d{3})+),(\d{2})/g, (m,int,dec)=>int.replace(/\./g,'')+'.'+dec)
+             .replace(/(\d+),(\d{2})(?!\d)/g,'$1.$2');
+}
+
 async function handleScanUpload(event){
   const file=event.target.files[0];if(!file)return;
-  const key=getApiKey();
-  if(!key){showToast('⚠️ Kein API Key');return;}
+  if(!isScanReady()){showToast('⚠️ Kein Worker / API Key konfiguriert');return;}
+
   const reader=new FileReader();
   reader.onload=async(e)=>{
-    const base64=e.target.result.split(',')[1];
-    const mimeType=file.type;
-    document.getElementById('scan-img-preview').src=e.target.result;
-    document.getElementById('scan-img-preview').style.display='block';
-    document.getElementById('scan-dropzone').style.display='none';
-    document.getElementById('scan-loading').style.display='flex';
-    document.getElementById('scan-results').innerHTML='';
-    document.getElementById('scan-actions').style.display='none';
-    document.getElementById('scan-save-all-btn').style.display='block';
-    scannedItems=[];
-    try{
-      const response=await fetch('https://api.anthropic.com/v1/messages',{
-        method:'POST',
-        headers:{
-          'Content-Type':'application/json',
-          'x-api-key':key,
-          'anthropic-version':'2023-06-01',
-          'anthropic-dangerous-direct-browser-access':'true'
-        },
-        body:JSON.stringify({
-          model:'claude-sonnet-4-20250514',
-          max_tokens:1000,
-          messages:[{role:'user',content:[
-            {type:'image',source:{type:'base64',media_type:mimeType,data:base64}},
-            {type:'text',text:`Du siehst eine Kellner-Z-Abrechnung. Extrahiere die Werte und antworte NUR mit einem JSON-Array:\n[\n  {"datum":"YYYY-MM-DD","umsatz":1234.56,"bar":567.89,"tip":120.00}\n]\nRegeln:\n- datum: Datum des Bons, Jahr ${new Date().getFullYear()} falls nicht sichtbar\n- umsatz: "Brutto Gesamt"\n- bar: Summe aller Bar-Einträge aus Finanzwege\n- tip: handschriftliche Zahl oben auf dem Bon (Tip/T), sonst 0\n- Nur Zahlen, keine Einheiten, kein Text`}
-          ]}]
-        })
-      });
-      if(!response.ok){
-        const err=await response.json().catch(()=>({}));
-        throw new Error(err?.error?.message||'HTTP '+response.status);
-      }
-      const data=await response.json();
-      const text=data.content.find(b=>b.type==='text')?.text||'[]';
-      scannedItems=JSON.parse(text.replace(/```json|```/g,'').trim());
-      renderScanResults();
-    }catch(err){
-      document.getElementById('scan-loading').style.display='none';
-      document.getElementById('scan-results').innerHTML=`<div class="empty"><span class="empty-icon">⚠️</span><span class="empty-txt">${err.message||'Fehler beim Lesen'}</span></div>`;
-      document.getElementById('scan-save-all-btn').style.display='none';
-      document.getElementById('scan-actions').style.display='flex';
+    const dataUrl=e.target.result;
+
+    // ── Quality check ──
+    const quality=await analyzeImageQuality(dataUrl);
+    if(quality.issues.length>0){
+      showQualityWarning(
+        quality,
+        ()=>doScan(dataUrl,file.type),   // proceed anyway
+        ()=>document.getElementById('scan-file').click()  // retry
+      );
+      return;
     }
+
+    doScan(dataUrl,file.type);
   };
   reader.readAsDataURL(file);
   event.target.value='';
+}
+
+async function doScan(dataUrl, originalMimeType){
+  // Compress image
+  const {base64, mimeType} = await compressImage(dataUrl);
+
+  document.getElementById('scan-img-preview').src=dataUrl;
+  document.getElementById('scan-img-preview').style.display='block';
+  document.getElementById('scan-dropzone').style.display='none';
+  document.getElementById('scan-loading').style.display='flex';
+  document.getElementById('scan-results').innerHTML='';
+  document.getElementById('scan-actions').style.display='none';
+  document.getElementById('scan-save-all-btn').style.display='block';
+  scannedItems=[];
+
+  const controller=new AbortController();
+  const timeout=setTimeout(()=>controller.abort(),35000);
+
+  const payload={
+    model:'claude-sonnet-4-20250514',
+    max_tokens:1000,
+    messages:[{role:'user',content:[
+      {type:'image',source:{type:'base64',media_type:mimeType,data:base64}},
+      {type:'text',text:`Du siehst eine Kellner-Z-Abrechnung. Extrahiere die Werte und antworte NUR mit einem JSON-Array:\n[\n  {"datum":"YYYY-MM-DD","umsatz":1234.56,"bar":567.89,"tip":120.00}\n]\nRegeln:\n- datum: Datum des Bons im Format YYYY-MM-DD, Jahr ${new Date().getFullYear()} falls nicht sichtbar\n- umsatz: Wert bei "Brutto Gesamt"\n- bar: Zeile "15x Bar" Betrag (NICHT die TIP-Zeile aus Detail Bar)\n- tip: handschriftliche Zahl oben auf dem Bon (z.B. "Tip 290"), sonst 0\n- Alle Zahlen als Dezimalzahl mit Punkt (nicht Komma)\n- Nur Zahlen, kein Text, kein Währungszeichen`}
+    ]}]
+  };
+
+  try{
+    let response;
+    if(isWorkerConfigured()){
+      response=await fetch(getWorkerUrl(),{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(payload),
+        signal:controller.signal
+      });
+    } else {
+      response=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'x-api-key':getApiKey(),
+          'anthropic-version':'2023-06-01',
+          'anthropic-dangerous-direct-browser-access':'true'
+        },
+        body:JSON.stringify(payload),
+        signal:controller.signal
+      });
+    }
+
+    clearTimeout(timeout);
+
+    if(!response.ok){
+      const err=await response.json().catch(()=>({}));
+      throw new Error(err?.error?.message||err?.error||'HTTP '+response.status);
+    }
+    const data=await response.json();
+    const raw=data.content.find(b=>b.type==='text')?.text||'[]';
+    const normalized=normalizeDecimals(raw.replace(/```json|```/g,'').trim());
+    scannedItems=JSON.parse(normalized);
+    renderScanResults();
+  }catch(err){
+    clearTimeout(timeout);
+    document.getElementById('scan-loading').style.display='none';
+    const msg=err.name==='AbortError'?'Timeout — bitte erneut versuchen':err.message||'Fehler beim Lesen';
+    document.getElementById('scan-results').innerHTML=`<div class="empty"><span class="empty-icon">⚠️</span><span class="empty-txt">${msg}</span></div>`;
+    document.getElementById('scan-save-all-btn').style.display='none';
+    document.getElementById('scan-actions').style.display='flex';
+  }
 }
 
 function renderScanResults(){
@@ -827,7 +1108,8 @@ window.addEventListener('resize',()=>{
 
 renderHome();
 renderLog();
-renderApiKeySection();
+renderSettings();
+renderScanWorkerStatus();
 </script>
 </body>
 </html>
