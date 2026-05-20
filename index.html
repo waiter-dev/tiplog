@@ -2,11 +2,14 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="ShiftTrack">
-<title>ShiftTrack v0.07</title>
+<title>ShiftTrack v0.08</title>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -35,6 +38,1121 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 
 .screen{position:absolute;inset:0;padding-top:calc(var(--sat) + var(--topbh) + 2px);padding-bottom:calc(var(--tabh) + var(--sab) + 4px);padding-left:var(--sal);padding-right:var(--sar);overflow-y:auto;-webkit-overflow-scrolling:touch;opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .25s ease,transform .25s ease;}
 .screen.active{opacity:1;transform:translateY(0);pointer-events:all;}
+
+.tabs{position:fixed;bottom:0;left:0;right:0;z-index:60;height:calc(var(--tabh) + var(--sab));padding-bottom:var(--sab);padding-left:var(--sal);padding-right:var(--sar);background:rgba(8,8,14,0.96);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border-top:1px solid var(--border);display:flex;align-items:flex-start;padding-top:6px;}
+.tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;color:var(--text3);transition:color .2s;padding:0 2px;}
+.tab-btn.active{color:var(--accent-l);}
+.tab-icon{width:clamp(28px,8vw,34px);height:clamp(28px,8vw,34px);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:clamp(14px,4.5vw,17px);transition:background .2s,transform .15s;}
+.tab-btn.active .tab-icon{background:rgba(108,92,231,0.18);transform:scale(1.1);}
+.tab-label{font-size:clamp(8px,2.5vw,10px);font-weight:700;letter-spacing:0.2px;}
+
+/* ── DASHBOARD ── */
+.dash-wrap{padding:10px 16px 20px;display:flex;flex-direction:column;gap:12px;}
+
+.tip-hero{background:linear-gradient(140deg,#16102e 0%,#0a1e1c 60%,#0d0a1e 100%);border:1px solid rgba(162,155,254,0.22);border-radius:24px;padding:clamp(16px,4vw,24px);position:relative;overflow:hidden;}
+.tip-hero::before{content:'';position:absolute;top:-50px;right:-50px;width:160px;height:160px;background:radial-gradient(circle,rgba(162,155,254,.25) 0%,transparent 70%);pointer-events:none;}
+.tip-hero::after{content:'';position:absolute;bottom:-40px;left:10px;width:130px;height:130px;background:radial-gradient(circle,rgba(0,245,212,.12) 0%,transparent 70%);pointer-events:none;}
+.tip-hero-eyebrow{font-size:clamp(9px,2.5vw,11px);font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--accent-l);display:flex;align-items:center;gap:6px;margin-bottom:6px;}
+.tip-hero-eyebrow::before{content:'';width:18px;height:2px;background:var(--accent-l);border-radius:2px;display:block;}
+.tip-hero-main{display:flex;align-items:flex-end;gap:6px;}
+.tip-hero-amount{font-size:clamp(36px,12vw,54px);font-weight:900;letter-spacing:-2px;color:var(--accent-l);font-family:'DM Mono',monospace;line-height:1;}
+.tip-hero-unit{font-size:clamp(14px,4vw,18px);color:var(--text2);font-weight:600;padding-bottom:6px;}
+.tip-pct-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(162,155,254,.12);border:1px solid rgba(162,155,254,.2);border-radius:20px;padding:4px 11px;font-size:clamp(10px,3vw,12px);font-weight:700;color:var(--accent-l);margin-top:6px;}
+.tip-hero-sub{font-size:clamp(11px,3vw,13px);color:var(--text2);margin-top:4px;}
+
+.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:clamp(14px,4vw,18px);display:flex;flex-direction:column;gap:4px;animation:fadeUp .4s ease both;}
+.stat-card:nth-child(1){animation-delay:.05s}
+.stat-card:nth-child(2){animation-delay:.1s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.stat-card-icon{font-size:clamp(18px,5vw,22px);margin-bottom:6px;}
+.stat-card-label{font-size:clamp(9px,2.5vw,10px);color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;}
+.stat-card-val{font-size:clamp(20px,6vw,26px);font-weight:900;letter-spacing:-0.5px;font-family:'DM Mono',monospace;margin:2px 0;}
+.stat-card-sub{font-size:clamp(9px,2.5vw,11px);color:var(--text3);}
+
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:clamp(14px,4vw,18px);overflow:hidden;}
+.chart-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.chart-title{font-size:clamp(13px,3.5vw,15px);font-weight:800;}
+.chart-total{font-size:clamp(13px,3.5vw,15px);font-weight:700;font-family:'DM Mono',monospace;color:var(--accent-l);}
+.chart-wrap{height:clamp(90px,24vw,120px);}
+.chart-legend{display:flex;gap:10px;margin-top:8px;}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:clamp(9px,2.5vw,11px);color:var(--text2);}
+.legend-dot{width:7px;height:7px;border-radius:50%;}
+
+.details-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;overflow:hidden;}
+.details-hdr{display:flex;align-items:center;justify-content:space-between;padding:clamp(14px,4vw,18px);border-bottom:1px solid var(--border);}
+.details-hdr-title{font-size:clamp(13px,4vw,15px);font-weight:800;}
+.details-toggle{display:flex;gap:4px;background:var(--surface2);border-radius:10px;padding:3px;}
+.dtoggle{padding:5px 12px;border-radius:8px;border:none;background:none;color:var(--text3);font-family:'Figtree',sans-serif;font-size:clamp(10px,3vw,12px);font-weight:700;cursor:pointer;transition:all .2s;}
+.dtoggle.active{background:var(--accent);color:#fff;}
+.details-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.detail-item{padding:clamp(12px,3.5vw,16px);border-bottom:1px solid var(--border);border-right:1px solid var(--border);}
+.detail-item:nth-child(even){border-right:none;}
+.detail-item:nth-last-child(-n+2){border-bottom:none;}
+.detail-item-label{font-size:clamp(9px,2.5vw,10px);color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;font-weight:700;margin-bottom:4px;}
+.detail-item-label .bh{filter:hue-rotate(270deg) saturate(2) brightness(1.1);display:inline-block;}
+.detail-item-val{font-size:clamp(15px,4.5vw,18px);font-weight:800;font-family:'DM Mono',monospace;}
+.col-green{color:var(--green-b);}.col-purple{color:var(--accent-l);}.col-yellow{color:var(--yellow);}.col-red{color:var(--red);}
+
+/* ── LOG ── */
+.log-list{padding:0 16px 8px;display:flex;flex-direction:column;gap:7px;}
+.log-item{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:clamp(10px,3vw,14px) 14px;display:flex;align-items:center;gap:10px;animation:fadeUp .3s ease both;}
+.log-item-icon{width:clamp(34px,9vw,40px);height:clamp(34px,9vw,40px);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:clamp(15px,4.5vw,18px);flex-shrink:0;}
+.log-icon-in{background:rgba(79,172,254,.1);}.log-icon-out{background:rgba(0,205,176,.1);}
+.log-item-body{flex:1;min-width:0;}
+.log-item-top{display:flex;align-items:center;justify-content:space-between;}
+.log-item-date{font-size:clamp(11px,3.5vw,13px);font-weight:700;}
+.log-item-umsatz{font-size:clamp(12px,3.5vw,14px);font-weight:800;font-family:'DM Mono',monospace;color:var(--green-b);}
+.log-item-bottom{display:flex;align-items:center;gap:5px;margin-top:4px;flex-wrap:wrap;}
+.log-chip{font-size:clamp(9px,2.8vw,11px);font-weight:700;padding:2px 7px;border-radius:7px;display:inline-block;}
+.chip-tip{background:rgba(162,155,254,.12);color:var(--accent-l);}
+.chip-bar{background:rgba(255,211,42,.1);color:var(--yellow);}
+.chip-abgabe{background:rgba(255,71,87,.1);color:var(--red);}
+.log-item-del{width:30px;height:30px;border-radius:9px;border:none;background:rgba(255,71,87,.1);color:var(--red);font-size:13px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.log-item-del:active{background:rgba(255,71,87,.25);}
+
+.filter-row{display:flex;gap:7px;padding:8px 16px 5px;}
+.filter-btn{flex:1;padding:7px 4px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text2);font-family:'Figtree',sans-serif;font-size:clamp(10px,3vw,12px);font-weight:700;cursor:pointer;transition:all .2s;}
+.filter-btn.active{background:var(--surface3);border-color:var(--border2);color:var(--text);}
+
+.empty{text-align:center;padding:40px 20px;color:var(--text3);}
+.empty-icon{font-size:40px;display:block;margin-bottom:12px;}
+.empty-txt{font-size:clamp(12px,3.5vw,14px);}
+
+/* ── FORM ── */
+.form-wrap{padding:10px 16px 20px;display:flex;flex-direction:column;gap:10px;}
+.form-section-title{font-size:clamp(10px,3vw,13px);font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:0.8px;padding:4px 0 2px;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-label{font-size:clamp(9px,2.8vw,11px);color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:0.6px;}
+.form-input,.form-select{background:var(--surface2);border:1px solid var(--border2);border-radius:13px;color:var(--text);padding:clamp(11px,3vw,14px) 14px;font-family:'Figtree',sans-serif;font-size:clamp(14px,4vw,16px);outline:none;width:100%;transition:border-color .2s;-webkit-appearance:none;appearance:none;}
+.form-input:focus,.form-select:focus{border-color:var(--accent);}
+.form-input::placeholder{color:var(--text3);}
+.form-select option{background:var(--surface2);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.calc-box{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:clamp(12px,3vw,16px);display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center;}
+.calc-label{font-size:clamp(8px,2.5vw,10px);color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;font-weight:700;margin-bottom:4px;}
+.calc-val{font-size:clamp(14px,4.5vw,17px);font-weight:800;font-family:'DM Mono',monospace;}
+.save-btn{width:100%;padding:clamp(13px,3.5vw,16px);background:var(--accent);border:none;border-radius:14px;color:#fff;font-family:'Figtree',sans-serif;font-size:clamp(15px,4.5vw,17px);font-weight:800;cursor:pointer;box-shadow:0 6px 24px rgba(108,92,231,.35);transition:all .2s;}
+.save-btn:active{transform:scale(0.98);box-shadow:none;}
+
+.section-hdr{padding:10px 16px 5px;display:flex;align-items:center;justify-content:space-between;}
+.section-hdr-title{font-size:clamp(14px,4.5vw,16px);font-weight:800;}
+
+/* ── SETTINGS ── */
+.settings-wrap{padding:14px 16px;display:flex;flex-direction:column;gap:10px;}
+.settings-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;overflow:hidden;}
+.settings-row{display:flex;align-items:center;justify-content:space-between;padding:clamp(12px,3.5vw,16px) 16px;border-bottom:1px solid var(--border);gap:10px;}
+.settings-row:last-child{border-bottom:none;}
+.settings-row-left{display:flex;flex-direction:column;gap:3px;}
+.settings-row-title{font-size:clamp(13px,4vw,15px);font-weight:700;}
+.settings-row-sub{font-size:clamp(10px,3vw,12px);color:var(--text2);}
+.settings-btn{padding:8px 16px;border-radius:11px;border:none;font-family:'Figtree',sans-serif;font-size:clamp(11px,3.5vw,13px);font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0;}
+.btn-export{background:rgba(108,92,231,.15);color:var(--accent-l);border:1px solid rgba(108,92,231,.25);}
+.btn-import{background:rgba(0,205,176,.12);color:var(--green-b);border:1px solid rgba(0,205,176,.2);}
+.btn-danger{background:rgba(255,71,87,.1);color:var(--red);border:1px solid rgba(255,71,87,.2);}
+.settings-version{text-align:center;color:var(--text3);font-size:11px;padding:8px 0 4px;}
+
+/* ── SCAN ── */
+.scan-wrap{padding:10px 16px 20px;display:flex;flex-direction:column;gap:14px;}
+
+/* Worker-Status-Banner */
+.worker-banner{border-radius:14px;padding:12px 16px;display:flex;align-items:center;gap:10px;font-size:clamp(11px,3vw,13px);font-weight:700;}
+.worker-banner.ok{background:rgba(0,205,176,.08);border:1px solid rgba(0,205,176,.2);color:var(--green-b);}
+.worker-banner.warn{background:rgba(255,211,42,.08);border:1px solid rgba(255,211,42,.2);color:var(--yellow);}
+.worker-banner.err{background:rgba(255,71,87,.08);border:1px solid rgba(255,71,87,.2);color:var(--red);}
+.worker-banner-icon{font-size:18px;flex-shrink:0;}
+.worker-banner-body{display:flex;flex-direction:column;gap:2px;}
+.worker-banner-sub{font-size:clamp(9px,2.5vw,11px);opacity:.8;font-weight:500;}
+
+/* Worker-URL Konfiguration (nur wenn nötig) */
+.worker-config-card{background:var(--surface);border:1px solid var(--border2);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:12px;}
+.worker-config-title{font-size:clamp(14px,4vw,16px);font-weight:800;}
+.worker-config-sub{font-size:clamp(11px,3vw,13px);color:var(--text2);line-height:1.55;}
+.worker-url-input{background:var(--surface2);border:1px solid var(--border2);border-radius:12px;color:var(--text);padding:13px 14px;font-family:'DM Mono',monospace;font-size:clamp(11px,3vw,13px);outline:none;width:100%;transition:border-color .2s;-webkit-appearance:none;}
+.worker-url-input:focus{border-color:var(--accent);}
+.worker-url-input::placeholder{color:var(--text3);}
+.worker-save-btn{width:100%;padding:13px;background:var(--accent);border:none;border-radius:12px;color:#fff;font-family:'Figtree',sans-serif;font-size:clamp(14px,4vw,15px);font-weight:800;cursor:pointer;}
+
+.scan-upload-area{border:2px dashed rgba(162,155,254,0.3);border-radius:20px;padding:clamp(24px,6vw,36px) 20px;display:flex;flex-direction:column;align-items:center;gap:10px;background:rgba(108,92,231,0.05);cursor:pointer;transition:all .2s;text-align:center;}
+.scan-upload-area:active{background:rgba(108,92,231,0.12);border-color:var(--accent-l);}
+.scan-upload-icon{font-size:clamp(38px,10vw,50px);}
+.scan-upload-title{font-size:clamp(14px,4vw,16px);font-weight:800;}
+.scan-upload-sub{font-size:clamp(11px,3vw,13px);color:var(--text2);}
+#scan-file{display:none;}
+.scan-preview-img{width:100%;border-radius:14px;object-fit:cover;max-height:clamp(140px,35vw,200px);border:1px solid var(--border2);}
+.scan-loading{display:flex;flex-direction:column;align-items:center;gap:12px;padding:20px;text-align:center;}
+.scan-spinner{width:40px;height:40px;border-radius:50%;border:3px solid rgba(162,155,254,0.15);border-top-color:var(--accent-l);animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.scan-loading-txt{font-size:clamp(12px,3.5vw,14px);color:var(--text2);font-weight:600;}
+.scan-results{display:flex;flex-direction:column;gap:10px;}
+.scan-result-card{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:clamp(12px,3.5vw,16px);}
+.scan-result-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.scan-result-date{font-size:clamp(12px,3.5vw,14px);font-weight:800;}
+.scan-result-confirm{padding:7px 14px;border-radius:10px;border:none;background:var(--accent);color:#fff;font-family:'Figtree',sans-serif;font-size:clamp(11px,3vw,12px);font-weight:800;cursor:pointer;}
+.scan-result-confirm.saved{background:rgba(0,205,176,.15);color:var(--green-b);pointer-events:none;}
+.scan-result-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.scan-result-field{display:flex;flex-direction:column;gap:4px;}
+.scan-result-label{font-size:clamp(9px,2.5vw,10px);color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;font-weight:700;}
+.scan-result-input{background:var(--surface2);border:1px solid var(--border2);border-radius:9px;color:var(--text);padding:clamp(8px,2.5vw,10px) 11px;font-family:'Figtree',sans-serif;font-size:clamp(13px,4vw,15px);font-weight:700;outline:none;width:100%;-webkit-appearance:none;}
+.scan-result-input:focus{border-color:var(--accent);}
+.scan-result-select{background:var(--surface2);border:1px solid var(--border2);border-radius:9px;color:var(--text);padding:clamp(8px,2.5vw,10px) 11px;font-family:'Figtree',sans-serif;font-size:clamp(12px,3.5vw,14px);font-weight:700;outline:none;width:100%;-webkit-appearance:none;appearance:none;}
+.scan-action-row{display:flex;flex-direction:column;gap:8px;}
+.scan-new-btn{width:100%;padding:12px;border-radius:13px;background:rgba(162,155,254,.1);color:var(--accent-l);border:1px solid rgba(162,155,254,.2);font-family:'Figtree',sans-serif;font-size:clamp(13px,4vw,15px);font-weight:800;cursor:pointer;}
+.scan-all-btn{width:100%;padding:clamp(12px,3.5vw,14px);border-radius:13px;border:none;background:var(--accent);color:#fff;font-family:'Figtree',sans-serif;font-size:clamp(13px,4vw,15px);font-weight:800;cursor:pointer;box-shadow:0 4px 18px rgba(108,92,231,.3);}
+
+.toast{position:fixed;bottom:calc(var(--tabh) + var(--sab) + 12px);left:50%;transform:translateX(-50%) translateY(60px);background:var(--surface3);border:1px solid var(--border2);border-radius:14px;padding:10px 18px;font-size:clamp(12px,3.5vw,14px);font-weight:600;z-index:100;transition:transform .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;pointer-events:none;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+#import-file{display:none;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <div class="topbar-title">ShiftTrack 🍽️</div>
+    <div class="topbar-sub" id="topbar-sub">v0.08 · Bereit</div>
+  </div>
+  <div class="topbar-date" id="topbar-date"></div>
+</div>
+
+<!-- ═══ DASHBOARD ═══ -->
+<div class="screen active" id="screen-home">
+  <div class="dash-wrap">
+    <div class="tip-hero">
+      <div class="tip-hero-eyebrow">⌀ Trinkgeld pro Schicht</div>
+      <div class="tip-hero-main">
+        <div class="tip-hero-amount" id="h-avg-tip">€0</div>
+        <div class="tip-hero-unit">avg</div>
+      </div>
+      <div class="tip-pct-badge" id="h-tip-pct">0.0% vom Ø Umsatz</div>
+      <div class="tip-hero-sub" id="h-shifts-lbl">— Schichten diesen Monat</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="stat-card-icon">💜</div>
+        <div class="stat-card-label">Tip diesen Monat</div>
+        <div class="stat-card-val col-purple" id="s-tip-month">€0</div>
+        <div class="stat-card-sub" id="s-tip-month-count">0 Schichten</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon">📅</div>
+        <div class="stat-card-label">Schichten gesamt</div>
+        <div class="stat-card-val col-green" id="s-shifts-total">0</div>
+        <div class="stat-card-sub" id="s-shifts-sub">alle Zeiten</div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-head">
+        <div class="chart-title">Trinkgeld — dieser Monat</div>
+        <div class="chart-total" id="chart-total-val">€0</div>
+      </div>
+      <div class="chart-wrap"><canvas id="mainChart"></canvas></div>
+      <div class="chart-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--accent-l)"></div>Trinkgeld</div>
+      </div>
+    </div>
+    <div class="details-card">
+      <div class="details-hdr">
+        <div class="details-hdr-title">📊 Details</div>
+        <div class="details-toggle">
+          <button class="dtoggle active" id="dtoggle-month" onclick="setDetailsPeriod('month')">Monat</button>
+          <button class="dtoggle" id="dtoggle-all" onclick="setDetailsPeriod('all')">Gesamt</button>
+        </div>
+      </div>
+      <div class="details-grid">
+        <div class="detail-item"><div class="detail-item-label">Gesamtumsatz</div><div class="detail-item-val col-green" id="d-umsatz">€0</div></div>
+        <div class="detail-item"><div class="detail-item-label">Tip gesamt</div><div class="detail-item-val col-purple" id="d-tip">€0</div></div>
+        <div class="detail-item"><div class="detail-item-label">Bar gesamt</div><div class="detail-item-val col-yellow" id="d-bar">€0</div></div>
+        <div class="detail-item"><div class="detail-item-label">Abgabe gesamt</div><div class="detail-item-val col-red" id="d-abgabe">€0</div></div>
+        <div class="detail-item"><div class="detail-item-label">🏠 Drinnen</div><div class="detail-item-val col-purple" id="d-drinnen">0 Schichten</div></div>
+        <div class="detail-item"><div class="detail-item-label">🌳 Draußen</div><div class="detail-item-val col-green" id="d-draussen">0 Schichten</div></div>
+        <div class="detail-item"><div class="detail-item-label">Bester Tip-Tag</div><div class="detail-item-val col-yellow" id="d-best-tip">—</div></div>
+        <div class="detail-item"><div class="detail-item-label">Ø Tip %</div><div class="detail-item-val col-purple" id="d-tip-pct">0.0%</div></div>
+        <div class="detail-item"><div class="detail-item-label">💜 Größter Tip</div><div class="detail-item-val col-purple" id="d-tip-max">—</div></div>
+        <div class="detail-item"><div class="detail-item-label"><span class="bh">💔</span> Kleinster Tip</div><div class="detail-item-val col-purple" id="d-tip-min">—</div></div>
+        <div class="detail-item"><div class="detail-item-label">📈 Größter Umsatz</div><div class="detail-item-val col-green" id="d-umsatz-max">—</div></div>
+        <div class="detail-item"><div class="detail-item-label">📉 Kleinster Umsatz</div><div class="detail-item-val col-green" id="d-umsatz-min">—</div></div>
+      </div>
+    </div>
+    <div style="height:4px"></div>
+  </div>
+</div>
+
+<!-- ═══ VERLAUF ═══ -->
+<div class="screen" id="screen-log">
+  <div class="section-hdr"><div class="section-hdr-title">Schichten</div><div style="font-size:12px;color:var(--text3);font-weight:600;" id="log-count-lbl">0 Einträge</div></div>
+  <div class="filter-row">
+    <button class="filter-btn active" onclick="setFilter('all',this)">Alle</button>
+    <button class="filter-btn" onclick="setFilter('drinnen',this)">🏠 Drinnen</button>
+    <button class="filter-btn" onclick="setFilter('draussen',this)">🌳 Draußen</button>
+  </div>
+  <div class="log-list" id="log-list"></div>
+</div>
+
+<!-- ═══ EINTRAGEN ═══ -->
+<div class="screen" id="screen-add">
+  <div class="form-wrap">
+    <div class="form-section-title">Schicht Details</div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Datum</label><input class="form-input" type="date" id="f-datum"></div>
+      <div class="form-group"><label class="form-label">Station</label><select class="form-select" id="f-station"><option value="drinnen">🏠 Drinnen</option><option value="draussen">🌳 Draußen</option></select></div>
+    </div>
+    <div class="form-section-title" style="margin-top:4px">Beträge</div>
+    <div class="form-group"><label class="form-label">Umsatz (€)</label><input class="form-input" type="text" id="f-umsatz" placeholder="0,00" inputmode="decimal" oninput="fmtInput(this);updatePreview()"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Bar (€)</label><input class="form-input" type="text" id="f-bar" placeholder="0,00" inputmode="decimal" oninput="fmtInput(this);updatePreview()"></div>
+      <div class="form-group"><label class="form-label">Trinkgeld (€)</label><input class="form-input" type="text" id="f-tip" placeholder="0,00" inputmode="decimal" oninput="fmtInput(this);updatePreview()"></div>
+    </div>
+    <div class="calc-box">
+      <div><div class="calc-label">Abgabe 4%</div><div class="calc-val col-red" id="p-abgabe">€0.00</div></div>
+      <div><div class="calc-label">Tip %</div><div class="calc-val col-purple" id="p-tippct">0.0%</div></div>
+      <div><div class="calc-label">Tip gesamt</div><div class="calc-val col-green" id="p-netto">€0.00</div></div>
+    </div>
+    <button class="save-btn" onclick="addEntry()">Schicht speichern ✓</button>
+  </div>
+</div>
+
+<!-- ═══ BON SCAN ═══ -->
+<div class="screen" id="screen-scan">
+  <div class="scan-wrap">
+    <div class="section-hdr" style="padding:4px 0 6px;"><div class="section-hdr-title">📷 Bon scannen</div></div>
+    <div id="scan-worker-status"></div>
+    <div id="scan-upload-area" style="display:none;flex-direction:column;gap:14px;">
+      <div id="scan-dropzone" class="scan-upload-area" onclick="document.getElementById('scan-file').click()">
+        <div class="scan-upload-icon">📄</div>
+        <div class="scan-upload-title">Foto hochladen</div>
+        <div class="scan-upload-sub">Foto der Kellner-Z-Abrechnung — Werte werden automatisch ausgelesen</div>
+      </div>
+      <input type="file" id="scan-file" accept="image/*" onchange="handleScanUpload(event)">
+      <img id="scan-img-preview" class="scan-preview-img" style="display:none">
+      <div id="scan-loading" class="scan-loading" style="display:none">
+        <div class="scan-spinner"></div>
+        <div class="scan-loading-txt">KI liest Bon aus…</div>
+      </div>
+      <div id="scan-results" class="scan-results"></div>
+      <div id="scan-actions" class="scan-action-row" style="display:none">
+        <button class="scan-all-btn" id="scan-save-all-btn" onclick="saveAllScanned()">Alle speichern ✓</button>
+        <button class="scan-new-btn" onclick="resetScan()">Neues Foto scannen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DATEN ═══ -->
+<div class="screen" id="screen-settings">
+  <div class="settings-wrap">
+    <div class="section-hdr" style="padding:4px 0 8px;"><div class="section-hdr-title">Datenverwaltung</div></div>
+    <div class="settings-card">
+      <div class="settings-row">
+        <div class="settings-row-left"><div class="settings-row-title">💾 Daten exportieren</div><div class="settings-row-sub">Alle Schichten als JSON speichern</div></div>
+        <button class="settings-btn btn-export" onclick="exportData()">Export</button>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-left"><div class="settings-row-title">📂 Daten importieren</div><div class="settings-row-sub">JSON-Backup wiederherstellen</div></div>
+        <button class="settings-btn btn-import" onclick="document.getElementById('import-file').click()">Import</button>
+      </div>
+    </div>
+    <div class="settings-card">
+      <div class="settings-row">
+        <div class="settings-row-left"><div class="settings-row-title">🤖 Cloudflare Worker</div><div class="settings-row-sub" id="set-worker-url-display">—</div></div>
+        <button class="settings-btn btn-export" onclick="promptWorkerUrl()">Ändern</button>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-left"><div class="settings-row-title">🔑 API Key</div><div class="settings-row-sub" id="set-apikey-display">—</div></div>
+        <button class="settings-btn btn-export" id="set-apikey-btn" onclick="promptApiKey()">Ändern</button>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-left"><div class="settings-row-title">📊 Einträge gesamt</div><div class="settings-row-sub" id="set-count">0 Schichten</div></div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-left"><div class="settings-row-title">🗑️ Alle Daten löschen</div><div class="settings-row-sub">Nicht rückgängig machbar</div></div>
+        <button class="settings-btn btn-danger" onclick="clearAll()">Löschen</button>
+      </div>
+    </div>
+    <div class="settings-version">ShiftTrack v0.08 · Cloudflare Worker Edition</div>
+  </div>
+</div>
+
+<!-- ═══ TABS ═══ -->
+<div class="tabs">
+  <button class="tab-btn active" id="tab-home" onclick="showScreen('home')"><div class="tab-icon">📊</div><div class="tab-label">Dashboard</div></button>
+  <button class="tab-btn" id="tab-log" onclick="showScreen('log')"><div class="tab-icon">📋</div><div class="tab-label">Verlauf</div></button>
+  <button class="tab-btn" id="tab-add" onclick="showScreen('add')"><div class="tab-icon">➕</div><div class="tab-label">Eintragen</div></button>
+  <button class="tab-btn" id="tab-scan" onclick="showScreen('scan')"><div class="tab-icon">📷</div><div class="tab-label">Bon scan</div></button>
+  <button class="tab-btn" id="tab-settings" onclick="showScreen('settings')"><div class="tab-icon">⚙️</div><div class="tab-label">Daten</div></button>
+</div>
+
+<div class="toast" id="toast"></div>
+<input type="file" id="import-file" accept=".json" onchange="importData(event)">
+
+<script>
+// ── Config ──
+// Trage hier deine Worker-URL ein, BEVOR du deployest.
+// Wird auch zur Laufzeit via localStorage überschrieben (für Updates ohne Redeployment).
+const WORKER_URL_DEFAULT = 'https://shifttrack.DEIN-ACCOUNT.workers.dev';
+
+const STORAGE_KEY = 'shifttrack_data';
+const WORKER_KEY  = 'st_worker_url';
+
+let entries = JSON.parse(
+  localStorage.getItem('shifttrack_data') ||
+  localStorage.getItem('st_v2') ||
+  localStorage.getItem('st_v001') || '[]'
+);
+localStorage.setItem('shifttrack_data', JSON.stringify(entries));
+
+let logFilter    = 'all';
+let detailsPeriod = 'month';
+let scannedItems  = [];
+
+const today = new Date();
+document.getElementById('f-datum').value = today.toISOString().split('T')[0];
+document.getElementById('topbar-date').textContent =
+  today.toLocaleDateString('de-AT',{day:'2-digit',month:'short'});
+
+const fmt  = v => '€' + (+v).toFixed(2).replace('.',',');
+const fmtS = v => '€' + Math.round(+v);
+const sum  = (arr,k) => arr.reduce((a,e)=>a+(+e[k]||0),0);
+
+function getThisMonth(){
+  const n=new Date();
+  const start=new Date(n.getFullYear(),n.getMonth(),1);
+  return entries.filter(e=>new Date(e.datum)>=start);
+}
+
+// ── Worker URL ──
+function getWorkerUrl(){
+  return (localStorage.getItem(WORKER_KEY)||'').trim() || WORKER_URL_DEFAULT;
+}
+function getApiKey(){ return localStorage.getItem('st_apikey')||''; }
+function isWorkerConfigured(){
+  const url = getWorkerUrl();
+  return url && !url.includes('DEIN-ACCOUNT') && url.startsWith('https://');
+}
+function isScanReady(){
+  return isWorkerConfigured() || !!getApiKey();
+}
+function promptWorkerUrl(){
+  const current = localStorage.getItem(WORKER_KEY) || '';
+  const val = prompt('Cloudflare Worker URL eingeben:', current || 'https://shifttrack.DEIN-ACCOUNT.workers.dev');
+  if(val === null) return;
+  const trimmed = val.trim();
+  if(!trimmed){ localStorage.removeItem(WORKER_KEY); showToast('⚠️ Worker URL entfernt'); }
+  else if(!trimmed.startsWith('https://')){ showToast('⚠️ URL muss mit https:// beginnen'); return; }
+  else { localStorage.setItem(WORKER_KEY, trimmed); showToast('✅ Worker URL gespeichert'); }
+  renderScanWorkerStatus();
+  renderSettings();
+}
+
+// ── Render Dashboard ──
+function renderHome(){
+  const monthData = getThisMonth();
+  const allData   = entries;
+  const cnt = monthData.length;
+  const n   = cnt||1;
+  const tipMonth = sum(monthData,'tip');
+  const uMonth   = sum(monthData,'umsatz');
+  const avgTip   = tipMonth/n;
+  const avgU     = uMonth/n;
+
+  document.getElementById('h-avg-tip').textContent    = fmtS(avgTip);
+  document.getElementById('h-tip-pct').textContent    = avgU>0?(avgTip/avgU*100).toFixed(1)+'% vom Ø Umsatz':'0.0% vom Ø Umsatz';
+  document.getElementById('h-shifts-lbl').textContent = cnt+(cnt===1?' Schicht':' Schichten')+' diesen Monat';
+  document.getElementById('topbar-sub').textContent   = cnt+' Schichten · Ø Tip '+fmtS(avgTip);
+  document.getElementById('s-tip-month').textContent  = fmtS(tipMonth);
+  document.getElementById('s-tip-month-count').textContent = cnt+' Schichten';
+  document.getElementById('s-shifts-total').textContent    = allData.length;
+  document.getElementById('s-shifts-sub').textContent      = 'alle Zeiten';
+  document.getElementById('chart-total-val').textContent   = fmtS(tipMonth);
+  renderDetails();
+  drawChart();
+}
+
+function setDetailsPeriod(p){
+  detailsPeriod=p;
+  document.getElementById('dtoggle-month').classList.toggle('active',p==='month');
+  document.getElementById('dtoggle-all').classList.toggle('active',p==='all');
+  renderDetails();
+}
+
+function renderDetails(){
+  const data  = detailsPeriod==='month' ? getThisMonth() : entries;
+  const uAll  = sum(data,'umsatz'), tAll=sum(data,'tip'), bAll=sum(data,'bar'), aAll=sum(data,'abgabe');
+  const drinnen  = data.filter(e=>e.station==='drinnen').length;
+  const draussen = data.filter(e=>e.station==='draussen').length;
+  const dayMap={};
+  data.forEach(e=>{dayMap[e.datum]=(dayMap[e.datum]||0)+(+e.tip||0);});
+  const bestDay=Object.entries(dayMap).sort((a,b)=>b[1]-a[1])[0];
+
+  document.getElementById('d-umsatz').textContent  = fmtS(uAll);
+  document.getElementById('d-tip').textContent     = fmtS(tAll);
+  document.getElementById('d-bar').textContent     = fmtS(bAll);
+  document.getElementById('d-abgabe').textContent  = fmtS(aAll);
+  document.getElementById('d-drinnen').textContent = drinnen+' Schichten';
+  document.getElementById('d-draussen').textContent= draussen+' Schichten';
+  document.getElementById('d-best-tip').textContent= bestDay
+    ?fmtS(bestDay[1])+' ('+new Date(bestDay[0]).toLocaleDateString('de-AT',{day:'2-digit',month:'short'})+')'
+    :'—';
+  document.getElementById('d-tip-pct').textContent = uAll>0?(tAll/uAll*100).toFixed(1)+'%':'0.0%';
+
+  if(data.length){
+    const tips=data.map(e=>+e.tip||0), umsaetze=data.map(e=>+e.umsatz||0);
+    document.getElementById('d-tip-max').textContent    = fmtS(Math.max(...tips));
+    document.getElementById('d-tip-min').textContent    = fmtS(Math.min(...tips));
+    document.getElementById('d-umsatz-max').textContent = fmtS(Math.max(...umsaetze));
+    document.getElementById('d-umsatz-min').textContent = fmtS(Math.min(...umsaetze));
+  } else {
+    ['d-tip-max','d-tip-min','d-umsatz-max','d-umsatz-min'].forEach(id=>document.getElementById(id).textContent='—');
+  }
+}
+
+function drawChart(){
+  const canvas=document.getElementById('mainChart');
+  const dpr=window.devicePixelRatio||1;
+  const rect=canvas.parentElement.getBoundingClientRect();
+  const H=rect.height||100;
+  canvas.width=rect.width*dpr; canvas.height=H*dpr;
+  canvas.style.width=rect.width+'px'; canvas.style.height=H+'px';
+  const ctx=canvas.getContext('2d'); ctx.scale(dpr,dpr);
+  const W=rect.width; ctx.clearRect(0,0,W,H);
+  const now=new Date();
+  const dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
+  const labels=[],tArr=[];
+  for(let d=1;d<=dim;d++){
+    const ds=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    labels.push(d%7===1?d:'');
+    const de=entries.filter(e=>e.datum===ds); tArr.push(sum(de,'tip'));
+  }
+  const maxVal=Math.max(...tArr,1);
+  const n=labels.length, pad={l:28,r:8,t:8,b:22};
+  const cW=W-pad.l-pad.r, cH=H-pad.t-pad.b;
+  const gap=cW/n, bw=Math.max(3,Math.min(14,gap*0.55));
+  ctx.strokeStyle='rgba(255,255,255,0.05)'; ctx.lineWidth=1;
+  for(let i=0;i<=3;i++){
+    const y=pad.t+cH-(i/3)*cH;
+    ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke();
+    if(i>0){ctx.fillStyle='rgba(255,255,255,0.2)';ctx.font='9px Figtree';ctx.textAlign='right';ctx.fillText(fmtS(maxVal*i/3),pad.l-3,y+3);}
+  }
+  tArr.forEach((val,i)=>{
+    const cx=pad.l+i*gap+gap/2;
+    const bh=Math.max(2,(val/maxVal)*cH),by=pad.t+cH-bh;
+    const g=ctx.createLinearGradient(0,by,0,by+bh);
+    g.addColorStop(0,'#a29bfedd');g.addColorStop(1,'#a29bfe22');
+    ctx.fillStyle=g;ctx.beginPath();ctx.roundRect(cx-bw/2,by,bw,bh,[3,3,0,0]);ctx.fill();
+    if(labels[i]){ctx.fillStyle='rgba(255,255,255,0.28)';ctx.font='9px Figtree';ctx.textAlign='center';ctx.fillText(labels[i],cx,H-5);}
+  });
+}
+
+// ── Screens ──
+function showScreen(name){
+  ['home','log','add','scan','settings'].forEach(s=>{
+    document.getElementById('screen-'+s).classList.toggle('active',s===name);
+    const tab=document.getElementById('tab-'+s);
+    if(tab) tab.classList.toggle('active',s===name);
+  });
+  if(name==='home')     renderHome();
+  if(name==='log')      renderLog();
+  if(name==='settings') renderSettings();
+  if(name==='scan')     renderScanWorkerStatus();
+}
+
+// ── Log ──
+function setFilter(f,btn){
+  logFilter=f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); renderLog();
+}
+
+function renderLog(){
+  let data=[...entries].reverse();
+  if(logFilter!=='all') data=data.filter(e=>e.station===logFilter);
+  document.getElementById('log-count-lbl').textContent=entries.length+' Einträge';
+  const list=document.getElementById('log-list');
+  if(!data.length){list.innerHTML='<div class="empty"><span class="empty-icon">📋</span><span class="empty-txt">Keine Einträge gefunden</span></div>';return;}
+  list.innerHTML=data.map(e=>{
+    const origIdx=entries.indexOf(e);
+    const isIn=e.station==='drinnen';
+    const dl=new Date(e.datum).toLocaleDateString('de-AT',{weekday:'short',day:'2-digit',month:'short'});
+    return `<div class="log-item">
+      <div class="log-item-icon ${isIn?'log-icon-in':'log-icon-out'}">${isIn?'🏠':'🌳'}</div>
+      <div class="log-item-body">
+        <div class="log-item-top"><span class="log-item-date">${dl}</span><span class="log-item-umsatz">${fmt(e.umsatz)}</span></div>
+        <div class="log-item-bottom">
+          <span class="log-chip chip-tip">Tip ${fmt(e.tip)}</span>
+          <span class="log-chip chip-bar">Bar ${fmt(e.bar)}</span>
+          <span class="log-chip chip-abgabe">-${fmt(e.abgabe)}</span>
+        </div>
+      </div>
+      <button class="log-item-del" onclick="deleteEntry(${origIdx})">✕</button>
+    </div>`;
+  }).join('');
+}
+
+// ── Entry ──
+// ── Live input formatter: 5000.50 → "5.000,50" ──
+function fmtInput(el){
+  const pos=el.selectionStart;
+  const raw=el.value;
+  // Allow only digits and one comma
+  let clean=raw.replace(/[^\d,]/g,'');
+  // Only one comma
+  const parts=clean.split(',');
+  if(parts.length>2) clean=parts[0]+','+parts.slice(1).join('');
+  // Limit decimal to 2 digits
+  const [intPart, decPart]=clean.split(',');
+  const intClean=intPart.replace(/^0+(?=\d)/,'') || '';
+  // Add thousand dots
+  const intFormatted=intClean.replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+  const newVal=decPart!==undefined ? intFormatted+','+(decPart.slice(0,2)) : intFormatted;
+  const diff=newVal.length-raw.length;
+  el.value=newVal;
+  // Restore cursor position
+  try{ el.setSelectionRange(pos+diff, pos+diff); }catch(e){}
+}
+
+function parseInput(id){
+  const v=(document.getElementById(id)?.value||'').replace(/\./g,'').replace(',','.');
+  return parseFloat(v)||0;
+}
+
+function updatePreview(){
+  const u=parseInput('f-umsatz');
+  const t=parseInput('f-tip');
+  document.getElementById('p-abgabe').textContent=fmt(u*0.04);
+  document.getElementById('p-tippct').textContent=u>0?(t/u*100).toFixed(1)+'%':'0.0%';
+  document.getElementById('p-netto').textContent=fmt(t);
+}
+
+function addEntry(){
+  const datum=document.getElementById('f-datum').value;
+  const station=document.getElementById('f-station').value;
+  const umsatz=parseInput('f-umsatz');
+  const bar=parseInput('f-bar');
+  const tip=parseInput('f-tip');
+  if(!datum||umsatz<=0){showToast('⚠️ Bitte Datum & Umsatz eingeben');return;}
+  entries.push({datum,station,umsatz,bar,tip,abgabe:+(umsatz*0.04).toFixed(2)});
+  save(); showToast('✅ Schicht gespeichert!', 2000);
+  document.getElementById('f-umsatz').value='';
+  document.getElementById('f-bar').value='';
+  document.getElementById('f-tip').value='';
+  document.getElementById('f-datum').value=new Date().toISOString().split('T')[0];
+  updatePreview(); showScreen('home');
+}
+
+function deleteEntry(idx){
+  const e=entries[idx];
+  const dl=new Date(e.datum).toLocaleDateString('de-AT',{weekday:'short',day:'2-digit',month:'short'});
+  if(!confirm(`Schicht vom ${dl} (Umsatz ${fmt(e.umsatz)}) wirklich löschen?`))return;
+  entries.splice(idx,1);save();renderLog();showToast('🗑️ Eintrag gelöscht', 2000);
+}
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(entries));}
+
+function exportData(){
+  const blob=new Blob([JSON.stringify(entries,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`shifttrack-backup-${new Date().toISOString().split('T')[0]}.json`;
+  a.click();URL.revokeObjectURL(url);showToast('💾 Backup gespeichert!');
+}
+
+function importData(event){
+  const file=event.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      if(!Array.isArray(data))throw new Error();
+      entries=data;save();renderHome();renderLog();renderSettings();
+      showToast('✅ '+data.length+' Einträge importiert!');
+    }catch{showToast('⚠️ Datei konnte nicht gelesen werden');}
+    event.target.value='';
+  };
+  reader.readAsText(file);
+}
+
+function clearAll(){
+  if(!confirm('Alle '+entries.length+' Einträge wirklich löschen?'))return;
+  entries=[];save();renderHome();renderLog();renderSettings();showToast('🗑️ Alle Daten gelöscht');
+}
+
+function renderSettings(){
+  document.getElementById('set-count').textContent=entries.length+' Schichten gespeichert';
+  const url=localStorage.getItem(WORKER_KEY)||'—';
+  const el=document.getElementById('set-worker-url-display');
+  if(el) el.textContent=url.length>40?url.slice(0,40)+'…':url;
+
+  const apiKey=localStorage.getItem('st_apikey')||'';
+  const keyEl=document.getElementById('set-apikey-display');
+  const keyBtn=document.getElementById('set-apikey-btn');
+  if(keyEl){
+    if(apiKey){
+      keyEl.textContent='sk-ant-…'+apiKey.slice(-6)+' (Fallback aktiv)';
+      keyEl.style.color='var(--green-b)';
+      if(keyBtn) keyBtn.textContent='Entfernen';
+    } else {
+      keyEl.textContent='Nicht gesetzt — Worker wird verwendet';
+      keyEl.style.color='';
+      if(keyBtn) keyBtn.textContent='Setzen';
+    }
+  }
+}
+
+function promptApiKey(){
+  const current=localStorage.getItem('st_apikey')||'';
+  if(current){
+    if(confirm('API Key entfernen?')){
+      localStorage.removeItem('st_apikey');
+      renderSettings();
+      renderScanWorkerStatus();
+      showToast('🗑️ Key entfernt');
+    }
+    return;
+  }
+  const val=prompt('Anthropic API Key (sk-ant-…):','');
+  if(!val) return;
+  const trimmed=val.trim();
+  if(!trimmed.startsWith('sk-')){showToast('⚠️ Key beginnt mit sk-ant-…');return;}
+  localStorage.setItem('st_apikey',trimmed);
+  renderSettings();
+  renderScanWorkerStatus();
+  showToast('✅ Key gespeichert');
+}
+
+// ── Scan Worker Status ──
+function renderScanWorkerStatus(){
+  const statusEl = document.getElementById('scan-worker-status');
+  const uploadEl = document.getElementById('scan-upload-area');
+
+  if(isWorkerConfigured()){
+    const url=getWorkerUrl();
+    const short=url.replace('https://','').replace(/\/.*$/,'');
+    statusEl.innerHTML=`
+      <div class="worker-banner ok">
+        <div class="worker-banner-icon">⚡</div>
+        <div class="worker-banner-body">
+          <div>Worker aktiv — kein API Key nötig</div>
+          <div class="worker-banner-sub">${short}</div>
+        </div>
+      </div>`;
+    uploadEl.style.display='flex';
+  } else if(getApiKey()){
+    statusEl.innerHTML=`
+      <div class="worker-banner warn">
+        <div class="worker-banner-icon">🔑</div>
+        <div class="worker-banner-body">
+          <div>Direktmodus — eigener API Key</div>
+          <div class="worker-banner-sub">Worker empfohlen · Key unter Daten verwalten</div>
+        </div>
+      </div>`;
+    uploadEl.style.display='flex';
+  } else {
+    statusEl.innerHTML=`
+      <div class="worker-banner warn">
+        <div class="worker-banner-icon">⚙️</div>
+        <div class="worker-banner-body">
+          <div>Worker noch nicht konfiguriert</div>
+          <div class="worker-banner-sub">URL unter Daten → Worker eintragen</div>
+        </div>
+      </div>
+      <div class="worker-config-card">
+        <div class="worker-config-title">🔗 Worker URL eintragen</div>
+        <div class="worker-config-sub">Deine Cloudflare Worker URL — einmalig eintragen, für alle Geräte.</div>
+        <input class="worker-url-input" type="url" id="worker-url-field"
+          placeholder="https://shifttrack.DEIN-ACCOUNT.workers.dev"
+          autocomplete="off" autocorrect="off" spellcheck="false">
+        <button class="worker-save-btn" onclick="doSaveWorkerUrl()">Worker speichern & loslegen ✓</button>
+      </div>`;
+    uploadEl.style.display='none';
+  }
+}
+
+function doSaveWorkerUrl(){
+  const val=(document.getElementById('worker-url-field')?.value||'').trim();
+  if(!val||!val.startsWith('https://')){showToast('⚠️ URL muss mit https:// beginnen');return;}
+  localStorage.setItem(WORKER_KEY,val);
+  renderScanWorkerStatus();
+  renderSettings();
+  showToast('✅ Worker URL gespeichert!');
+}
+
+// ── Image compression (keeps under Anthropic 5 MB base64 limit) ──
+function compressImage(dataUrl){
+  return new Promise(resolve=>{
+    const img=new Image();
+    img.onload=()=>{
+      const MAX_BYTES=4.5*1024*1024; // 4.5 MB base64 target
+      let w=img.width, h=img.height;
+      // Scale down if very large
+      const MAX_DIM=2048;
+      if(w>MAX_DIM||h>MAX_DIM){
+        const ratio=Math.min(MAX_DIM/w,MAX_DIM/h);
+        w=Math.round(w*ratio); h=Math.round(h*ratio);
+      }
+      const canvas=document.createElement('canvas');
+      canvas.width=w; canvas.height=h;
+      const ctx=canvas.getContext('2d');
+      ctx.drawImage(img,0,0,w,h);
+      // Try quality 0.85 first, then reduce until under limit
+      let quality=0.85;
+      const attempt=(q)=>{
+        const result=canvas.toDataURL('image/jpeg',q);
+        const b64=result.split(',')[1];
+        if(b64.length<=MAX_BYTES||q<=0.3){
+          resolve({base64:b64, mimeType:'image/jpeg'});
+        } else {
+          attempt(Math.max(q-0.15,0.3));
+        }
+      };
+      attempt(quality);
+    };
+    img.src=dataUrl;
+  });
+}
+
+// ── Image Quality Check ──
+function analyzeImageQuality(dataUrl){
+  return new Promise(resolve=>{
+    const img=new Image();
+    img.onload=()=>{
+      const w=img.width, h=img.height;
+      const canvas=document.createElement('canvas');
+      // Sample at reduced size for performance
+      const sw=Math.min(w,320), sh=Math.round(h*(sw/w));
+      canvas.width=sw; canvas.height=sh;
+      const ctx=canvas.getContext('2d');
+      ctx.drawImage(img,0,0,sw,sh);
+
+      const imgData=ctx.getImageData(0,0,sw,sh).data;
+      let rSum=0,gSum=0,bSum=0,varSum=0;
+      const px=imgData.length/4;
+      const grays=[];
+
+      for(let i=0;i<imgData.length;i+=4){
+        const r=imgData[i],g=imgData[i+1],b=imgData[i+2];
+        rSum+=r; gSum+=g; bSum+=b;
+        grays.push(0.299*r+0.587*g+0.114*b);
+      }
+
+      const avgBrightness=(rSum+gSum+bSum)/(px*3);
+      // Sharpness via variance of grayscale
+      const mean=grays.reduce((a,v)=>a+v,0)/grays.length;
+      grays.forEach(v=>varSum+=(v-mean)**2);
+      const sharpness=varSum/grays.length;
+
+      // Aspect ratio check: receipt is tall (height >> width)
+      const aspect=h/w;
+
+      const issues=[];
+      const tips=[];
+
+      if(avgBrightness<60){
+        issues.push({icon:'🌑',label:'Zu dunkel',severe:true});
+        tips.push('Mehr Licht — Zimmerbeleuchtung einschalten oder ans Fenster gehen');
+      } else if(avgBrightness<100){
+        issues.push({icon:'🌘',label:'Etwas dunkel',severe:false});
+        tips.push('Heller wäre besser — Taschenlampe des Handys anmachen');
+      }
+
+      if(w<600||h<600){
+        issues.push({icon:'🔍',label:'Zu niedrige Auflösung',severe:true});
+        tips.push('Näher an den Bon herangehen oder höhere Auflösung verwenden');
+      } else if(w<900||h<900){
+        issues.push({icon:'🔎',label:'Auflösung knapp',severe:false});
+        tips.push('Etwas näher herangehen für bessere Ergebnisse');
+      }
+
+      if(sharpness<120){
+        issues.push({icon:'💫',label:'Unscharf / verwackelt',severe:true});
+        tips.push('Handy auf dem Tisch abstützen und warten bis die Kamera fokussiert hat');
+      } else if(sharpness<300){
+        issues.push({icon:'🫧',label:'Leicht unscharf',severe:false});
+        tips.push('Ruhiger halten und auf den Text fokussieren lassen');
+      }
+
+      if(aspect<1.5){
+        issues.push({icon:'📐',label:'Bon zu breit / abgeschnitten',severe:false});
+        tips.push('Bon hochkant fotografieren, damit der ganze Text sichtbar ist');
+      }
+
+      resolve({w,h,avgBrightness,sharpness,aspect,issues,tips,hasSevere:issues.some(i=>i.severe)});
+    };
+    img.src=dataUrl;
+  });
+}
+
+function showQualityWarning(quality, onProceed, onRetry){
+  // Remove any existing overlay
+  document.getElementById('quality-overlay')?.remove();
+
+  const severeIssues=quality.issues.filter(i=>i.severe);
+  const minorIssues=quality.issues.filter(i=>!i.severe);
+
+  const overlay=document.createElement('div');
+  overlay.id='quality-overlay';
+  overlay.style.cssText=`
+    position:fixed;inset:0;z-index:200;
+    background:rgba(8,8,14,0.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+    display:flex;align-items:flex-end;justify-content:center;
+    padding:0 0 calc(var(--tabh) + var(--sab) + 16px);
+  `;
+
+  const card=document.createElement('div');
+  card.style.cssText=`
+    background:var(--surface);border:1px solid var(--border2);border-radius:24px 24px 20px 20px;
+    padding:22px 20px 20px;width:100%;max-width:480px;display:flex;flex-direction:column;gap:14px;
+  `;
+
+  const header=quality.hasSevere
+    ? `<div style="display:flex;align-items:center;gap:10px">
+        <div style="font-size:28px">⚠️</div>
+        <div>
+          <div style="font-size:16px;font-weight:800;color:var(--red)">Foto-Qualität mangelhaft</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:2px">KI könnte den Bon nicht richtig lesen</div>
+        </div>
+       </div>`
+    : `<div style="display:flex;align-items:center;gap:10px">
+        <div style="font-size:28px">💡</div>
+        <div>
+          <div style="font-size:16px;font-weight:800;color:var(--yellow)">Qualität könnte besser sein</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:2px">Ergebnis evtl. ungenau</div>
+        </div>
+       </div>`;
+
+  const issueList=quality.issues.map(i=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;
+      border-radius:10px;background:${i.severe?'rgba(255,71,87,.1)':'rgba(255,211,42,.07)'};
+      border:1px solid ${i.severe?'rgba(255,71,87,.2)':'rgba(255,211,42,.15)'}">
+      <span style="font-size:18px">${i.icon}</span>
+      <span style="font-size:13px;font-weight:700;color:${i.severe?'var(--red)':'var(--yellow)'}">${i.label}</span>
+    </div>`).join('');
+
+  const tipList=quality.tips.map(t=>`
+    <div style="display:flex;gap:8px;align-items:flex-start">
+      <span style="color:var(--accent-l);font-size:13px;flex-shrink:0;margin-top:1px">→</span>
+      <span style="font-size:13px;color:var(--text2);line-height:1.5">${t}</span>
+    </div>`).join('');
+
+  const statsBar=`
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;text-align:center">
+      <div style="background:var(--surface2);border-radius:10px;padding:8px 4px">
+        <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;font-weight:700">Helligkeit</div>
+        <div style="font-size:15px;font-weight:800;font-family:'DM Mono',monospace;color:${quality.avgBrightness<80?'var(--red)':quality.avgBrightness<110?'var(--yellow)':'var(--green-b)'}">${Math.round(quality.avgBrightness)}</div>
+      </div>
+      <div style="background:var(--surface2);border-radius:10px;padding:8px 4px">
+        <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;font-weight:700">Schärfe</div>
+        <div style="font-size:15px;font-weight:800;font-family:'DM Mono',monospace;color:${quality.sharpness<150?'var(--red)':quality.sharpness<350?'var(--yellow)':'var(--green-b)'}">${Math.round(quality.sharpness)}</div>
+      </div>
+      <div style="background:var(--surface2);border-radius:10px;padding:8px 4px">
+        <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;font-weight:700">Auflösung</div>
+        <div style="font-size:15px;font-weight:800;font-family:'DM Mono',monospace;color:${(quality.w<600||quality.h<600)?'var(--red)':'var(--green-b)'}">${quality.w}×${quality.h}</div>
+      </div>
+    </div>`;
+
+  card.innerHTML=`
+    ${header}
+    <div style="display:flex;flex-direction:column;gap:6px">${issueList}</div>
+    ${statsBar}
+    <div style="display:flex;flex-direction:column;gap:6px;padding:4px 0">${tipList}</div>
+    <div style="display:flex;gap:8px">
+      <button id="qw-retry" style="flex:1;padding:13px;border-radius:13px;background:var(--accent);border:none;color:#fff;font-family:'Figtree',sans-serif;font-size:15px;font-weight:800;cursor:pointer">
+        📷 Neu fotografieren
+      </button>
+      <button id="qw-proceed" style="flex:1;padding:13px;border-radius:13px;background:var(--surface2);border:1px solid var(--border2);color:var(--text2);font-family:'Figtree',sans-serif;font-size:13px;font-weight:700;cursor:pointer">
+        Trotzdem scannen
+      </button>
+    </div>`;
+
+  overlay.appendChild(card);
+  document.body.appendChild(overlay);
+
+  document.getElementById('qw-retry').onclick=()=>{overlay.remove();onRetry();};
+  document.getElementById('qw-proceed').onclick=()=>{overlay.remove();onProceed();};
+  // Tap backdrop to dismiss
+  overlay.onclick=(ev)=>{if(ev.target===overlay){overlay.remove();onRetry();}};
+}
+// ── Decimal normalizer ──
+function normalizeDecimals(text){
+  // Fix German/Austrian decimal: 1.281,80 → 1281.80
+  return text.replace(/(\d{1,3}(?:\.\d{3})+),(\d{2})/g, (m,int,dec)=>int.replace(/\./g,'')+'.'+dec)
+             .replace(/(\d+),(\d{2})(?!\d)/g,'$1.$2');
+}
+
+async function handleScanUpload(event){
+  const file=event.target.files[0];if(!file)return;
+  if(!isScanReady()){showToast('⚠️ Kein Worker / API Key konfiguriert');return;}
+
+  const reader=new FileReader();
+  reader.onload=async(e)=>{
+    const dataUrl=e.target.result;
+
+    // ── Quality check ──
+    const quality=await analyzeImageQuality(dataUrl);
+    if(quality.issues.length>0){
+      showQualityWarning(
+        quality,
+        ()=>doScan(dataUrl,file.type),   // proceed anyway
+        ()=>document.getElementById('scan-file').click()  // retry
+      );
+      return;
+    }
+
+    doScan(dataUrl,file.type);
+  };
+  reader.readAsDataURL(file);
+  event.target.value='';
+}
+
+async function doScan(dataUrl, originalMimeType){
+  // Compress image
+  const {base64, mimeType} = await compressImage(dataUrl);
+
+  document.getElementById('scan-img-preview').src=dataUrl;
+  document.getElementById('scan-img-preview').style.display='block';
+  document.getElementById('scan-dropzone').style.display='none';
+  document.getElementById('scan-loading').style.display='flex';
+  document.getElementById('scan-results').innerHTML='';
+  document.getElementById('scan-actions').style.display='none';
+  document.getElementById('scan-save-all-btn').style.display='block';
+  scannedItems=[];
+
+  const controller=new AbortController();
+  const timeout=setTimeout(()=>controller.abort(),35000);
+
+  const payload={
+    model:'claude-sonnet-4-20250514',
+    max_tokens:1000,
+    messages:[{role:'user',content:[
+      {type:'image',source:{type:'base64',media_type:mimeType,data:base64}},
+      {type:'text',text:`Du siehst eine Kellner-Z-Abrechnung. Extrahiere die Werte und antworte NUR mit einem JSON-Array:\n[\n  {"datum":"YYYY-MM-DD","umsatz":1234.56,"bar":567.89,"tip":120.00}\n]\nRegeln:\n- datum: Datum des Bons im Format YYYY-MM-DD, Jahr ${new Date().getFullYear()} falls nicht sichtbar\n- umsatz: Wert bei "Brutto Gesamt"\n- bar: Zeile "15x Bar" Betrag (NICHT die TIP-Zeile aus Detail Bar)\n- tip: handschriftliche Zahl oben auf dem Bon (z.B. "Tip 290"), sonst 0\n- Alle Zahlen als Dezimalzahl mit Punkt (nicht Komma)\n- Nur Zahlen, kein Text, kein Währungszeichen`}
+    ]}]
+  };
+
+  try{
+    let response;
+    if(isWorkerConfigured()){
+      response=await fetch(getWorkerUrl(),{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(payload),
+        signal:controller.signal
+      });
+    } else {
+      response=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'x-api-key':getApiKey(),
+          'anthropic-version':'2023-06-01',
+          'anthropic-dangerous-direct-browser-access':'true'
+        },
+        body:JSON.stringify(payload),
+        signal:controller.signal
+      });
+    }
+
+    clearTimeout(timeout);
+
+    if(!response.ok){
+      const err=await response.json().catch(()=>({}));
+      throw new Error(err?.error?.message||err?.error||'HTTP '+response.status);
+    }
+    const data=await response.json();
+    const raw=data.content.find(b=>b.type==='text')?.text||'[]';
+    const normalized=normalizeDecimals(raw.replace(/```json|```/g,'').trim());
+    scannedItems=JSON.parse(normalized);
+    renderScanResults();
+  }catch(err){
+    clearTimeout(timeout);
+    document.getElementById('scan-loading').style.display='none';
+    const msg=err.name==='AbortError'?'Timeout — bitte erneut versuchen':err.message||'Fehler beim Lesen';
+    document.getElementById('scan-results').innerHTML=`<div class="empty"><span class="empty-icon">⚠️</span><span class="empty-txt">${msg}</span></div>`;
+    document.getElementById('scan-save-all-btn').style.display='none';
+    document.getElementById('scan-actions').style.display='flex';
+  }
+}
+
+function renderScanResults(){
+  document.getElementById('scan-loading').style.display='none';
+  const container=document.getElementById('scan-results');
+  if(!scannedItems.length){
+    container.innerHTML='<div class="empty"><span class="empty-icon">🤔</span><span class="empty-txt">Keine Daten erkannt — klareres Foto versuchen.</span></div>';
+    document.getElementById('scan-save-all-btn').style.display='none';
+    document.getElementById('scan-actions').style.display='flex';
+    return;
+  }
+  container.innerHTML=scannedItems.map((item,i)=>`
+    <div class="scan-result-card" id="scan-card-${i}">
+      <div class="scan-result-header">
+        <div class="scan-result-date">Bon ${i+1}</div>
+        <button class="scan-result-confirm" onclick="saveSingleScanned(${i})" id="scan-btn-${i}">Speichern</button>
+      </div>
+      <div class="scan-result-grid">
+        <div class="scan-result-field" style="grid-column:1/-1"><div class="scan-result-label">Datum</div><input class="scan-result-input" type="date" id="sc-datum-${i}" value="${item.datum||new Date().toISOString().split('T')[0]}"></div>
+        <div class="scan-result-field" style="grid-column:1/-1"><div class="scan-result-label">Station</div><select class="scan-result-select" id="sc-station-${i}"><option value="drinnen">🏠 Drinnen</option><option value="draussen">🌳 Draußen</option></select></div>
+        <div class="scan-result-field"><div class="scan-result-label">Umsatz (€)</div><input class="scan-result-input" type="number" id="sc-umsatz-${i}" value="${item.umsatz||''}" step="0.01" inputmode="decimal"></div>
+        <div class="scan-result-field"><div class="scan-result-label">Bar (€)</div><input class="scan-result-input" type="number" id="sc-bar-${i}" value="${item.bar||''}" step="0.01" inputmode="decimal"></div>
+        <div class="scan-result-field" style="grid-column:1/-1"><div class="scan-result-label">Trinkgeld (€)</div><input class="scan-result-input" type="number" id="sc-tip-${i}" value="${item.tip||''}" step="0.01" inputmode="decimal"></div>
+      </div>
+    </div>`).join('');
+  document.getElementById('scan-save-all-btn').style.display='block';
+  document.getElementById('scan-actions').style.display='flex';
+}
+
+function saveSingleScanned(i){
+  const datum=document.getElementById(`sc-datum-${i}`).value;
+  const station=document.getElementById(`sc-station-${i}`).value;
+  const umsatz=+document.getElementById(`sc-umsatz-${i}`).value||0;
+  const bar=+document.getElementById(`sc-bar-${i}`).value||0;
+  const tip=+document.getElementById(`sc-tip-${i}`).value||0;
+  if(!datum||umsatz<=0){showToast('⚠️ Umsatz fehlt');return;}
+  entries.push({datum,station,umsatz,bar,tip,abgabe:+(umsatz*0.04).toFixed(2)});
+  save();
+  const btn=document.getElementById(`scan-btn-${i}`);
+  btn.textContent='✓ Gespeichert';btn.classList.add('saved');
+  showToast('✅ Bon gespeichert!');
+}
+
+function saveAllScanned(){
+  let count=0;
+  scannedItems.forEach((_,i)=>{
+    const btn=document.getElementById(`scan-btn-${i}`);
+    if(btn&&!btn.classList.contains('saved')){saveSingleScanned(i);count++;}
+  });
+  if(count>0) showToast(`✅ ${count} Bons gespeichert!`);
+}
+
+function resetScan(){
+  scannedItems=[];
+  document.getElementById('scan-dropzone').style.display='flex';
+  document.getElementById('scan-img-preview').style.display='none';
+  document.getElementById('scan-results').innerHTML='';
+  document.getElementById('scan-actions').style.display='none';
+  document.getElementById('scan-loading').style.display='none';
+}
+
+let _toastTimer=null;
+function showToast(msg, duration=2000){
+  const t=document.getElementById('toast');
+  if(_toastTimer){clearTimeout(_toastTimer);t.classList.remove('show');}
+  t.textContent=msg;
+  // Small delay so remove+add transition plays correctly
+  requestAnimationFrame(()=>{
+    t.classList.add('show');
+    _toastTimer=setTimeout(()=>{t.classList.remove('show');_toastTimer=null;},duration);
+  });
+}
+
+window.addEventListener('resize',()=>{
+  if(document.getElementById('screen-home').classList.contains('active')) drawChart();
+});
+
+renderHome();
+renderLog();
+renderSettings();
+renderScanWorkerStatus();
+</script>
+</body>
+</html>.screen.active{opacity:1;transform:translateY(0);pointer-events:all;}
 
 .tabs{position:fixed;bottom:0;left:0;right:0;z-index:60;height:calc(var(--tabh) + var(--sab));padding-bottom:var(--sab);padding-left:var(--sal);padding-right:var(--sar);background:rgba(8,8,14,0.96);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border-top:1px solid var(--border);display:flex;align-items:flex-start;padding-top:6px;}
 .tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;color:var(--text3);transition:color .2s;padding:0 2px;}
