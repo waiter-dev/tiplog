@@ -1133,13 +1133,12 @@ function resetScan(){
 let _toastTimer=null;
 function showToast(msg, duration=2000){
   const t=document.getElementById('toast');
-  if(_toastTimer){clearTimeout(_toastTimer);t.classList.remove('show');}
+  if(_toastTimer){clearTimeout(_toastTimer);_toastTimer=null;}
+  t.classList.remove('show');
   t.textContent=msg;
-  // Small delay so remove+add transition plays correctly
-  requestAnimationFrame(()=>{
-    t.classList.add('show');
-    _toastTimer=setTimeout(()=>{t.classList.remove('show');_toastTimer=null;},duration);
-  });
+  void t.offsetWidth; // Reflow → Transition sauber neu starten
+  t.classList.add('show');
+  _toastTimer=setTimeout(()=>{t.classList.remove('show');_toastTimer=null;},duration);
 }
 
 window.addEventListener('resize',()=>{
