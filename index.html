@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="ShiftTrack">
-<title>ShiftTrack v0.08</title>
+<title>ShiftTrack v0.10</title>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -210,7 +210,7 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 <div class="topbar">
   <div>
     <div class="topbar-title">ShiftTrack 🍽️</div>
-    <div class="topbar-sub" id="topbar-sub">v0.08 · Bereit</div>
+    <div class="topbar-sub" id="topbar-sub">v0.10 · Bereit</div>
   </div>
   <div class="topbar-date" id="topbar-date"></div>
 </div>
@@ -324,7 +324,7 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
         <div class="scan-upload-sub">Foto der Kellner-Z-Abrechnung — Werte werden automatisch ausgelesen</div>
       </div>
       <input type="file" id="scan-file" accept="image/*" onchange="handleScanUpload(event)">
-      <img id="scan-img-preview" class="scan-preview-img" style="display:none">
+      <img id="scan-img-preview" class="scan-preview-img" style="display:none;cursor:zoom-in;" onclick="showImgFullscreen(this.src)">
       <div id="scan-loading" class="scan-loading" style="display:none">
         <div class="scan-spinner"></div>
         <div class="scan-loading-txt">KI liest Bon aus…</div>
@@ -371,7 +371,7 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
         <button class="settings-btn btn-danger" onclick="clearAll()">Löschen</button>
       </div>
     </div>
-    <div class="settings-version">ShiftTrack v0.08 · Cloudflare Worker Edition</div>
+    <div class="settings-version">ShiftTrack v0.10 · Cloudflare Worker Edition</div>
   </div>
 </div>
 
@@ -1050,7 +1050,7 @@ function renderScanResults(){
       </div>
       <div class="scan-result-grid">
         <div class="scan-result-field" style="grid-column:1/-1"><div class="scan-result-label">Datum</div><input class="scan-result-input" type="date" id="sc-datum-${i}" value="${item.datum||new Date().toISOString().split('T')[0]}"></div>
-        <div class="scan-result-field" style="grid-column:1/-1"><div class="scan-result-label">Station</div><select class="scan-result-select" id="sc-station-${i}"><option value="drinnen">🏠 Drinnen</option><option value="draussen">🌳 Draußen</option></select></div>
+        <div class="scan-result-field" style="grid-column:1/-1"><div class="scan-result-label">Station</div><select class="scan-result-select" id="sc-station-${i}" required><option value="" disabled selected>⚠️ Bitte auswählen</option><option value="drinnen">🏠 Drinnen</option><option value="draussen">🌳 Draußen</option></select></div>
         <div class="scan-result-field"><div class="scan-result-label">Umsatz (€)</div><input class="scan-result-input" type="number" id="sc-umsatz-${i}" value="${item.umsatz||''}" step="0.01" inputmode="decimal"></div>
         <div class="scan-result-field"><div class="scan-result-label">Bar (€)</div><input class="scan-result-input" type="number" id="sc-bar-${i}" value="${item.bar||''}" step="0.01" inputmode="decimal"></div>
         <div class="scan-result-field" style="grid-column:1/-1"><div class="scan-result-label">Trinkgeld (€)</div><input class="scan-result-input" type="number" id="sc-tip-${i}" value="${item.tip||''}" step="0.01" inputmode="decimal"></div>
@@ -1121,6 +1121,60 @@ function showToast(msg, duration=2000){
 window.addEventListener('resize',()=>{
   if(document.getElementById('screen-home').classList.contains('active')) drawChart();
 });
+
+// ── Foto Vollbild ──
+function showImgFullscreen(src){
+  const overlay=document.createElement('div');
+  overlay.style.cssText=`position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.92);display:flex;align-items:center;justify-content:center;padding:20px;`;
+  const img=document.createElement('img');
+  img.src=src;
+  img.style.cssText=`max-width:100%;max-height:100%;border-radius:12px;object-fit:contain;`;
+  overlay.appendChild(img);
+  overlay.onclick=()=>overlay.remove();
+  document.body.appendChild(overlay);
+}
+
+// ── Pull-to-Refresh ──
+(function(){
+  let startY=0, pulling=false;
+  const threshold=80;
+  let indicator=null;
+
+  function getIndicator(){
+    if(!indicator){
+      indicator=document.createElement('div');
+      indicator.style.cssText=`position:fixed;top:calc(var(--sat) + var(--topbh));left:50%;transform:translateX(-50%);z-index:200;background:var(--surface3);border:1px solid var(--border2);border-radius:20px;padding:7px 18px;font-size:13px;font-weight:700;color:var(--text2);opacity:0;transition:opacity .2s;pointer-events:none;`;
+      indicator.textContent='↓ Zum Aktualisieren ziehen';
+      document.body.appendChild(indicator);
+    }
+    return indicator;
+  }
+
+  document.addEventListener('touchstart',e=>{
+    const screen=document.querySelector('.screen.active');
+    if(screen&&screen.scrollTop===0) startY=e.touches[0].clientY;
+    else startY=0;
+  },{passive:true});
+
+  document.addEventListener('touchmove',e=>{
+    if(!startY) return;
+    const dy=e.touches[0].clientY-startY;
+    if(dy>10){
+      pulling=true;
+      const ind=getIndicator();
+      ind.style.opacity='1';
+      ind.textContent=dy>threshold?'↑ Loslassen zum Aktualisieren':'↓ Zum Aktualisieren ziehen';
+    }
+  },{passive:true});
+
+  document.addEventListener('touchend',e=>{
+    if(!pulling){startY=0;return;}
+    const dy=e.changedTouches[0].clientY-startY;
+    if(indicator) indicator.style.opacity='0';
+    pulling=false; startY=0;
+    if(dy>threshold) window.location.reload(true);
+  },{passive:true});
+})();
 
 renderHome();
 renderLog();
