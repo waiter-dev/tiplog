@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="ShiftTrack">
-<title>ShiftTrack v0.10</title>
+<title>ShiftTrack v0.11</title>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -108,8 +108,16 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 .chip-tip{background:rgba(162,155,254,.12);color:var(--accent-l);}
 .chip-bar{background:rgba(255,211,42,.1);color:var(--yellow);}
 .chip-abgabe{background:rgba(255,71,87,.1);color:var(--red);}
-.log-item-del{width:30px;height:30px;border-radius:9px;border:none;background:rgba(255,71,87,.1);color:var(--red);font-size:13px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background .2s;}
-.log-item-del:active{background:rgba(255,71,87,.25);}
+
+/* v0.11 — Drei-Punkte-Menü */
+.log-item-menu{width:30px;height:30px;border-radius:9px;border:none;background:rgba(255,255,255,.07);color:var(--text2);font-size:20px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background .2s;line-height:1;letter-spacing:1px;padding-bottom:4px;}
+.log-item-menu:active{background:rgba(255,255,255,.18);}
+.entry-menu-overlay{position:fixed;inset:0;z-index:150;}
+.entry-menu-popup{position:fixed;z-index:151;background:var(--surface3);border:1px solid var(--border2);border-radius:16px;overflow:hidden;min-width:180px;box-shadow:0 10px 40px rgba(0,0,0,.6);}
+.entry-menu-item{display:flex;align-items:center;gap:11px;padding:15px 18px;font-size:14px;font-weight:700;cursor:pointer;transition:background .15s;color:var(--text);}
+.entry-menu-item:active{background:rgba(255,255,255,.08);}
+.entry-menu-item+.entry-menu-item{border-top:1px solid var(--border);}
+.entry-menu-item.danger{color:var(--red);}
 
 .filter-row{display:flex;gap:7px;padding:8px 16px 5px;}
 .filter-btn{flex:1;padding:7px 4px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text2);font-family:'Figtree',sans-serif;font-size:clamp(10px,3vw,12px);font-weight:700;cursor:pointer;transition:all .2s;}
@@ -198,7 +206,6 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 .scan-new-btn{width:100%;padding:12px;border-radius:13px;background:rgba(162,155,254,.1);color:var(--accent-l);border:1px solid rgba(162,155,254,.2);font-family:'Figtree',sans-serif;font-size:clamp(13px,4vw,15px);font-weight:800;cursor:pointer;}
 .scan-all-btn{width:100%;padding:clamp(12px,3.5vw,14px);border-radius:13px;border:none;background:var(--accent);color:#fff;font-family:'Figtree',sans-serif;font-size:clamp(13px,4vw,15px);font-weight:800;cursor:pointer;box-shadow:0 4px 18px rgba(108,92,231,.3);}
 
-/* TOAST FIX: opacity added */
 .toast{position:fixed;bottom:calc(var(--tabh) + var(--sab) + 12px);left:50%;transform:translateX(-50%) translateY(60px);opacity:0;background:var(--surface3);border:1px solid var(--border2);border-radius:14px;padding:10px 18px;font-size:clamp(12px,3.5vw,14px);font-weight:600;z-index:100;transition:transform .3s cubic-bezier(.34,1.56,.64,1),opacity .25s ease;white-space:nowrap;pointer-events:none;}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
 
@@ -210,7 +217,7 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 <div class="topbar">
   <div>
     <div class="topbar-title">ShiftTrack 🍽️</div>
-    <div class="topbar-sub" id="topbar-sub">v0.10 · Bereit</div>
+    <div class="topbar-sub" id="topbar-sub">v0.11 · Bereit</div>
   </div>
   <div class="topbar-date" id="topbar-date"></div>
 </div>
@@ -371,7 +378,7 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
         <button class="settings-btn btn-danger" onclick="clearAll()">Löschen</button>
       </div>
     </div>
-    <div class="settings-version">ShiftTrack v0.10 · Cloudflare Worker Edition</div>
+    <div class="settings-version">ShiftTrack v0.11 · Cloudflare Worker Edition</div>
   </div>
 </div>
 
@@ -410,7 +417,8 @@ document.getElementById('topbar-date').textContent =
   today.toLocaleDateString('de-AT',{day:'2-digit',month:'short'});
 
 const fmt  = v => '€' + (+v).toFixed(2).replace('.',',');
-const fmtS = v => '€' + Math.round(+v);
+// v0.11: Tausender-Trennpunkt mit de-AT Locale (z.B. 20.000)
+const fmtS = v => '€' + Math.round(+v).toLocaleString('de-AT');
 const sum  = (arr,k) => arr.reduce((a,e)=>a+(+e[k]||0),0);
 
 function getThisMonth(){
@@ -578,9 +586,112 @@ function renderLog(){
           <span class="log-chip chip-abgabe">-${fmt(e.abgabe)}</span>
         </div>
       </div>
-      <button class="log-item-del" onclick="deleteEntry(${origIdx})">✕</button>
+      <button class="log-item-menu" onclick="showEntryMenu(event,${origIdx})">⋮</button>
     </div>`;
   }).join('');
+}
+
+/* ── v0.11: Drei-Punkte-Menü ── */
+function showEntryMenu(event, idx){
+  event.stopPropagation();
+  document.getElementById('entry-menu-overlay')?.remove();
+
+  const overlay=document.createElement('div');
+  overlay.id='entry-menu-overlay';
+  overlay.className='entry-menu-overlay';
+  overlay.onclick=()=>overlay.remove();
+
+  const popup=document.createElement('div');
+  popup.className='entry-menu-popup';
+
+  const btn=event.currentTarget;
+  const rect=btn.getBoundingClientRect();
+  const rightOffset=window.innerWidth-rect.right;
+  popup.style.right=rightOffset+'px';
+  popup.style.top=(rect.bottom+8)+'px';
+
+  popup.innerHTML=`
+    <div class="entry-menu-item" onclick="editEntry(${idx});document.getElementById('entry-menu-overlay')?.remove()">
+      <span>✏️</span> Bearbeiten
+    </div>
+    <div class="entry-menu-item danger" onclick="deleteEntryFromMenu(${idx})">
+      <span>🗑️</span> Löschen
+    </div>`;
+
+  overlay.appendChild(popup);
+  document.body.appendChild(overlay);
+}
+
+function deleteEntryFromMenu(idx){
+  document.getElementById('entry-menu-overlay')?.remove();
+  deleteEntry(idx);
+}
+
+function editEntry(idx){
+  const e=entries[idx];
+  document.getElementById('edit-modal-overlay')?.remove();
+
+  const toVal=v=>(+v||0).toFixed(2).replace('.',',');
+
+  const overlay=document.createElement('div');
+  overlay.id='edit-modal-overlay';
+  overlay.style.cssText=`position:fixed;inset:0;z-index:200;background:rgba(8,8,14,0.88);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);display:flex;align-items:flex-end;justify-content:center;`;
+  overlay.onclick=ev=>{if(ev.target===overlay)overlay.remove();};
+
+  overlay.innerHTML=`
+    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:24px 24px 0 0;padding:22px 20px calc(24px + var(--sab));width:100%;max-width:480px;display:flex;flex-direction:column;gap:13px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div style="font-size:16px;font-weight:800;">✏️ Eintrag bearbeiten</div>
+        <button onclick="document.getElementById('edit-modal-overlay').remove()" style="background:rgba(255,255,255,.07);border:none;border-radius:10px;width:32px;height:32px;color:var(--text2);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <label style="font-size:10px;color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:.6px;">Datum</label>
+          <input class="form-input" type="date" id="edit-datum" value="${e.datum}" style="padding:11px 12px;font-size:14px;">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <label style="font-size:10px;color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:.6px;">Station</label>
+          <select class="form-select" id="edit-station" style="padding:11px 12px;font-size:13px;">
+            <option value="drinnen" ${e.station==='drinnen'?'selected':''}>🏠 Drinnen</option>
+            <option value="draussen" ${e.station==='draussen'?'selected':''}>🌳 Draußen</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:5px;">
+        <label style="font-size:10px;color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:.6px;">Umsatz (€)</label>
+        <input class="form-input" type="text" id="edit-umsatz" value="${toVal(e.umsatz)}" inputmode="decimal" oninput="fmtInput(this)" style="padding:11px 12px;font-size:15px;">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <label style="font-size:10px;color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:.6px;">Bar (€)</label>
+          <input class="form-input" type="text" id="edit-bar" value="${toVal(e.bar)}" inputmode="decimal" oninput="fmtInput(this)" style="padding:11px 12px;font-size:15px;">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <label style="font-size:10px;color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:.6px;">Trinkgeld (€)</label>
+          <input class="form-input" type="text" id="edit-tip" value="${toVal(e.tip)}" inputmode="decimal" oninput="fmtInput(this)" style="padding:11px 12px;font-size:15px;">
+        </div>
+      </div>
+      <button onclick="saveEditEntry(${idx})" style="width:100%;padding:15px;background:var(--accent);border:none;border-radius:14px;color:#fff;font-family:'Figtree',sans-serif;font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 6px 24px rgba(108,92,231,.3);">
+        Speichern ✓
+      </button>
+    </div>`;
+
+  document.body.appendChild(overlay);
+}
+
+function saveEditEntry(idx){
+  const datum=document.getElementById('edit-datum').value;
+  const station=document.getElementById('edit-station').value;
+  const parseField=id=>parseFloat((document.getElementById(id)?.value||'').replace(/\./g,'').replace(',','.'))||0;
+  const umsatz=parseField('edit-umsatz');
+  const bar=parseField('edit-bar');
+  const tip=parseField('edit-tip');
+  if(!datum||umsatz<=0){showToast('⚠️ Datum & Umsatz eingeben');return;}
+  entries[idx]={datum,station,umsatz,bar,tip,abgabe:+(umsatz*0.04).toFixed(2)};
+  save();
+  document.getElementById('edit-modal-overlay')?.remove();
+  renderLog();
+  showToast('✅ Eintrag aktualisiert!');
 }
 
 function fmtInput(el){
@@ -1060,20 +1171,6 @@ function renderScanResults(){
   document.getElementById('scan-actions').style.display='flex';
 }
 
-function saveSingleScanned(i){
-  const datum=document.getElementById(`sc-datum-${i}`).value;
-  const station=document.getElementById(`sc-station-${i}`).value;
-  const umsatz=+document.getElementById(`sc-umsatz-${i}`).value||0;
-  const bar=+document.getElementById(`sc-bar-${i}`).value||0;
-  const tip=+document.getElementById(`sc-tip-${i}`).value||0;
-  if(!datum||umsatz<=0){showToast('⚠️ Umsatz fehlt');return;}
-  entries.push({datum,station,umsatz,bar,tip,abgabe:+(umsatz*0.04).toFixed(2)});
-  save();
-  const btn=document.getElementById(`scan-btn-${i}`);
-  btn.textContent='✓ Gespeichert';btn.classList.add('saved');
-  showToast('✅ Bon gespeichert!');
-}
-
 function saveAllScanned(){
   let count=0;
   scannedItems.forEach((_,i)=>{
@@ -1122,7 +1219,6 @@ window.addEventListener('resize',()=>{
   if(document.getElementById('screen-home').classList.contains('active')) drawChart();
 });
 
-// ── Foto Vollbild ──
 function showImgFullscreen(src){
   const overlay=document.createElement('div');
   overlay.style.cssText=`position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.92);display:flex;align-items:center;justify-content:center;padding:20px;`;
