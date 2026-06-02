@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="ShiftTrack">
-<title>ShiftTrack v0.11</title>
+<title>ShiftTrack v0.12</title>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -69,6 +69,16 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 .stat-card-label{font-size:clamp(9px,2.5vw,10px);color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;}
 .stat-card-val{font-size:clamp(20px,6vw,26px);font-weight:900;letter-spacing:-0.5px;font-family:'DM Mono',monospace;margin:2px 0;}
 .stat-card-sub{font-size:clamp(9px,2.5vw,11px);color:var(--text3);}
+
+.avg-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:clamp(14px,4vw,18px);}
+.avg-card-title{font-size:clamp(13px,3.5vw,15px);font-weight:800;margin-bottom:14px;}
+.avg-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;}
+.avg-item{text-align:center;padding:0 6px;}
+.avg-item+.avg-item{border-left:1px solid var(--border);}
+.avg-label{font-size:clamp(9px,2.5vw,10px);color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;font-weight:700;margin-bottom:6px;}
+.avg-val{font-size:clamp(16px,5vw,21px);font-weight:900;font-family:'DM Mono',monospace;letter-spacing:-0.5px;}
+.avg-sub{font-size:clamp(9px,2.5vw,10px);color:var(--text3);margin-top:3px;font-weight:600;}
+.avg-pct{font-size:clamp(9px,2.5vw,11px);color:var(--accent-l);margin-top:2px;font-weight:700;opacity:0.85;}
 
 .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:clamp(14px,4vw,18px);overflow:hidden;}
 .chart-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
@@ -217,7 +227,7 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 <div class="topbar">
   <div>
     <div class="topbar-title">ShiftTrack 🍽️</div>
-    <div class="topbar-sub" id="topbar-sub">v0.11 · Bereit</div>
+    <div class="topbar-sub" id="topbar-sub">v0.12 · Bereit</div>
   </div>
   <div class="topbar-date" id="topbar-date"></div>
 </div>
@@ -248,14 +258,37 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
         <div class="stat-card-sub" id="s-shifts-sub">alle Zeiten</div>
       </div>
     </div>
+    <div class="avg-card">
+      <div class="avg-card-title">⌀ Tip Durchschnitt</div>
+      <div class="avg-grid">
+        <div class="avg-item">
+          <div class="avg-label">Letzter Tag</div>
+          <div class="avg-val col-purple" id="avg-day">—</div>
+          <div class="avg-pct" id="avg-day-pct"></div>
+          <div class="avg-sub" id="avg-day-sub">kein Eintrag</div>
+        </div>
+        <div class="avg-item">
+          <div class="avg-label">7 Tage</div>
+          <div class="avg-val col-purple" id="avg-week">—</div>
+          <div class="avg-pct" id="avg-week-pct"></div>
+          <div class="avg-sub" id="avg-week-sub">0 Schichten</div>
+        </div>
+        <div class="avg-item">
+          <div class="avg-label">Monat</div>
+          <div class="avg-val col-purple" id="avg-month">—</div>
+          <div class="avg-pct" id="avg-month-pct"></div>
+          <div class="avg-sub" id="avg-month-sub">0 Schichten</div>
+        </div>
+      </div>
+    </div>
     <div class="chart-card">
       <div class="chart-head">
         <div class="chart-title">Trinkgeld — dieser Monat</div>
         <div class="chart-total" id="chart-total-val">€0</div>
       </div>
-      <div class="chart-wrap"><canvas id="mainChart"></canvas></div>
+      <div class="chart-wrap"><canvas id="mainChart" style="cursor:pointer;"></canvas></div>
       <div class="chart-legend">
-        <div class="legend-item"><div class="legend-dot" style="background:var(--accent-l)"></div>Trinkgeld</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--accent-l)"></div>Trinkgeld · antippen für Details</div>
       </div>
     </div>
     <div class="details-card">
@@ -378,7 +411,7 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
         <button class="settings-btn btn-danger" onclick="clearAll()">Löschen</button>
       </div>
     </div>
-    <div class="settings-version">ShiftTrack v0.11 · Cloudflare Worker Edition</div>
+    <div class="settings-version">ShiftTrack v0.12 · Cloudflare Worker Edition</div>
   </div>
 </div>
 
@@ -407,9 +440,13 @@ let entries = JSON.parse(
 );
 localStorage.setItem('shifttrack_data', JSON.stringify(entries));
 
-let logFilter    = 'all';
+let logFilter     = 'all';
 let detailsPeriod = 'month';
 let scannedItems  = [];
+
+// v0.12: interaktiver Chart
+let _chartBars        = [];
+let _chartSelectedIdx = null;
 
 const today = new Date();
 document.getElementById('f-datum').value = today.toISOString().split('T')[0];
@@ -417,7 +454,6 @@ document.getElementById('topbar-date').textContent =
   today.toLocaleDateString('de-AT',{day:'2-digit',month:'short'});
 
 const fmt  = v => '€' + (+v).toFixed(2).replace('.',',');
-// v0.11: Tausender-Trennpunkt mit de-AT Locale (z.B. 20.000)
 const fmtS = v => '€' + Math.round(+v).toLocaleString('de-AT');
 const sum  = (arr,k) => arr.reduce((a,e)=>a+(+e[k]||0),0);
 
@@ -470,6 +506,7 @@ function renderHome(){
   document.getElementById('s-shifts-sub').textContent      = 'alle Zeiten';
   document.getElementById('chart-total-val').textContent   = fmtS(tipMonth);
   renderDetails();
+  renderAvgCard();
   drawChart();
 }
 
@@ -511,41 +548,223 @@ function renderDetails(){
   }
 }
 
-function drawChart(){
-  const canvas=document.getElementById('mainChart');
-  const dpr=window.devicePixelRatio||1;
-  const rect=canvas.parentElement.getBoundingClientRect();
-  const H=rect.height||100;
-  canvas.width=rect.width*dpr; canvas.height=H*dpr;
-  canvas.style.width=rect.width+'px'; canvas.style.height=H+'px';
-  const ctx=canvas.getContext('2d'); ctx.scale(dpr,dpr);
-  const W=rect.width; ctx.clearRect(0,0,W,H);
-  const now=new Date();
-  const dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
-  const labels=[],tArr=[];
-  for(let d=1;d<=dim;d++){
-    const ds=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    labels.push(d%7===1?d:'');
-    const de=entries.filter(e=>e.datum===ds); tArr.push(sum(de,'tip'));
-  }
-  const maxVal=Math.max(...tArr,1);
-  const n=labels.length, pad={l:28,r:8,t:8,b:22};
-  const cW=W-pad.l-pad.r, cH=H-pad.t-pad.b;
-  const gap=cW/n, bw=Math.max(3,Math.min(14,gap*0.55));
-  ctx.strokeStyle='rgba(255,255,255,0.05)'; ctx.lineWidth=1;
-  for(let i=0;i<=3;i++){
-    const y=pad.t+cH-(i/3)*cH;
-    ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke();
-    if(i>0){ctx.fillStyle='rgba(255,255,255,0.2)';ctx.font='9px Figtree';ctx.textAlign='right';ctx.fillText(fmtS(maxVal*i/3),pad.l-3,y+3);}
-  }
-  tArr.forEach((val,i)=>{
-    const cx=pad.l+i*gap+gap/2;
-    const bh=Math.max(2,(val/maxVal)*cH),by=pad.t+cH-bh;
-    const g=ctx.createLinearGradient(0,by,0,by+bh);
-    g.addColorStop(0,'#a29bfedd');g.addColorStop(1,'#a29bfe22');
-    ctx.fillStyle=g;ctx.beginPath();ctx.roundRect(cx-bw/2,by,bw,bh,[3,3,0,0]);ctx.fill();
-    if(labels[i]){ctx.fillStyle='rgba(255,255,255,0.28)';ctx.font='9px Figtree';ctx.textAlign='center';ctx.fillText(labels[i],cx,H-5);}
+// ── v0.12: Ø Tip Durchschnitt Card ──
+function renderAvgCard() {
+  // Letzter Eintrag (nach Datum sortiert, neuester zuerst)
+  const sorted = [...entries].sort((a, b) => new Date(b.datum) - new Date(a.datum));
+  const lastEntry = sorted[0] || null;
+
+  // Letzte 7 Kalendertage (inkl. heute)
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  const weekAgo = new Date(now);
+  weekAgo.setDate(weekAgo.getDate() - 6);
+  const weekData = entries.filter(e => {
+    const d = new Date(e.datum); d.setHours(0,0,0,0); return d >= weekAgo;
   });
+
+  // Dieser Monat (ab dem 1.)
+  const monthData = getThisMonth();
+
+  // --- Tag ---
+  const dayEl    = document.getElementById('avg-day');
+  const dayPctEl = document.getElementById('avg-day-pct');
+  const daySubEl = document.getElementById('avg-day-sub');
+  if (lastEntry) {
+    dayEl.textContent    = fmtS(lastEntry.tip);
+    dayPctEl.textContent = +lastEntry.umsatz > 0
+      ? (+lastEntry.tip / +lastEntry.umsatz * 100).toFixed(1) + '%' : '';
+    daySubEl.textContent = new Date(lastEntry.datum + 'T12:00:00')
+      .toLocaleDateString('de-AT', { day: '2-digit', month: 'short' });
+  } else {
+    dayEl.textContent    = '—';
+    dayPctEl.textContent = '';
+    daySubEl.textContent = 'kein Eintrag';
+  }
+
+  // --- Woche ---
+  const weekEl    = document.getElementById('avg-week');
+  const weekPctEl = document.getElementById('avg-week-pct');
+  const weekSubEl = document.getElementById('avg-week-sub');
+  if (weekData.length) {
+    const wTip = sum(weekData, 'tip'), wU = sum(weekData, 'umsatz');
+    weekEl.textContent    = fmtS(wTip / weekData.length);
+    weekPctEl.textContent = wU > 0 ? (wTip / wU * 100).toFixed(1) + '%' : '';
+    weekSubEl.textContent = weekData.length + ' Schicht' + (weekData.length === 1 ? '' : 'en');
+  } else {
+    weekEl.textContent    = '—';
+    weekPctEl.textContent = '';
+    weekSubEl.textContent = '0 Schichten';
+  }
+
+  // --- Monat ---
+  const monthEl    = document.getElementById('avg-month');
+  const monthPctEl = document.getElementById('avg-month-pct');
+  const monthSubEl = document.getElementById('avg-month-sub');
+  if (monthData.length) {
+    const mTip = sum(monthData, 'tip'), mU = sum(monthData, 'umsatz');
+    monthEl.textContent    = fmtS(mTip / monthData.length);
+    monthPctEl.textContent = mU > 0 ? (mTip / mU * 100).toFixed(1) + '%' : '';
+    monthSubEl.textContent = monthData.length + ' Schicht' + (monthData.length === 1 ? '' : 'en');
+  } else {
+    monthEl.textContent    = '—';
+    monthPctEl.textContent = '';
+    monthSubEl.textContent = '0 Schichten';
+  }
+}
+
+// ── v0.12: Interaktiver Health-Style Chart ──
+function drawChart(selectedIdx) {
+  if(selectedIdx === undefined) selectedIdx = _chartSelectedIdx;
+
+  const canvas = document.getElementById('mainChart');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const H = rect.height || 100;
+  canvas.width  = rect.width * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width  = rect.width + 'px';
+  canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  const W = rect.width;
+  ctx.clearRect(0, 0, W, H);
+
+  const now = new Date();
+  const dim = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  const days = [];
+  for (let d = 1; d <= dim; d++) {
+    const ds = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const de = entries.filter(e => e.datum === ds);
+    days.push({ d, ds, tip: sum(de, 'tip') });
+  }
+
+  const maxVal     = Math.max(...days.map(d => d.tip), 1);
+  const totalMonth = days.reduce((a, d) => a + d.tip, 0);
+  const pad = { l: 28, r: 8, t: 16, b: 22 };
+  const cW  = W - pad.l - pad.r;
+  const cH  = H - pad.t - pad.b;
+  const gap = cW / days.length;
+  const bw  = Math.max(3, Math.min(14, gap * 0.55));
+
+  // Grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+  ctx.lineWidth   = 1;
+  for (let i = 0; i <= 3; i++) {
+    const y = pad.t + cH - (i / 3) * cH;
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(W - pad.r, y); ctx.stroke();
+    if (i > 0) {
+      ctx.fillStyle   = 'rgba(255,255,255,0.2)';
+      ctx.font        = '9px Figtree';
+      ctx.textAlign   = 'right';
+      ctx.fillText(fmtS(maxVal * i / 3), pad.l - 3, y + 3);
+    }
+  }
+
+  _chartBars = [];
+
+  days.forEach((day, i) => {
+    const cx         = pad.l + i * gap + gap / 2;
+    const bh         = Math.max(2, (day.tip / maxVal) * cH);
+    const by         = pad.t + cH - bh;
+    const isSelected = selectedIdx === i;
+    const dimmed     = selectedIdx !== null && selectedIdx !== undefined && !isSelected;
+
+    _chartBars.push({ cx, by, bw, bh, ...day });
+
+    if (day.tip === 0) {
+      ctx.fillStyle = 'rgba(255,255,255,0.05)';
+      ctx.beginPath();
+      ctx.roundRect(cx - bw / 2, pad.t + cH - 2, bw, 2, [1, 1, 0, 0]);
+      ctx.fill();
+    } else {
+      const alpha = dimmed ? 0.15 : 1;
+      const g = ctx.createLinearGradient(0, by, 0, by + bh);
+      g.addColorStop(0, `rgba(162,155,254,${isSelected ? 1 : alpha * 0.88})`);
+      g.addColorStop(1, `rgba(162,155,254,${isSelected ? 0.4 : alpha * 0.15})`);
+      ctx.fillStyle  = g;
+      if (isSelected) { ctx.shadowColor = 'rgba(162,155,254,0.55)'; ctx.shadowBlur = 10; }
+      ctx.beginPath();
+      ctx.roundRect(cx - bw / 2, by, bw, bh, [3, 3, 0, 0]);
+      ctx.fill();
+      ctx.shadowBlur  = 0;
+      ctx.shadowColor = 'transparent';
+    }
+
+    if (day.d % 7 === 1) {
+      ctx.fillStyle = 'rgba(255,255,255,0.28)';
+      ctx.font      = '9px Figtree';
+      ctx.textAlign = 'center';
+      ctx.fillText(day.d, cx, H - 5);
+    }
+  });
+
+  // Callout
+  if (selectedIdx !== null && selectedIdx !== undefined) {
+    const bar = _chartBars[selectedIdx];
+    if (bar && bar.tip > 0) {
+      const pct     = totalMonth > 0 ? (bar.tip / totalMonth * 100).toFixed(1) : '0.0';
+      const dateStr = new Date(bar.ds + 'T12:00:00').toLocaleDateString('de-AT', { weekday: 'short', day: '2-digit', month: 'short' });
+      const line1   = `${fmtS(bar.tip)}  ·  ${pct}% des Monats`;
+
+      ctx.font = 'bold 11.5px Figtree';
+      const lw   = ctx.measureText(line1).width;
+      ctx.font   = '10px Figtree';
+      const sw   = ctx.measureText(dateStr).width;
+      const boxW = Math.max(lw, sw) + 22;
+      const boxH = 40;
+      let bx     = bar.cx - boxW / 2;
+      bx = Math.max(pad.l, Math.min(W - pad.r - boxW, bx));
+      const boxY = Math.max(2, bar.by - boxH - 10);
+
+      // Box
+      ctx.fillStyle = 'rgba(108,92,231,0.96)';
+      ctx.beginPath();
+      ctx.roundRect(bx, boxY, boxW, boxH, 9);
+      ctx.fill();
+
+      // Tail
+      const tx = Math.min(Math.max(bar.cx, bx + 10), bx + boxW - 10);
+      ctx.beginPath();
+      ctx.moveTo(tx - 5, boxY + boxH);
+      ctx.lineTo(tx + 5, boxY + boxH);
+      ctx.lineTo(tx, boxY + boxH + 6);
+      ctx.closePath();
+      ctx.fill();
+
+      // Text
+      ctx.fillStyle = '#fff';
+      ctx.textAlign = 'center';
+      ctx.font      = 'bold 11.5px Figtree';
+      ctx.fillText(line1, bx + boxW / 2, boxY + 15);
+      ctx.font          = '10px Figtree';
+      ctx.globalAlpha   = 0.72;
+      ctx.fillText(dateStr, bx + boxW / 2, boxY + 30);
+      ctx.globalAlpha   = 1;
+    }
+  }
+}
+
+function initChartInteraction() {
+  const canvas = document.getElementById('mainChart');
+
+  function handleTap(clientX, clientY) {
+    const rect = canvas.getBoundingClientRect();
+    const relX = clientX - rect.left;
+    let hit = null;
+    _chartBars.forEach((bar, i) => {
+      const hitW = Math.max(bar.bw * 2.5, 20);
+      if (relX >= bar.cx - hitW && relX <= bar.cx + hitW && bar.tip > 0) hit = i;
+    });
+    _chartSelectedIdx = (hit === _chartSelectedIdx) ? null : hit;
+    drawChart(_chartSelectedIdx);
+  }
+
+  canvas.addEventListener('click', e => handleTap(e.clientX, e.clientY));
+  canvas.addEventListener('touchstart', e => {
+    e.preventDefault();
+    handleTap(e.touches[0].clientX, e.touches[0].clientY);
+  }, { passive: false });
 }
 
 function showScreen(name){
@@ -566,6 +785,7 @@ function setFilter(f,btn){
   btn.classList.add('active'); renderLog();
 }
 
+// ── v0.12: Tip % im Verlauf ──
 function renderLog(){
   let data=[...entries].reverse();
   if(logFilter!=='all') data=data.filter(e=>e.station===logFilter);
@@ -576,12 +796,13 @@ function renderLog(){
     const origIdx=entries.indexOf(e);
     const isIn=e.station==='drinnen';
     const dl=new Date(e.datum).toLocaleDateString('de-AT',{weekday:'short',day:'2-digit',month:'short'});
+    const tipPct = +e.umsatz > 0 ? (+e.tip / +e.umsatz * 100).toFixed(1) + '%' : '0.0%';
     return `<div class="log-item">
       <div class="log-item-icon ${isIn?'log-icon-in':'log-icon-out'}">${isIn?'🏠':'🌳'}</div>
       <div class="log-item-body">
         <div class="log-item-top"><span class="log-item-date">${dl}</span><span class="log-item-umsatz">${fmt(e.umsatz)}</span></div>
         <div class="log-item-bottom">
-          <span class="log-chip chip-tip">Tip ${fmt(e.tip)}</span>
+          <span class="log-chip chip-tip">Tip ${fmt(e.tip)} · ${tipPct}</span>
           <span class="log-chip chip-bar">Bar ${fmt(e.bar)}</span>
           <span class="log-chip chip-abgabe">-${fmt(e.abgabe)}</span>
         </div>
@@ -1216,7 +1437,7 @@ function showToast(msg, duration=2000){
 }
 
 window.addEventListener('resize',()=>{
-  if(document.getElementById('screen-home').classList.contains('active')) drawChart();
+  if(document.getElementById('screen-home').classList.contains('active')) drawChart(_chartSelectedIdx);
 });
 
 function showImgFullscreen(src){
@@ -1276,6 +1497,7 @@ renderHome();
 renderLog();
 renderSettings();
 renderScanWorkerStatus();
+initChartInteraction();
 </script>
 </body>
 </html>
