@@ -457,10 +457,17 @@ const fmt  = v => '€' + (+v).toFixed(2).replace('.',',');
 const fmtS = v => '€' + Math.round(+v).toLocaleString('de-AT');
 const sum  = (arr,k) => arr.reduce((a,e)=>a+(+e[k]||0),0);
 
+// ── Hilfsfunktion: YYYY-MM-DD → Integer (z.B. 20250603) für sicheren Vergleich ──
+function dateInt(s){ return s ? parseInt(s.replace(/-/g,''), 10) : 0; }
+function todayStr(){
+  const n = new Date();
+  return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}`;
+}
+
 function getThisMonth(){
-  const n=new Date();
-  const startStr=`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-01`;
-  return entries.filter(e=>e.datum>=startStr);
+  const n = new Date();
+  const startStr = `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-01`;
+  return entries.filter(e => dateInt(e.datum) >= dateInt(startStr));
 }
 
 function getWorkerUrl(){
@@ -550,16 +557,17 @@ function renderDetails(){
 
 // ── v0.12: Ø Tip Durchschnitt Card ──
 function renderAvgCard() {
-  // Letzter Eintrag (nach Datum sortiert, neuester zuerst — String-Vergleich, kein Date-Parsing)
-  const sorted = [...entries].sort((a, b) => b.datum.localeCompare(a.datum));
+  // Letzter Eintrag — Integer-Vergleich, kein Date-Parsing
+  const sorted = [...entries].sort((a, b) => dateInt(b.datum) - dateInt(a.datum));
   const lastEntry = sorted[0] || null;
 
-  // Letzte 7 Kalendertage (inkl. heute) — String-Vergleich vermeidet Timezone-Bugs
-  const now = new Date();
-  const todayStr   = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-  const weekAgoDate = new Date(now); weekAgoDate.setDate(weekAgoDate.getDate() - 6);
-  const weekAgoStr  = `${weekAgoDate.getFullYear()}-${String(weekAgoDate.getMonth()+1).padStart(2,'0')}-${String(weekAgoDate.getDate()).padStart(2,'0')}`;
-  const weekData = entries.filter(e => e.datum >= weekAgoStr && e.datum <= todayStr);
+  // Letzte 7 Kalendertage (inkl. heute)
+  const tStr = todayStr();
+  const n7 = new Date();
+  n7.setDate(n7.getDate() - 6);
+  const weekAgoStr = `${n7.getFullYear()}-${String(n7.getMonth()+1).padStart(2,'0')}-${String(n7.getDate()).padStart(2,'0')}`;
+  const wFrom = dateInt(weekAgoStr), wTo = dateInt(tStr);
+  const weekData = entries.filter(e => { const d = dateInt(e.datum); return d >= wFrom && d <= wTo; });
 
   // Dieser Monat (ab dem 1.)
   const monthData = getThisMonth();
