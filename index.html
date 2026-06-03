@@ -459,8 +459,8 @@ const sum  = (arr,k) => arr.reduce((a,e)=>a+(+e[k]||0),0);
 
 function getThisMonth(){
   const n=new Date();
-  const start=new Date(n.getFullYear(),n.getMonth(),1);
-  return entries.filter(e=>new Date(e.datum)>=start);
+  const startStr=`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-01`;
+  return entries.filter(e=>e.datum>=startStr);
 }
 
 function getWorkerUrl(){
@@ -550,18 +550,16 @@ function renderDetails(){
 
 // ── v0.12: Ø Tip Durchschnitt Card ──
 function renderAvgCard() {
-  // Letzter Eintrag (nach Datum sortiert, neuester zuerst)
-  const sorted = [...entries].sort((a, b) => new Date(b.datum) - new Date(a.datum));
+  // Letzter Eintrag (nach Datum sortiert, neuester zuerst — String-Vergleich, kein Date-Parsing)
+  const sorted = [...entries].sort((a, b) => b.datum.localeCompare(a.datum));
   const lastEntry = sorted[0] || null;
 
-  // Letzte 7 Kalendertage (inkl. heute)
+  // Letzte 7 Kalendertage (inkl. heute) — String-Vergleich vermeidet Timezone-Bugs
   const now = new Date();
-  now.setHours(0, 0, 0, 0);
-  const weekAgo = new Date(now);
-  weekAgo.setDate(weekAgo.getDate() - 6);
-  const weekData = entries.filter(e => {
-    const d = new Date(e.datum); d.setHours(0,0,0,0); return d >= weekAgo;
-  });
+  const todayStr   = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  const weekAgoDate = new Date(now); weekAgoDate.setDate(weekAgoDate.getDate() - 6);
+  const weekAgoStr  = `${weekAgoDate.getFullYear()}-${String(weekAgoDate.getMonth()+1).padStart(2,'0')}-${String(weekAgoDate.getDate()).padStart(2,'0')}`;
+  const weekData = entries.filter(e => e.datum >= weekAgoStr && e.datum <= todayStr);
 
   // Dieser Monat (ab dem 1.)
   const monthData = getThisMonth();
