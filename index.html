@@ -27,7 +27,7 @@
     --yellow: #ffd166;
     --card-r: 16px;
     --trans: all 0.2s cubic-bezier(0.4,0,0.2,1);
-    --nav-h: calc(56px + env(safe-area-inset-bottom, 0px));
+    --nav-h: calc(66px + max(env(safe-area-inset-bottom, 0px), 16px));
   }
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html, body { height:100%; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif; overflow:hidden; }
@@ -126,14 +126,14 @@
     display:flex;
     background:var(--bg2);
     border-top:1px solid var(--border);
-    padding:8px 0 0;
-    padding-bottom:env(safe-area-inset-bottom, 0px);
+    padding:10px 0 0;
+    padding-bottom:max(env(safe-area-inset-bottom, 0px), 16px);
     position:fixed; bottom:0; left:0; right:0;
     z-index:50;
     flex-shrink:0;
   }
-  .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; padding:6px 0 8px; cursor:pointer; transition:var(--trans); }
-  .nav-icon { font-size:22px; line-height:1; }
+  .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; padding:0 0 2px; cursor:pointer; transition:var(--trans); }
+  .nav-icon { font-size:24px; line-height:1; }
   .nav-label { font-size:10px; font-weight:600; color:var(--text3); transition:var(--trans); }
   .nav-item.active .nav-label { color:var(--accent2); }
 
@@ -263,6 +263,12 @@
     <button id="auth-submit" class="auth-btn" onclick="handleAuth()">Anmelden</button>
     <button id="auth-reset-btn" style="background:none;border:none;color:var(--text3);font-size:13px;cursor:pointer;padding:4px;text-decoration:underline;" onclick="handlePasswordReset()">Passwort vergessen?</button>
   </div>
+  <div style="display:flex;align-items:center;gap:10px;width:100%;max-width:360px;margin-top:8px;">
+    <div style="flex:1;height:1px;background:var(--border);"></div>
+    <span style="font-size:12px;color:var(--text3);white-space:nowrap;">oder</span>
+    <div style="flex:1;height:1px;background:var(--border);"></div>
+  </div>
+  <button onclick="enterGuestMode()" style="width:100%;max-width:360px;margin-top:8px;padding:14px;background:transparent;border:1.5px solid var(--border);border-radius:12px;color:var(--text2);font-size:15px;font-weight:600;cursor:pointer;transition:var(--trans);">Als Gast fortfahren</button>
 </div>
 
 <!-- MAIN (Dashboard) -->
@@ -448,7 +454,12 @@
         </div>
       </div>
     </div>
-    <div class="profile-section">
+    <div id="guest-banner" style="display:none;background:rgba(124,108,255,0.1);border:1px solid rgba(124,108,255,0.25);border-radius:14px;padding:16px;margin-bottom:16px;">
+      <div style="font-size:14px;font-weight:700;color:var(--accent2);margin-bottom:6px;">☁️ Daten nur lokal gespeichert</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.5;margin-bottom:12px;">Im Gast-Modus werden deine Schichten nur auf diesem Gerät gespeichert. Erstelle ein Konto um deine Daten sicher in der Cloud zu speichern.</div>
+      <button onclick="showScreen('auth')" style="width:100%;padding:12px;background:linear-gradient(135deg,var(--accent),#5a4eff);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;">Jetzt Konto erstellen</button>
+    </div>
+    <div id="pw-section" class="profile-section">
       <div class="profile-section-title">Konto</div>
       <div class="profile-item" onclick="openChangePassword()">
         <div class="profile-item-icon">🔐</div>
@@ -649,9 +660,25 @@ async function handlePasswordReset() {
 }
 
 async function handleLogout() {
+  if (isGuest()) {
+    currentUser = null; shifts = [];
+    showScreen('auth'); return;
+  }
   try { await sbFetch('/auth/v1/logout', { method:'POST' }); } catch {}
   clearSession(); shifts = []; showScreen('auth');
 }
+
+function enterGuestMode() {
+  currentSession = null;
+  currentUser = { id: 'guest', email: null, user_metadata: { display_name: 'Gast' }, isGuest: true };
+  shifts = JSON.parse(localStorage.getItem('st_guest_shifts') || '[]');
+  updateUserUI();
+  showScreen('main');
+  renderAll();
+  showToast('info', 'Gast-Modus', 'Daten werden nur lokal gespeichert.');
+}
+
+function isGuest() { return currentUser?.isGuest === true; }
 
 async function openChangePassword() {
   if (!currentUser?.email) return;
@@ -682,10 +709,15 @@ function updateProfileUI() {
   const name = currentUser.user_metadata?.display_name || currentUser.email?.split('@')[0] || '–';
   document.getElementById('profile-avatar-large').textContent = name.charAt(0).toUpperCase();
   document.getElementById('profile-name').textContent  = name;
-  document.getElementById('profile-email').textContent = currentUser.email || '–';
+  document.getElementById('profile-email').textContent = isGuest() ? 'Gast-Modus · Daten nur lokal' : (currentUser.email || '–');
   const total = shifts.reduce((s,e)=>s+(e.tip||0),0);
   document.getElementById('profile-total-tip').textContent    = '€'+fmt(total)+' gesamt';
   document.getElementById('profile-total-shifts').textContent = shifts.length+' Schichten erfasst';
+  // Show/hide guest banner
+  const banner = document.getElementById('guest-banner');
+  const pwSection = document.getElementById('pw-section');
+  if (banner) banner.style.display = isGuest() ? 'block' : 'none';
+  if (pwSection) pwSection.style.display = isGuest() ? 'none' : 'block';
 }
 
 let toastTimer;
@@ -713,6 +745,10 @@ function setSyncStatus(state) {
 // DB
 // ═══════════════════════════════════════
 async function loadShifts() {
+  if (isGuest()) {
+    shifts = JSON.parse(localStorage.getItem('st_guest_shifts') || '[]');
+    renderAll(); return;
+  }
   setSyncStatus('syncing');
   try {
     const data = await sbFetch('/rest/v1/shifts?select=*&order=date.desc', { headers:{'Prefer':'return=representation'} });
@@ -721,6 +757,20 @@ async function loadShifts() {
 }
 
 async function saveShift(shiftData) {
+  if (isGuest()) {
+    const stored = JSON.parse(localStorage.getItem('st_guest_shifts') || '[]');
+    if (editingShiftId) {
+      const idx = stored.findIndex(s => s.id === editingShiftId);
+      if (idx >= 0) stored[idx] = { ...stored[idx], ...shiftData };
+      showToast('success','Gespeichert','Schicht wurde aktualisiert.');
+    } else {
+      stored.unshift({ ...shiftData, id: 'g_' + Date.now(), user_id: 'guest', created_at: new Date().toISOString() });
+      showToast('success','Gespeichert','Neue Schicht gespeichert.');
+    }
+    stored.sort((a,b) => b.date.localeCompare(a.date));
+    localStorage.setItem('st_guest_shifts', JSON.stringify(stored));
+    await loadShifts(); return;
+  }
   setSyncStatus('syncing');
   try {
     if (editingShiftId) {
@@ -736,6 +786,12 @@ async function saveShift(shiftData) {
 
 async function deleteShift(id) {
   if (!confirm('Diese Schicht wirklich löschen?')) return;
+  if (isGuest()) {
+    const stored = JSON.parse(localStorage.getItem('st_guest_shifts') || '[]').filter(s => s.id !== id);
+    localStorage.setItem('st_guest_shifts', JSON.stringify(stored));
+    showToast('success','Gelöscht','Schicht wurde entfernt.');
+    await loadShifts(); return;
+  }
   setSyncStatus('syncing');
   try { await sbFetch(`/rest/v1/shifts?id=eq.${id}`, { method:'DELETE' }); showToast('success','Gelöscht','Schicht wurde entfernt.'); setSyncStatus('ok'); await loadShifts(); }
   catch(e) { setSyncStatus('error'); showToast('error','Löschen fehlgeschlagen', mapDbError(e.message)); }
