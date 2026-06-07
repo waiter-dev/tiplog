@@ -27,6 +27,7 @@
     --yellow: #ffd166;
     --card-r: 16px;
     --trans: all 0.2s cubic-bezier(0.4,0,0.2,1);
+    --nav-h: calc(56px + env(safe-area-inset-bottom, 0px));
   }
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html, body { height:100%; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif; overflow:hidden; }
@@ -35,390 +36,139 @@
   .screen { display:none; flex-direction:column; height:100%; overflow:hidden; }
   .screen.active { display:flex; }
 
-  /* ── AUTH SCREEN ── */
-  #screen-auth {
-    background: var(--bg);
-    align-items:center;
-    justify-content:center;
-    padding:32px 24px;
-    gap:0;
-  }
-  .auth-logo {
-    width:64px; height:64px;
-    background:linear-gradient(135deg, var(--accent), var(--green));
-    border-radius:18px;
-    display:flex; align-items:center; justify-content:center;
-    font-size:28px;
-    margin-bottom:24px;
-    box-shadow: 0 8px 32px rgba(124,108,255,0.35);
-  }
+  /* ── AUTH ── */
+  #screen-auth { background:var(--bg); align-items:center; justify-content:center; padding:32px 24px; }
+  .auth-logo { width:64px; height:64px; background:linear-gradient(135deg,var(--accent),#5a4eff); border-radius:18px; display:flex; align-items:center; justify-content:center; font-size:28px; margin-bottom:24px; box-shadow:0 8px 32px rgba(124,108,255,0.35); }
   .auth-title { font-size:28px; font-weight:700; letter-spacing:-0.5px; margin-bottom:6px; }
   .auth-sub { font-size:14px; color:var(--text2); margin-bottom:36px; }
-  .auth-tabs {
-    display:flex; gap:4px;
-    background:var(--bg3);
-    border-radius:12px;
-    padding:4px;
-    width:100%; max-width:360px;
-    margin-bottom:24px;
-  }
-  .auth-tab {
-    flex:1; padding:9px;
-    border:none; background:transparent;
-    color:var(--text2); font-size:14px; font-weight:600;
-    border-radius:9px; cursor:pointer;
-    transition:var(--trans);
-  }
+  .auth-tabs { display:flex; gap:4px; background:var(--bg3); border-radius:12px; padding:4px; width:100%; max-width:360px; margin-bottom:24px; }
+  .auth-tab { flex:1; padding:9px; border:none; background:transparent; color:var(--text2); font-size:14px; font-weight:600; border-radius:9px; cursor:pointer; transition:var(--trans); }
   .auth-tab.active { background:var(--bg4); color:var(--text); }
   .auth-form { width:100%; max-width:360px; display:flex; flex-direction:column; gap:12px; }
-  .auth-field {
-    width:100%;
-    padding:14px 16px;
-    background:var(--bg3);
-    border:1.5px solid var(--border);
-    border-radius:12px;
-    color:var(--text);
-    font-size:15px;
-    outline:none;
-    transition:var(--trans);
-  }
+  .auth-field { width:100%; padding:14px 16px; background:var(--bg3); border:1.5px solid var(--border); border-radius:12px; color:var(--text); font-size:15px; outline:none; transition:var(--trans); }
   .auth-field:focus { border-color:var(--accent); background:var(--bg4); }
   .auth-field::placeholder { color:var(--text3); }
-  .auth-btn {
-    width:100%; padding:15px;
-    background:linear-gradient(135deg, var(--accent), #5a4eff);
-    border:none; border-radius:12px;
-    color:#fff; font-size:16px; font-weight:700;
-    cursor:pointer; margin-top:4px;
-    transition:var(--trans);
-    position:relative; overflow:hidden;
-  }
+  .auth-btn { width:100%; padding:15px; background:linear-gradient(135deg,var(--accent),#5a4eff); border:none; border-radius:12px; color:#fff; font-size:16px; font-weight:700; cursor:pointer; margin-top:4px; transition:var(--trans); }
   .auth-btn:active { transform:scale(0.98); }
   .auth-btn:disabled { opacity:0.6; pointer-events:none; }
-  .auth-error {
-    background:rgba(255,90,90,0.12);
-    border:1px solid rgba(255,90,90,0.3);
-    border-radius:10px;
-    padding:10px 14px;
-    font-size:13px;
-    color:var(--red);
-    display:none;
-  }
+  .auth-error { background:rgba(255,90,90,0.12); border:1px solid rgba(255,90,90,0.3); border-radius:10px; padding:10px 14px; font-size:13px; color:var(--red); display:none; }
   .auth-error.show { display:block; }
 
-  /* ── TOP BAR ── */
-  .topbar {
-    display:flex; align-items:center; justify-content:space-between;
-    padding:16px 20px 12px;
-    background:var(--bg);
-    position:relative;
-    z-index:10;
-  }
+  /* ── TOPBAR ── */
+  .topbar { display:flex; align-items:center; justify-content:space-between; padding:16px 20px 12px; background:var(--bg); z-index:10; flex-shrink:0; }
   .topbar-left { display:flex; align-items:center; gap:10px; }
-  .topbar-logo {
-    width:32px; height:32px;
-    background:linear-gradient(135deg, var(--accent), var(--green));
-    border-radius:9px;
-    display:flex; align-items:center; justify-content:center;
-    font-size:14px;
-  }
+  .topbar-logo { width:32px; height:32px; background:linear-gradient(135deg,var(--accent),#5a4eff); border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:14px; }
   .topbar-title { font-size:17px; font-weight:700; }
   .topbar-version { font-size:11px; color:var(--text3); font-weight:500; }
   .topbar-right { display:flex; gap:8px; }
-  .icon-btn {
-    width:36px; height:36px;
-    background:var(--bg3);
-    border:1px solid var(--border);
-    border-radius:10px;
-    display:flex; align-items:center; justify-content:center;
-    cursor:pointer; font-size:16px;
-    transition:var(--trans);
-    color:var(--text2);
-  }
+  .icon-btn { width:36px; height:36px; background:var(--bg3); border:1px solid var(--border); border-radius:10px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:16px; transition:var(--trans); color:var(--text2); border:none; }
   .icon-btn:active { transform:scale(0.92); background:var(--bg4); }
-  .user-avatar {
-    width:36px; height:36px;
-    background:linear-gradient(135deg, var(--accent), #5a4eff);
-    border-radius:10px;
-    display:flex; align-items:center; justify-content:center;
-    font-size:14px; font-weight:700; color:#fff;
-    cursor:pointer;
-  }
+  .user-avatar { width:36px; height:36px; background:linear-gradient(135deg,var(--accent),#5a4eff); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; color:#fff; cursor:pointer; }
 
-  /* ── SCROLL AREA ── */
-  .scroll-area {
-    flex:1; overflow-y:auto;
-    padding:0 16px 100px;
-    -webkit-overflow-scrolling:touch;
-  }
+  /* ── SCROLL ── */
+  .scroll-area { flex:1; overflow-y:auto; padding:0 16px 20px; -webkit-overflow-scrolling:touch; }
   .scroll-area::-webkit-scrollbar { display:none; }
+  /* Extra padding when bottom nav is visible */
+  .has-nav .scroll-area { padding-bottom:calc(var(--nav-h) + 76px); }
 
   /* ── CARDS ── */
-  .card {
-    background:var(--bg2);
-    border:1px solid var(--border);
-    border-radius:var(--card-r);
-    padding:16px;
-    margin-bottom:12px;
-  }
-  .card-header {
-    display:flex; justify-content:space-between; align-items:center;
-    margin-bottom:12px;
-  }
+  .card { background:var(--bg2); border:1px solid var(--border); border-radius:var(--card-r); padding:16px; margin-bottom:12px; }
+  .card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
   .card-title { font-size:12px; font-weight:600; color:var(--text2); text-transform:uppercase; letter-spacing:0.8px; }
 
-  /* ── STATS ROW ── */
-  .stats-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
-  .stat-card {
-    background:var(--bg3);
-    border:1px solid var(--border);
-    border-radius:14px;
-    padding:14px;
-  }
+  /* ── STATS ── */
+  .stats-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; margin-top:8px; }
+  .stat-card { background:var(--bg3); border:1px solid var(--border); border-radius:14px; padding:14px; }
   .stat-label { font-size:11px; color:var(--text3); font-weight:600; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:6px; }
   .stat-value { font-size:24px; font-weight:700; color:var(--text); letter-spacing:-0.5px; }
-  .stat-value span { font-size:13px; font-weight:500; color:var(--text2); }
   .stat-sub { font-size:12px; color:var(--text3); margin-top:3px; }
-  .stat-badge {
-    display:inline-flex; align-items:center;
-    background:rgba(34,212,138,0.12);
-    color:var(--green);
-    font-size:11px; font-weight:600;
-    padding:2px 7px; border-radius:20px;
-    margin-top:4px;
-  }
 
-  /* ── TIP AVERAGE CARD ── */
-  .tip-avg-card { margin-bottom:12px; }
-  .tip-seg-tabs {
-    display:flex; gap:4px;
-    background:var(--bg3);
-    border-radius:10px; padding:3px;
-    margin-bottom:14px;
-  }
-  .tip-seg-tab {
-    flex:1; padding:6px;
-    border:none; background:transparent;
-    color:var(--text3); font-size:12px; font-weight:600;
-    border-radius:7px; cursor:pointer;
-    transition:var(--trans);
-  }
+  /* ── TIP AVG ── */
+  .tip-seg-tabs { display:flex; gap:4px; background:var(--bg3); border-radius:10px; padding:3px; margin-bottom:14px; }
+  .tip-seg-tab { flex:1; padding:6px; border:none; background:transparent; color:var(--text3); font-size:12px; font-weight:600; border-radius:7px; cursor:pointer; transition:var(--trans); }
   .tip-seg-tab.active { background:var(--bg4); color:var(--text); }
   .tip-avg-main { text-align:center; padding:8px 0; }
-  .tip-avg-val { font-size:36px; font-weight:800; color:var(--green); letter-spacing:-1px; }
+  .tip-avg-val { font-size:36px; font-weight:800; color:var(--accent2); letter-spacing:-1px; }
   .tip-avg-sub { font-size:13px; color:var(--text2); margin-top:4px; }
-  .tip-avg-pct {
-    display:inline-flex; align-items:center;
-    background:rgba(34,212,138,0.12);
-    color:var(--green); font-size:12px; font-weight:700;
-    padding:3px 9px; border-radius:20px; margin-top:6px;
-  }
+  .tip-avg-pct { display:inline-flex; align-items:center; background:rgba(124,108,255,0.12); color:var(--accent2); font-size:12px; font-weight:700; padding:3px 9px; border-radius:20px; margin-top:6px; }
 
   /* ── CHART ── */
   .chart-wrap { position:relative; height:120px; margin-bottom:4px; }
   #tip-chart { width:100%; height:100%; }
-  .chart-callout {
-    position:absolute;
-    background:var(--bg4);
-    border:1px solid var(--border2);
-    border-radius:10px;
-    padding:8px 12px;
-    font-size:12px;
-    pointer-events:none;
-    display:none;
-    white-space:nowrap;
-    box-shadow:0 4px 16px rgba(0,0,0,0.4);
-    z-index:20;
-  }
+  .chart-callout { position:absolute; background:var(--bg4); border:1px solid var(--border2); border-radius:10px; padding:8px 12px; font-size:12px; pointer-events:none; display:none; white-space:nowrap; box-shadow:0 4px 16px rgba(0,0,0,0.4); z-index:20; }
   .chart-callout .cal-date { color:var(--text2); font-size:11px; margin-bottom:2px; }
-  .chart-callout .cal-tip { color:var(--green); font-weight:700; font-size:14px; }
+  .chart-callout .cal-tip { color:var(--accent2); font-weight:700; font-size:14px; }
   .chart-callout .cal-pct { color:var(--text2); font-size:11px; }
 
   /* ── ENTRY LIST ── */
-  .entry-item {
-    display:flex; align-items:center;
-    padding:13px 0;
-    border-bottom:1px solid var(--border);
-    gap:12px;
-    position:relative;
-  }
+  .entry-item { display:flex; align-items:center; padding:13px 0; border-bottom:1px solid var(--border); gap:12px; position:relative; }
   .entry-item:last-child { border-bottom:none; }
-  .entry-dot {
-    width:8px; height:8px;
-    background:var(--green);
-    border-radius:50%;
-    flex-shrink:0;
-    margin-top:2px;
-  }
+  .entry-dot { width:8px; height:8px; background:var(--accent); border-radius:50%; flex-shrink:0; }
   .entry-info { flex:1; min-width:0; }
   .entry-date { font-size:13px; font-weight:600; color:var(--text); }
   .entry-chips { display:flex; flex-wrap:wrap; gap:5px; margin-top:5px; }
-  .chip {
-    display:inline-flex; align-items:center; gap:3px;
-    background:var(--bg3);
-    border:1px solid var(--border);
-    border-radius:20px;
-    padding:3px 9px;
-    font-size:11px; font-weight:600; color:var(--text2);
-  }
-  .chip.tip { background:rgba(34,212,138,0.1); border-color:rgba(34,212,138,0.2); color:var(--green); }
-  .chip.rev { background:rgba(124,108,255,0.1); border-color:rgba(124,108,255,0.2); color:var(--accent2); }
-  .chip.hours { background:rgba(255,209,102,0.1); border-color:rgba(255,209,102,0.2); color:var(--yellow); }
-  .entry-menu-btn {
-    width:28px; height:28px;
-    background:transparent; border:none;
-    color:var(--text3); font-size:18px;
-    cursor:pointer; border-radius:8px;
-    display:flex; align-items:center; justify-content:center;
-    transition:var(--trans);
-    flex-shrink:0;
-  }
+  .chip { display:inline-flex; align-items:center; gap:3px; background:var(--bg3); border:1px solid var(--border); border-radius:20px; padding:3px 9px; font-size:11px; font-weight:600; color:var(--text2); }
+  .chip.tip { background:rgba(124,108,255,0.1); border-color:rgba(124,108,255,0.2); color:var(--accent2); }
+  .chip.rev { background:rgba(255,209,102,0.1); border-color:rgba(255,209,102,0.2); color:var(--yellow); }
+  .entry-menu-btn { width:28px; height:28px; background:transparent; border:none; color:var(--text3); font-size:18px; cursor:pointer; border-radius:8px; display:flex; align-items:center; justify-content:center; transition:var(--trans); flex-shrink:0; }
   .entry-menu-btn:active { background:var(--bg3); }
 
-  /* ── DROPDOWN MENU ── */
-  .dropdown-menu {
-    position:absolute; right:0; top:44px;
-    background:var(--bg3);
-    border:1px solid var(--border2);
-    border-radius:12px;
-    overflow:hidden;
-    z-index:100;
-    box-shadow:0 8px 24px rgba(0,0,0,0.4);
-    min-width:160px;
-    display:none;
-  }
+  /* ── DROPDOWN ── */
+  .dropdown-menu { position:absolute; right:0; top:44px; background:var(--bg3); border:1px solid var(--border2); border-radius:12px; overflow:hidden; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.4); min-width:160px; display:none; }
   .dropdown-menu.show { display:block; }
-  .dropdown-item {
-    padding:12px 16px;
-    font-size:14px; color:var(--text);
-    cursor:pointer;
-    display:flex; align-items:center; gap:10px;
-    transition:var(--trans);
-  }
+  .dropdown-item { padding:12px 16px; font-size:14px; color:var(--text); cursor:pointer; display:flex; align-items:center; gap:10px; transition:var(--trans); }
   .dropdown-item:active { background:var(--bg4); }
   .dropdown-item.danger { color:var(--red); }
+  .dd-divider { height:1px; background:var(--border); }
 
   /* ── BOTTOM NAV ── */
   .bottom-nav {
     display:flex;
     background:var(--bg2);
     border-top:1px solid var(--border);
-    padding:8px 0 env(safe-area-inset-bottom, 8px);
+    padding:8px 0 0;
+    padding-bottom:env(safe-area-inset-bottom, 0px);
     position:fixed; bottom:0; left:0; right:0;
     z-index:50;
+    flex-shrink:0;
   }
-  .nav-item {
-    flex:1; display:flex; flex-direction:column;
-    align-items:center; gap:3px;
-    padding:6px 0;
-    cursor:pointer;
-    transition:var(--trans);
-  }
-  .nav-icon { font-size:22px; transition:var(--trans); }
+  .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; padding:6px 0 8px; cursor:pointer; transition:var(--trans); }
+  .nav-icon { font-size:22px; line-height:1; }
   .nav-label { font-size:10px; font-weight:600; color:var(--text3); transition:var(--trans); }
-  .nav-item.active .nav-icon { filter:drop-shadow(0 0 6px var(--accent)); }
   .nav-item.active .nav-label { color:var(--accent2); }
 
   /* ── FAB ── */
-  .fab {
-    position:fixed; right:20px;
-    bottom:calc(env(safe-area-inset-bottom, 0px) + 72px);
-    width:56px; height:56px;
-    background:linear-gradient(135deg, var(--accent), #5a4eff);
-    border-radius:18px;
-    border:none;
-    display:flex; align-items:center; justify-content:center;
-    font-size:24px; color:#fff;
-    cursor:pointer;
-    box-shadow:0 4px 20px rgba(124,108,255,0.45);
-    transition:var(--trans);
-    z-index:40;
-  }
+  .fab { position:fixed; right:20px; bottom:calc(var(--nav-h) + 16px); width:56px; height:56px; background:linear-gradient(135deg,var(--accent),#5a4eff); border-radius:18px; border:none; display:flex; align-items:center; justify-content:center; font-size:24px; color:#fff; cursor:pointer; box-shadow:0 4px 20px rgba(124,108,255,0.45); transition:var(--trans); z-index:40; }
   .fab:active { transform:scale(0.92); }
 
-  /* ── BOTTOM SHEET ── */
-  .sheet-overlay {
-    position:fixed; inset:0;
-    background:rgba(0,0,0,0.6);
-    backdrop-filter:blur(4px);
-    z-index:200;
-    display:none; opacity:0;
-    transition:opacity 0.25s;
-  }
+  /* ── SHEET ── */
+  .sheet-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.65); backdrop-filter:blur(4px); z-index:200; display:none; opacity:0; transition:opacity 0.25s; }
   .sheet-overlay.show { display:block; opacity:1; }
-  .bottom-sheet {
-    position:fixed; bottom:0; left:0; right:0;
-    background:var(--bg2);
-    border-top:1px solid var(--border);
-    border-radius:24px 24px 0 0;
-    z-index:201;
-    transform:translateY(100%);
-    transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);
-    max-height:92vh;
-    overflow-y:auto;
-    padding:0 20px env(safe-area-inset-bottom, 20px);
-  }
+  .bottom-sheet { position:fixed; bottom:0; left:0; right:0; background:var(--bg2); border-top:1px solid var(--border); border-radius:24px 24px 0 0; z-index:201; transform:translateY(100%); transition:transform 0.3s cubic-bezier(0.4,0,0.2,1); max-height:88vh; overflow-y:auto; padding:0 20px; padding-bottom:env(safe-area-inset-bottom, 20px); }
   .bottom-sheet.show { transform:translateY(0); }
-  .sheet-handle {
-    width:36px; height:4px;
-    background:var(--border2);
-    border-radius:2px;
-    margin:12px auto 20px;
-  }
+  .sheet-handle { width:36px; height:4px; background:var(--border2); border-radius:2px; margin:12px auto 20px; }
   .sheet-title { font-size:18px; font-weight:700; margin-bottom:20px; }
 
-  /* ── FORM FIELDS ── */
+  /* ── FORM ── */
   .form-group { margin-bottom:16px; }
   .form-label { font-size:12px; font-weight:600; color:var(--text2); text-transform:uppercase; letter-spacing:0.6px; margin-bottom:8px; display:block; }
-  .form-input {
-    width:100%; padding:13px 15px;
-    background:var(--bg3);
-    border:1.5px solid var(--border);
-    border-radius:12px;
-    color:var(--text); font-size:15px;
-    outline:none; transition:var(--trans);
-  }
+  .form-input { width:100%; padding:15px; background:var(--bg3); border:1.5px solid var(--border); border-radius:12px; color:var(--text); font-size:17px; outline:none; transition:var(--trans); -webkit-appearance:none; }
   .form-input:focus { border-color:var(--accent); background:var(--bg4); }
   .form-input::placeholder { color:var(--text3); }
   .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-  .form-hint { font-size:12px; color:var(--text3); margin-top:6px; }
-  .form-submit {
-    width:100%; padding:15px;
-    background:linear-gradient(135deg, var(--green), var(--green2));
-    border:none; border-radius:12px;
-    color:#fff; font-size:16px; font-weight:700;
-    cursor:pointer; margin-top:8px;
-    transition:var(--trans);
-  }
+  .form-submit { width:100%; padding:16px; background:linear-gradient(135deg,var(--accent),#5a4eff); border:none; border-radius:14px; color:#fff; font-size:16px; font-weight:700; cursor:pointer; margin-top:8px; transition:var(--trans); }
   .form-submit:active { transform:scale(0.98); }
   .form-submit:disabled { opacity:0.5; pointer-events:none; }
 
-  /* ── SCAN SECTION ── */
-  .scan-area {
-    border:2px dashed var(--border2);
-    border-radius:16px;
-    padding:28px 20px;
-    text-align:center;
-    cursor:pointer;
-    transition:var(--trans);
-    margin-bottom:16px;
-    position:relative;
-    overflow:hidden;
-  }
+  /* ── SCAN ── */
+  .scan-area { border:2px dashed var(--border2); border-radius:16px; padding:28px 20px; text-align:center; cursor:pointer; transition:var(--trans); margin-bottom:16px; }
   .scan-area:active { background:var(--bg3); border-color:var(--accent); }
   .scan-area.scanning { border-color:var(--accent); background:rgba(124,108,255,0.05); }
   .scan-icon { font-size:36px; margin-bottom:10px; }
   .scan-text { font-size:14px; color:var(--text2); }
   .scan-hint { font-size:12px; color:var(--text3); margin-top:4px; }
   #scan-file { display:none; }
-  .scan-result {
-    background:var(--bg3);
-    border:1px solid var(--border2);
-    border-radius:12px;
-    padding:14px;
-    margin-bottom:16px;
-    display:none;
-  }
+  .scan-result { background:var(--bg3); border:1px solid var(--border2); border-radius:12px; padding:14px; margin-bottom:16px; display:none; }
   .scan-result.show { display:block; }
   .scan-result-label { font-size:11px; color:var(--text2); font-weight:600; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:8px; }
   .scan-result-row { display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid var(--border); }
@@ -426,139 +176,66 @@
   .scan-result-key { font-size:13px; color:var(--text2); }
   .scan-result-val { font-size:13px; font-weight:600; color:var(--text); }
 
-  /* ── ERROR / TOAST ── */
-  .toast {
-    position:fixed; top:20px; left:16px; right:16px;
-    background:var(--bg3);
-    border:1px solid var(--border2);
-    border-radius:14px;
-    padding:14px 16px;
-    display:flex; align-items:flex-start; gap:12px;
-    z-index:999;
-    transform:translateY(-120%);
-    transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);
-    box-shadow:0 8px 32px rgba(0,0,0,0.4);
-  }
+  /* ── TOAST ── */
+  .toast { position:fixed; top:20px; left:16px; right:16px; background:var(--bg3); border:1px solid var(--border2); border-radius:14px; padding:14px 16px; display:flex; align-items:flex-start; gap:12px; z-index:999; transform:translateY(-140%); transition:transform 0.3s cubic-bezier(0.4,0,0.2,1); box-shadow:0 8px 32px rgba(0,0,0,0.5); }
   .toast.show { transform:translateY(0); }
-  .toast.error { border-color:rgba(255,90,90,0.4); background:rgba(255,90,90,0.08); }
-  .toast.success { border-color:rgba(34,212,138,0.4); background:rgba(34,212,138,0.08); }
-  .toast.info { border-color:rgba(124,108,255,0.4); background:rgba(124,108,255,0.08); }
+  .toast.error { border-color:rgba(255,90,90,0.4); background:rgba(20,10,10,0.95); }
+  .toast.success { border-color:rgba(34,212,138,0.4); background:rgba(10,20,15,0.95); }
+  .toast.info { border-color:rgba(124,108,255,0.4); background:rgba(15,12,25,0.95); }
   .toast-icon { font-size:18px; flex-shrink:0; margin-top:1px; }
   .toast-body { flex:1; }
   .toast-title { font-size:14px; font-weight:700; color:var(--text); margin-bottom:2px; }
   .toast-msg { font-size:13px; color:var(--text2); line-height:1.4; }
 
-  /* ── PROFILE SCREEN ── */
-  .profile-header {
-    display:flex; flex-direction:column; align-items:center;
-    padding:24px 0 20px;
-  }
-  .profile-avatar-large {
-    width:72px; height:72px;
-    background:linear-gradient(135deg, var(--accent), #5a4eff);
-    border-radius:22px;
-    display:flex; align-items:center; justify-content:center;
-    font-size:28px; font-weight:700; color:#fff;
-    margin-bottom:12px;
-    box-shadow:0 8px 24px rgba(124,108,255,0.35);
-  }
-  .profile-email { font-size:14px; color:var(--text2); margin-top:4px; }
+  /* ── PROFILE ── */
+  .profile-header { display:flex; flex-direction:column; align-items:center; padding:24px 0 20px; }
+  .profile-avatar-large { width:72px; height:72px; background:linear-gradient(135deg,var(--accent),#5a4eff); border-radius:22px; display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:700; color:#fff; margin-bottom:12px; box-shadow:0 8px 24px rgba(124,108,255,0.35); }
   .profile-name { font-size:20px; font-weight:700; }
+  .profile-email { font-size:14px; color:var(--text2); margin-top:4px; }
   .profile-section { margin-bottom:20px; }
   .profile-section-title { font-size:12px; font-weight:600; color:var(--text3); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:10px; padding:0 4px; }
-  .profile-item {
-    display:flex; align-items:center; gap:14px;
-    padding:14px 16px;
-    background:var(--bg2);
-    border:1px solid var(--border);
-    border-radius:14px;
-    margin-bottom:8px;
-    cursor:pointer;
-    transition:var(--trans);
-  }
+  .profile-item { display:flex; align-items:center; gap:14px; padding:14px 16px; background:var(--bg2); border:1px solid var(--border); border-radius:14px; margin-bottom:8px; cursor:pointer; transition:var(--trans); }
   .profile-item:active { background:var(--bg3); }
-  .profile-item-icon {
-    width:36px; height:36px;
-    background:var(--bg3);
-    border-radius:10px;
-    display:flex; align-items:center; justify-content:center;
-    font-size:18px; flex-shrink:0;
-  }
+  .profile-item-icon { width:36px; height:36px; background:var(--bg3); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
   .profile-item-text { flex:1; }
   .profile-item-label { font-size:15px; font-weight:600; }
   .profile-item-sub { font-size:12px; color:var(--text2); margin-top:2px; }
-  .profile-item-arrow { color:var(--text3); font-size:14px; }
-  .logout-btn {
-    width:100%; padding:15px;
-    background:rgba(255,90,90,0.1);
-    border:1px solid rgba(255,90,90,0.25);
-    border-radius:14px;
-    color:var(--red); font-size:15px; font-weight:700;
-    cursor:pointer; margin-top:8px;
-    transition:var(--trans);
-  }
+  .profile-item-arrow { color:var(--text3); font-size:16px; }
+  .logout-btn { width:100%; padding:15px; background:rgba(255,90,90,0.1); border:1px solid rgba(255,90,90,0.25); border-radius:14px; color:var(--red); font-size:15px; font-weight:700; cursor:pointer; margin-top:8px; transition:var(--trans); }
   .logout-btn:active { background:rgba(255,90,90,0.2); }
 
-  /* ── LOADING SCREEN ── */
-  #screen-loading {
-    align-items:center; justify-content:center;
-    background:var(--bg);
-  }
-  .loading-logo {
-    width:72px; height:72px;
-    background:linear-gradient(135deg, var(--accent), var(--green));
-    border-radius:20px;
-    display:flex; align-items:center; justify-content:center;
-    font-size:32px;
-    box-shadow:0 12px 40px rgba(124,108,255,0.4);
-    animation:pulse-logo 2s ease-in-out infinite;
-  }
-  @keyframes pulse-logo {
-    0%,100% { box-shadow:0 12px 40px rgba(124,108,255,0.4); }
-    50% { box-shadow:0 12px 60px rgba(124,108,255,0.7); }
-  }
+  /* ── HISTORY SCREEN ── */
+  .history-filter { display:flex; gap:6px; padding:0 0 12px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .history-filter::-webkit-scrollbar { display:none; }
+  .filter-chip { flex-shrink:0; padding:7px 14px; background:var(--bg3); border:1px solid var(--border); border-radius:20px; font-size:13px; font-weight:600; color:var(--text2); cursor:pointer; transition:var(--trans); white-space:nowrap; }
+  .filter-chip.active { background:rgba(124,108,255,0.15); border-color:var(--accent); color:var(--accent2); }
+  .history-summary { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:16px; }
+  .hist-stat { background:var(--bg3); border:1px solid var(--border); border-radius:12px; padding:12px; text-align:center; }
+  .hist-stat-val { font-size:18px; font-weight:700; color:var(--text); }
+  .hist-stat-label { font-size:10px; color:var(--text3); font-weight:600; text-transform:uppercase; letter-spacing:0.5px; margin-top:3px; }
+
+  /* ── LOADING ── */
+  #screen-loading { align-items:center; justify-content:center; background:var(--bg); }
+  .loading-logo { width:72px; height:72px; background:linear-gradient(135deg,var(--accent),#5a4eff); border-radius:20px; display:flex; align-items:center; justify-content:center; font-size:32px; box-shadow:0 12px 40px rgba(124,108,255,0.4); animation:pulse-logo 2s ease-in-out infinite; }
+  @keyframes pulse-logo { 0%,100%{box-shadow:0 12px 40px rgba(124,108,255,0.4)} 50%{box-shadow:0 12px 60px rgba(124,108,255,0.7)} }
   .loading-text { margin-top:20px; font-size:14px; color:var(--text2); }
 
-  /* ── EMPTY STATE ── */
-  .empty-state {
-    display:flex; flex-direction:column; align-items:center;
-    padding:48px 20px;
-    text-align:center;
-  }
-  .empty-icon { font-size:48px; margin-bottom:16px; opacity:0.5; }
+  /* ── EMPTY ── */
+  .empty-state { display:flex; flex-direction:column; align-items:center; padding:48px 20px; text-align:center; }
+  .empty-icon { font-size:48px; margin-bottom:16px; opacity:0.4; }
   .empty-title { font-size:16px; font-weight:600; color:var(--text2); margin-bottom:6px; }
   .empty-sub { font-size:13px; color:var(--text3); }
 
-  /* ── SYNC INDICATOR ── */
-  .sync-dot {
-    width:7px; height:7px;
-    border-radius:50%;
-    background:var(--green);
-    display:inline-block;
-    margin-left:6px;
-  }
+  /* ── SYNC DOT ── */
+  .sync-dot { width:6px; height:6px; border-radius:50%; background:var(--accent); display:inline-block; margin-left:5px; vertical-align:middle; }
   .sync-dot.syncing { background:var(--yellow); animation:blink 1s ease-in-out infinite; }
   .sync-dot.error { background:var(--red); }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
   /* ── MISC ── */
-  .divider { height:1px; background:var(--border); margin:4px 0; }
-  .section-label {
-    font-size:12px; font-weight:600; color:var(--text3);
-    text-transform:uppercase; letter-spacing:0.8px;
-    padding:16px 0 8px;
-  }
-  .spinner {
-    width:20px; height:20px;
-    border:2px solid rgba(255,255,255,0.2);
-    border-top-color:#fff;
-    border-radius:50%;
-    animation:spin 0.7s linear infinite;
-    display:inline-block;
-    vertical-align:middle;
-    margin-right:8px;
-  }
-  @keyframes spin { to { transform:rotate(360deg); } }
+  .section-label { font-size:12px; font-weight:600; color:var(--text3); text-transform:uppercase; letter-spacing:0.8px; padding:16px 0 8px; }
+  .spinner { width:18px; height:18px; border:2px solid rgba(255,255,255,0.25); border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite; display:inline-block; vertical-align:middle; margin-right:8px; }
+  @keyframes spin { to{transform:rotate(360deg)} }
 </style>
 </head>
 <body>
@@ -588,25 +265,23 @@
   </div>
 </div>
 
-<!-- MAIN APP -->
-<div id="screen-main" class="screen">
-  <!-- TOP BAR -->
+<!-- MAIN (Dashboard) -->
+<div id="screen-main" class="screen has-nav">
   <div class="topbar">
     <div class="topbar-left">
       <div class="topbar-logo">⚡</div>
       <div>
-        <div class="topbar-title">ShiftTrack <span style="font-size:11px;color:var(--accent2);font-weight:600;">v1.0</span></div>
-        <div class="topbar-version" id="sync-status">Synchronisiert <span class="sync-dot" id="sync-dot"></span></div>
+        <div class="topbar-title">ShiftTrack <span style="font-size:11px;color:var(--accent2);font-weight:500;">v1.0</span></div>
+        <div class="topbar-version" id="sync-status">Synchronisiert<span class="sync-dot" id="sync-dot"></span></div>
       </div>
     </div>
     <div class="topbar-right">
-      <div class="icon-btn" onclick="openSheet('scan')" title="Bon scannen">📷</div>
+      <div class="icon-btn" onclick="openSheet('scan')">📷</div>
       <div id="user-avatar" class="user-avatar" onclick="showScreen('profile')">?</div>
     </div>
   </div>
 
-  <div class="scroll-area" id="main-scroll">
-    <!-- STATS ROW -->
+  <div class="scroll-area">
     <div class="stats-row">
       <div class="stat-card">
         <div class="stat-label">Heute</div>
@@ -620,11 +295,8 @@
       </div>
     </div>
 
-    <!-- TIP AVERAGE CARD -->
-    <div class="card tip-avg-card">
-      <div class="card-header">
-        <span class="card-title">Ø Trinkgeld</span>
-      </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Ø Trinkgeld</span></div>
       <div class="tip-seg-tabs">
         <button class="tip-seg-tab active" onclick="switchTipSeg('day',this)">Letzter Tag</button>
         <button class="tip-seg-tab" onclick="switchTipSeg('week',this)">7 Tage</button>
@@ -637,11 +309,10 @@
       </div>
     </div>
 
-    <!-- CHART CARD -->
     <div class="card">
       <div class="card-header">
         <span class="card-title">Trinkgeld Verlauf</span>
-        <span style="font-size:11px;color:var(--text3);">letzte 14 Tage</span>
+        <span style="font-size:11px;color:var(--text3);">14 Tage</span>
       </div>
       <div class="chart-wrap">
         <canvas id="tip-chart"></canvas>
@@ -653,10 +324,9 @@
       </div>
     </div>
 
-    <!-- ENTRIES -->
     <div class="section-label">Letzte Schichten</div>
-    <div class="card" id="entries-container">
-      <div class="empty-state" id="entries-empty">
+    <div class="card">
+      <div class="empty-state" id="entries-empty" style="display:none">
         <div class="empty-icon">📋</div>
         <div class="empty-title">Noch keine Einträge</div>
         <div class="empty-sub">Tippe + um eine Schicht hinzuzufügen</div>
@@ -665,20 +335,82 @@
     </div>
   </div>
 
-  <!-- FAB -->
   <button class="fab" onclick="openSheet('add')">＋</button>
 
-  <!-- BOTTOM NAV -->
   <nav class="bottom-nav">
-    <div class="nav-item active" id="nav-home" onclick="showMainTab('home',this)">
+    <div class="nav-item active" onclick="showScreen('main')">
       <span class="nav-icon">🏠</span>
       <span class="nav-label">Start</span>
     </div>
-    <div class="nav-item" id="nav-history" onclick="showMainTab('history',this)">
+    <div class="nav-item" onclick="showScreen('history')">
       <span class="nav-icon">📊</span>
       <span class="nav-label">Verlauf</span>
     </div>
-    <div class="nav-item" id="nav-profile" onclick="showScreen('profile')">
+    <div class="nav-item" onclick="showScreen('profile')">
+      <span class="nav-icon">👤</span>
+      <span class="nav-label">Profil</span>
+    </div>
+  </nav>
+</div>
+
+<!-- HISTORY SCREEN -->
+<div id="screen-history" class="screen has-nav">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-logo">⚡</div>
+      <div class="topbar-title">Verlauf</div>
+    </div>
+    <div class="topbar-right">
+      <div id="user-avatar-hist" class="user-avatar" onclick="showScreen('profile')">?</div>
+    </div>
+  </div>
+
+  <div class="scroll-area">
+    <!-- Filter chips -->
+    <div class="history-filter" id="history-filter">
+      <div class="filter-chip active" onclick="setHistFilter('all',this)">Alle</div>
+      <div class="filter-chip" onclick="setHistFilter('month',this)">Dieser Monat</div>
+      <div class="filter-chip" onclick="setHistFilter('last30',this)">30 Tage</div>
+      <div class="filter-chip" onclick="setHistFilter('last7',this)">7 Tage</div>
+    </div>
+
+    <!-- Summary -->
+    <div class="history-summary" id="hist-summary">
+      <div class="hist-stat">
+        <div class="hist-stat-val" id="hist-total-tip">€0</div>
+        <div class="hist-stat-label">Trinkgeld</div>
+      </div>
+      <div class="hist-stat">
+        <div class="hist-stat-val" id="hist-avg-tip">€0</div>
+        <div class="hist-stat-label">Ø / Schicht</div>
+      </div>
+      <div class="hist-stat">
+        <div class="hist-stat-val" id="hist-count">0</div>
+        <div class="hist-stat-label">Schichten</div>
+      </div>
+    </div>
+
+    <!-- Full list -->
+    <div class="card">
+      <div class="empty-state" id="hist-empty" style="display:none">
+        <div class="empty-icon">📊</div>
+        <div class="empty-title">Keine Einträge</div>
+        <div class="empty-sub">Für diesen Zeitraum gibt es keine Daten</div>
+      </div>
+      <div id="hist-list"></div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="nav-item" onclick="showScreen('main')">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Start</span>
+    </div>
+    <div class="nav-item active" onclick="showScreen('history')">
+      <span class="nav-icon">📊</span>
+      <span class="nav-label">Verlauf</span>
+    </div>
+    <div class="nav-item" onclick="showScreen('profile')">
       <span class="nav-icon">👤</span>
       <span class="nav-label">Profil</span>
     </div>
@@ -689,7 +421,7 @@
 <div id="screen-profile" class="screen">
   <div class="topbar">
     <div class="topbar-left">
-      <div class="icon-btn" onclick="showScreen('main')" style="font-size:20px;">‹</div>
+      <button class="icon-btn" onclick="showScreen('main')" style="font-size:22px;color:var(--text);">‹</button>
       <div class="topbar-title">Profil</div>
     </div>
   </div>
@@ -699,7 +431,6 @@
       <div class="profile-name" id="profile-name">–</div>
       <div class="profile-email" id="profile-email">–</div>
     </div>
-
     <div class="profile-section">
       <div class="profile-section-title">Statistik</div>
       <div class="profile-item" style="cursor:default;">
@@ -717,20 +448,19 @@
         </div>
       </div>
     </div>
-
     <div class="profile-section">
       <div class="profile-section-title">Konto</div>
       <div class="profile-item" onclick="openChangePassword()">
         <div class="profile-item-icon">🔐</div>
         <div class="profile-item-text">
           <div class="profile-item-label">Passwort ändern</div>
-          <div class="profile-item-sub">E-Mail wird gesendet</div>
+          <div class="profile-item-sub">Reset-Link per E-Mail</div>
         </div>
         <div class="profile-item-arrow">›</div>
       </div>
     </div>
-
     <button class="logout-btn" onclick="handleLogout()">Abmelden</button>
+    <div style="height:32px;"></div>
   </div>
 </div>
 
@@ -757,99 +487,51 @@
   </div>
   <div class="form-row">
     <div class="form-group">
-      <label class="form-label">Trinkgeld (€)</label>
-      <input type="number" class="form-input" id="form-tip" placeholder="0.00" step="0.50" min="0">
+      <label class="form-label">Umsatz (€) *</label>
+      <input type="number" inputmode="decimal" class="form-input" id="form-revenue" placeholder="0" step="0.50" min="0">
     </div>
     <div class="form-group">
-      <label class="form-label">Umsatz (€)</label>
-      <input type="number" class="form-input" id="form-revenue" placeholder="0.00" step="1" min="0">
+      <label class="form-label">Trinkgeld (€) *</label>
+      <input type="number" inputmode="decimal" class="form-input" id="form-tip" placeholder="0" step="0.50" min="0">
     </div>
   </div>
-  <div class="form-group">
-    <label class="form-label">Stunden</label>
-    <input type="number" class="form-input" id="form-hours" placeholder="8.0" step="0.5" min="0" max="24">
-  </div>
-  <div class="form-group">
-    <label class="form-label">Notiz (optional)</label>
-    <input type="text" class="form-input" id="form-note" placeholder="z.B. Frühschicht, Sonderveranstaltung…">
-  </div>
   <button class="form-submit" id="form-submit-btn" onclick="submitShift()">Speichern</button>
-  <div style="height:12px;"></div>
+  <div style="height:16px;"></div>
 </div>
 
 <!-- SCAN SHEET -->
 <div class="bottom-sheet" id="sheet-scan">
   <div class="sheet-handle"></div>
   <div class="sheet-title">Bon scannen</div>
-
   <div class="scan-area" id="scan-area" onclick="document.getElementById('scan-file').click()">
     <input type="file" id="scan-file" accept="image/*" capture="environment" onchange="handleScanFile(this)">
     <div class="scan-icon" id="scan-icon">📷</div>
     <div class="scan-text" id="scan-text">Bon-Foto aufnehmen oder auswählen</div>
-    <div class="scan-hint" id="scan-hint">JPG, PNG • Max 10MB</div>
+    <div class="scan-hint" id="scan-hint">JPG, PNG · Max 10MB</div>
   </div>
-
-  <!-- Scan result preview -->
   <div class="scan-result" id="scan-result">
     <div class="scan-result-label">Erkannte Daten</div>
-    <div class="scan-result-row">
-      <span class="scan-result-key">Umsatz</span>
-      <span class="scan-result-val" id="scan-res-rev">–</span>
-    </div>
-    <div class="scan-result-row">
-      <span class="scan-result-key">Datum</span>
-      <span class="scan-result-val" id="scan-res-date">–</span>
-    </div>
-    <div class="scan-result-row">
-      <span class="scan-result-key">Restaurant</span>
-      <span class="scan-result-val" id="scan-res-rest">–</span>
-    </div>
-    <div class="scan-result-row">
-      <span class="scan-result-key">Konfidenz</span>
-      <span class="scan-result-val" id="scan-res-conf">–</span>
-    </div>
+    <div class="scan-result-row"><span class="scan-result-key">Umsatz</span><span class="scan-result-val" id="scan-res-rev">–</span></div>
+    <div class="scan-result-row"><span class="scan-result-key">Datum</span><span class="scan-result-val" id="scan-res-date">–</span></div>
+    <div class="scan-result-row"><span class="scan-result-key">Restaurant</span><span class="scan-result-val" id="scan-res-rest">–</span></div>
+    <div class="scan-result-row"><span class="scan-result-key">Konfidenz</span><span class="scan-result-val" id="scan-res-conf">–</span></div>
   </div>
-
-  <!-- Scan error details -->
   <div id="scan-error-detail" style="display:none;background:rgba(255,90,90,0.08);border:1px solid rgba(255,90,90,0.25);border-radius:12px;padding:14px;margin-bottom:16px;">
     <div style="font-size:13px;font-weight:700;color:var(--red);margin-bottom:6px;">⚠️ Scan-Fehler</div>
     <div id="scan-error-msg" style="font-size:13px;color:var(--text2);line-height:1.5;"></div>
     <div id="scan-error-hint" style="font-size:12px;color:var(--text3);margin-top:8px;line-height:1.4;"></div>
   </div>
-
-  <button class="form-submit" id="scan-apply-btn" onclick="applyScanResult()" style="display:none;">
-    In Schicht übernehmen
-  </button>
-  <div style="height:12px;"></div>
+  <button class="form-submit" id="scan-apply-btn" onclick="applyScanResult()" style="display:none;">In Schicht übernehmen</button>
+  <div style="height:16px;"></div>
 </div>
 
 <script>
 // ═══════════════════════════════════════
-// SUPABASE CONFIG
+// CONFIG
 // ═══════════════════════════════════════
 const SUPABASE_URL = 'https://qqninfkcgtbxbvjanage.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_cZ8QsDMvRW4sFCUCWVOUvA_EbPvr4qC';
 const WORKER_URL   = 'https://young-heart-e467.oleg-egorov-2002.workers.dev';
-
-// Supabase REST helpers
-async function sbFetch(path, options = {}) {
-  const headers = {
-    'apikey': SUPABASE_KEY,
-    'Content-Type': 'application/json',
-    ...options.headers
-  };
-  if (currentSession?.access_token) {
-    headers['Authorization'] = `Bearer ${currentSession.access_token}`;
-  }
-  const res = await fetch(`${SUPABASE_URL}${path}`, { ...options, headers });
-  if (!res.ok) {
-    let errMsg = `HTTP ${res.status}`;
-    try { const e = await res.json(); errMsg = e.message || e.error_description || errMsg; } catch {}
-    throw new Error(errMsg);
-  }
-  const text = await res.text();
-  return text ? JSON.parse(text) : null;
-}
 
 // ═══════════════════════════════════════
 // STATE
@@ -862,17 +544,30 @@ let tipSegment     = 'day';
 let scanData       = null;
 let authMode       = 'login';
 let chartBars      = [];
+let histFilter     = 'all';
+
+// ═══════════════════════════════════════
+// SUPABASE
+// ═══════════════════════════════════════
+async function sbFetch(path, options = {}) {
+  const headers = { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json', ...options.headers };
+  if (currentSession?.access_token) headers['Authorization'] = `Bearer ${currentSession.access_token}`;
+  const res = await fetch(`${SUPABASE_URL}${path}`, { ...options, headers });
+  if (!res.ok) {
+    let errMsg = `HTTP ${res.status}`;
+    try { const e = await res.json(); errMsg = e.message || e.error_description || errMsg; } catch {}
+    throw new Error(errMsg);
+  }
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
+}
 
 // ═══════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════
 window.addEventListener('DOMContentLoaded', async () => {
-  // Try to restore session
   if (currentSession) {
-    try {
-      const ok = await refreshSession();
-      if (ok) { await initApp(); return; }
-    } catch {}
+    try { const ok = await refreshSession(); if (ok) { await initApp(); return; } } catch {}
   }
   showScreen('auth');
 });
@@ -880,290 +575,178 @@ window.addEventListener('DOMContentLoaded', async () => {
 async function refreshSession() {
   if (!currentSession?.refresh_token) return false;
   try {
-    const data = await sbFetch('/auth/v1/token?grant_type=refresh_token', {
-      method: 'POST',
-      body: JSON.stringify({ refresh_token: currentSession.refresh_token })
-    });
-    saveSession(data);
-    return true;
-  } catch {
-    clearSession();
-    return false;
-  }
+    const data = await sbFetch('/auth/v1/token?grant_type=refresh_token', { method:'POST', body: JSON.stringify({ refresh_token: currentSession.refresh_token }) });
+    saveSession(data); return true;
+  } catch { clearSession(); return false; }
 }
 
 function saveSession(data) {
-  currentSession = data;
-  currentUser    = data.user;
+  currentSession = data; currentUser = data.user;
   localStorage.setItem('st_session', JSON.stringify(data));
-  localStorage.setItem('st_user',    JSON.stringify(data.user));
+  localStorage.setItem('st_user', JSON.stringify(data.user));
 }
-
 function clearSession() {
-  currentSession = null;
-  currentUser    = null;
-  localStorage.removeItem('st_session');
-  localStorage.removeItem('st_user');
+  currentSession = null; currentUser = null;
+  localStorage.removeItem('st_session'); localStorage.removeItem('st_user');
 }
-
-async function initApp() {
-  updateUserUI();
-  showScreen('main');
-  await loadShifts();
-}
+async function initApp() { updateUserUI(); showScreen('main'); await loadShifts(); }
 
 // ═══════════════════════════════════════
 // AUTH
 // ═══════════════════════════════════════
 function switchAuthTab(mode) {
   authMode = mode;
-  document.querySelectorAll('.auth-tab').forEach((t,i) => {
-    t.classList.toggle('active', (i===0 && mode==='login') || (i===1 && mode==='register'));
-  });
-  document.getElementById('auth-name').style.display   = mode==='register' ? 'block' : 'none';
-  document.getElementById('auth-submit').textContent   = mode==='login' ? 'Anmelden' : 'Konto erstellen';
+  document.querySelectorAll('.auth-tab').forEach((t,i) => t.classList.toggle('active', (i===0&&mode==='login')||(i===1&&mode==='register')));
+  document.getElementById('auth-name').style.display = mode==='register' ? 'block' : 'none';
+  document.getElementById('auth-submit').textContent = mode==='login' ? 'Anmelden' : 'Konto erstellen';
   document.getElementById('auth-reset-btn').style.display = mode==='login' ? 'block' : 'none';
   document.getElementById('auth-error').classList.remove('show');
 }
 
 async function handleAuth() {
-  const email    = document.getElementById('auth-email').value.trim();
+  const email = document.getElementById('auth-email').value.trim();
   const password = document.getElementById('auth-password').value;
-  const name     = document.getElementById('auth-name').value.trim();
-  const errEl    = document.getElementById('auth-error');
-  const btn      = document.getElementById('auth-submit');
-
-  errEl.classList.remove('show');
-
-  // Validation
+  const name = document.getElementById('auth-name').value.trim();
+  const btn = document.getElementById('auth-submit');
+  document.getElementById('auth-error').classList.remove('show');
   if (!email) return showAuthError('Bitte E-Mail eingeben.');
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showAuthError('Ungültige E-Mail-Adresse.');
   if (!password) return showAuthError('Bitte Passwort eingeben.');
   if (password.length < 6) return showAuthError('Passwort muss mindestens 6 Zeichen haben.');
-  if (authMode === 'register' && !name) return showAuthError('Bitte Name eingeben.');
-
+  if (authMode==='register' && !name) return showAuthError('Bitte Name eingeben.');
   btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span>' + (authMode==='login' ? 'Wird angemeldet…' : 'Konto wird erstellt…');
-
+  btn.innerHTML = `<span class="spinner"></span>${authMode==='login'?'Wird angemeldet…':'Konto wird erstellt…'}`;
   try {
-    if (authMode === 'login') {
-      const data = await sbFetch('/auth/v1/token?grant_type=password', {
-        method: 'POST',
-        body: JSON.stringify({ email, password })
-      });
-      saveSession(data);
-      await initApp();
+    if (authMode==='login') {
+      const data = await sbFetch('/auth/v1/token?grant_type=password', { method:'POST', body: JSON.stringify({ email, password }) });
+      saveSession(data); await initApp();
     } else {
-      const data = await sbFetch('/auth/v1/signup', {
-        method: 'POST',
-        body: JSON.stringify({ email, password, data: { display_name: name } })
-      });
-      if (data.session) {
-        saveSession(data.session);
-        await initApp();
-      } else {
-        showAuthError('Bestätigungs-E-Mail wurde gesendet. Bitte E-Mail verifizieren und dann anmelden.');
-        switchAuthTab('login');
-      }
+      const data = await sbFetch('/auth/v1/signup', { method:'POST', body: JSON.stringify({ email, password, data:{ display_name: name } }) });
+      if (data.session) { saveSession(data.session); await initApp(); }
+      else { showAuthError('Bestätigungs-E-Mail wurde gesendet. Bitte E-Mail prüfen und dann anmelden.'); switchAuthTab('login'); }
     }
-  } catch(e) {
-    const msg = mapAuthError(e.message);
-    showAuthError(msg);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = authMode==='login' ? 'Anmelden' : 'Konto erstellen';
-  }
+  } catch(e) { showAuthError(mapAuthError(e.message)); }
+  finally { btn.disabled = false; btn.textContent = authMode==='login' ? 'Anmelden' : 'Konto erstellen'; }
 }
 
 function mapAuthError(msg) {
-  if (!msg) return 'Unbekannter Fehler. Bitte erneut versuchen.';
+  if (!msg) return 'Unbekannter Fehler.';
   const m = msg.toLowerCase();
-  if (m.includes('invalid login') || m.includes('invalid credentials')) return 'E-Mail oder Passwort falsch.';
+  if (m.includes('invalid login')||m.includes('invalid credentials')) return 'E-Mail oder Passwort falsch.';
   if (m.includes('email not confirmed')) return 'E-Mail noch nicht bestätigt. Bitte Posteingang prüfen.';
   if (m.includes('user already registered')) return 'Diese E-Mail ist bereits registriert. Bitte anmelden.';
   if (m.includes('rate limit')) return 'Zu viele Versuche. Bitte kurz warten.';
-  if (m.includes('network') || m.includes('fetch')) return 'Keine Verbindung. Bitte Internet prüfen.';
-  if (m.includes('weak password')) return 'Passwort zu schwach. Mindestens 6 Zeichen, besser mit Zahlen/Sonderzeichen.';
+  if (m.includes('network')||m.includes('fetch')) return 'Keine Verbindung. Bitte Internet prüfen.';
   return msg;
 }
-
-function showAuthError(msg) {
-  const el = document.getElementById('auth-error');
-  el.textContent = msg;
-  el.classList.add('show');
-}
+function showAuthError(msg) { const el=document.getElementById('auth-error'); el.textContent=msg; el.classList.add('show'); }
 
 async function handlePasswordReset() {
   const email = document.getElementById('auth-email').value.trim();
   if (!email) { showAuthError('Bitte zuerst E-Mail eingeben.'); return; }
-  try {
-    await sbFetch('/auth/v1/recover', {
-      method: 'POST',
-      body: JSON.stringify({ email })
-    });
-    showAuthError(''); 
-    showToast('info', 'E-Mail gesendet', `Passwort-Reset wurde an ${email} geschickt.`);
-  } catch(e) {
-    showAuthError('Fehler beim Senden: ' + e.message);
-  }
+  try { await sbFetch('/auth/v1/recover', { method:'POST', body: JSON.stringify({ email }) }); showToast('info','E-Mail gesendet',`Reset-Link an ${email} gesendet.`); }
+  catch(e) { showAuthError('Fehler: ' + e.message); }
 }
 
 async function handleLogout() {
-  try {
-    await sbFetch('/auth/v1/logout', { method: 'POST' });
-  } catch {}
-  clearSession();
-  shifts = [];
-  showScreen('auth');
-  showToast('info', 'Abgemeldet', 'Du wurdest erfolgreich abgemeldet.');
+  try { await sbFetch('/auth/v1/logout', { method:'POST' }); } catch {}
+  clearSession(); shifts = []; showScreen('auth');
 }
 
 async function openChangePassword() {
   if (!currentUser?.email) return;
-  try {
-    await sbFetch('/auth/v1/recover', {
-      method: 'POST',
-      body: JSON.stringify({ email: currentUser.email })
-    });
-    showToast('success', 'E-Mail gesendet', 'Passwort-Reset Link wurde gesendet.');
-  } catch(e) {
-    showToast('error', 'Fehler', e.message);
-  }
+  try { await sbFetch('/auth/v1/recover', { method:'POST', body: JSON.stringify({ email: currentUser.email }) }); showToast('success','E-Mail gesendet','Passwort-Reset Link wurde gesendet.'); }
+  catch(e) { showToast('error','Fehler', e.message); }
 }
 
 // ═══════════════════════════════════════
-// UI HELPERS
+// UI
 // ═══════════════════════════════════════
 function showScreen(name) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-' + name).classList.add('active');
-  if (name === 'profile') updateProfileUI();
+  document.getElementById('screen-'+name).classList.add('active');
+  if (name==='profile') updateProfileUI();
+  if (name==='history') renderHistory();
+  if (name==='main') setTimeout(renderChart, 50);
 }
 
 function updateUserUI() {
   if (!currentUser) return;
-  const name  = currentUser.user_metadata?.display_name || currentUser.email?.split('@')[0] || '?';
-  const initial = name.charAt(0).toUpperCase();
-  const avatarEl = document.getElementById('user-avatar');
-  if (avatarEl) avatarEl.textContent = initial;
+  const name = currentUser.user_metadata?.display_name || currentUser.email?.split('@')[0] || '?';
+  const ini = name.charAt(0).toUpperCase();
+  ['user-avatar','user-avatar-hist'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent=ini; });
 }
 
 function updateProfileUI() {
   if (!currentUser) return;
   const name = currentUser.user_metadata?.display_name || currentUser.email?.split('@')[0] || '–';
-  const initial = name.charAt(0).toUpperCase();
-  document.getElementById('profile-avatar-large').textContent = initial;
+  document.getElementById('profile-avatar-large').textContent = name.charAt(0).toUpperCase();
   document.getElementById('profile-name').textContent  = name;
   document.getElementById('profile-email').textContent = currentUser.email || '–';
-
-  const total = shifts.reduce((s,e) => s + (e.tip||0), 0);
-  document.getElementById('profile-total-tip').textContent    = '€' + fmt(total) + ' gesamt';
-  document.getElementById('profile-total-shifts').textContent = shifts.length + ' Schichten erfasst';
-}
-
-function showMainTab(tab, el) {
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  el.classList.add('active');
+  const total = shifts.reduce((s,e)=>s+(e.tip||0),0);
+  document.getElementById('profile-total-tip').textContent    = '€'+fmt(total)+' gesamt';
+  document.getElementById('profile-total-shifts').textContent = shifts.length+' Schichten erfasst';
 }
 
 let toastTimer;
 function showToast(type, title, msg) {
-  const el   = document.getElementById('toast');
+  const el = document.getElementById('toast');
   const icons = { error:'❌', success:'✅', info:'ℹ️', warning:'⚠️' };
-  document.getElementById('toast-icon').textContent  = icons[type] || 'ℹ️';
+  document.getElementById('toast-icon').textContent  = icons[type]||'ℹ️';
   document.getElementById('toast-title').textContent = title;
   document.getElementById('toast-msg').textContent   = msg;
-  el.className = `toast ${type}`;
-  el.classList.add('show');
+  el.className = 'toast '+type+' show';
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), 4000);
+  toastTimer = setTimeout(()=>el.classList.remove('show'), 4500);
 }
 
 function setSyncStatus(state) {
-  const dot   = document.getElementById('sync-dot');
-  const label = document.getElementById('sync-status');
-  if (state === 'syncing') {
-    dot.className = 'sync-dot syncing';
-    label.innerHTML = 'Synchronisiert <span class="sync-dot syncing" id="sync-dot"></span>';
-  } else if (state === 'error') {
-    dot.className = 'sync-dot error';
-    label.innerHTML = 'Sync-Fehler <span class="sync-dot error" id="sync-dot"></span>';
-  } else {
-    dot.className = 'sync-dot';
-    label.innerHTML = 'Synchronisiert <span class="sync-dot" id="sync-dot"></span>';
-  }
+  const dot = document.getElementById('sync-dot');
+  const lbl = document.getElementById('sync-status');
+  if (!dot||!lbl) return;
+  if (state==='syncing') { dot.className='sync-dot syncing'; lbl.firstChild.textContent='Synchronisiert'; }
+  else if (state==='error') { dot.className='sync-dot error'; lbl.firstChild.textContent='Sync-Fehler'; }
+  else { dot.className='sync-dot'; lbl.firstChild.textContent='Synchronisiert'; }
 }
 
 // ═══════════════════════════════════════
-// SUPABASE DB — SHIFTS
+// DB
 // ═══════════════════════════════════════
 async function loadShifts() {
   setSyncStatus('syncing');
   try {
-    const data = await sbFetch(
-      '/rest/v1/shifts?select=*&order=date.desc',
-      { headers: { 'Prefer': 'return=representation' } }
-    );
-    shifts = data || [];
-    renderAll();
-    setSyncStatus('ok');
-  } catch(e) {
-    setSyncStatus('error');
-    showToast('error', 'Laden fehlgeschlagen', mapDbError(e.message));
-    renderAll(); // render empty state
-  }
+    const data = await sbFetch('/rest/v1/shifts?select=*&order=date.desc', { headers:{'Prefer':'return=representation'} });
+    shifts = data || []; renderAll(); setSyncStatus('ok');
+  } catch(e) { setSyncStatus('error'); showToast('error','Laden fehlgeschlagen', mapDbError(e.message)); renderAll(); }
 }
 
 async function saveShift(shiftData) {
   setSyncStatus('syncing');
   try {
     if (editingShiftId) {
-      await sbFetch(`/rest/v1/shifts?id=eq.${editingShiftId}`, {
-        method: 'PATCH',
-        headers: { 'Prefer': 'return=representation' },
-        body: JSON.stringify(shiftData)
-      });
-      showToast('success', 'Gespeichert', 'Schicht wurde aktualisiert.');
+      await sbFetch(`/rest/v1/shifts?id=eq.${editingShiftId}`, { method:'PATCH', headers:{'Prefer':'return=representation'}, body: JSON.stringify(shiftData) });
+      showToast('success','Gespeichert','Schicht wurde aktualisiert.');
     } else {
-      await sbFetch('/rest/v1/shifts', {
-        method: 'POST',
-        headers: { 'Prefer': 'return=representation' },
-        body: JSON.stringify({ ...shiftData, user_id: currentUser.id })
-      });
-      showToast('success', 'Gespeichert', 'Neue Schicht wurde gespeichert.');
+      await sbFetch('/rest/v1/shifts', { method:'POST', headers:{'Prefer':'return=representation'}, body: JSON.stringify({ ...shiftData, user_id: currentUser.id }) });
+      showToast('success','Gespeichert','Neue Schicht gespeichert.');
     }
-    setSyncStatus('ok');
-    await loadShifts();
-  } catch(e) {
-    setSyncStatus('error');
-    showToast('error', 'Speichern fehlgeschlagen', mapDbError(e.message));
-  }
+    setSyncStatus('ok'); await loadShifts();
+  } catch(e) { setSyncStatus('error'); showToast('error','Speichern fehlgeschlagen', mapDbError(e.message)); }
 }
 
 async function deleteShift(id) {
   if (!confirm('Diese Schicht wirklich löschen?')) return;
   setSyncStatus('syncing');
-  try {
-    await sbFetch(`/rest/v1/shifts?id=eq.${id}`, { method: 'DELETE' });
-    showToast('success', 'Gelöscht', 'Schicht wurde entfernt.');
-    setSyncStatus('ok');
-    await loadShifts();
-  } catch(e) {
-    setSyncStatus('error');
-    showToast('error', 'Löschen fehlgeschlagen', mapDbError(e.message));
-  }
+  try { await sbFetch(`/rest/v1/shifts?id=eq.${id}`, { method:'DELETE' }); showToast('success','Gelöscht','Schicht wurde entfernt.'); setSyncStatus('ok'); await loadShifts(); }
+  catch(e) { setSyncStatus('error'); showToast('error','Löschen fehlgeschlagen', mapDbError(e.message)); }
 }
 
 function mapDbError(msg) {
   if (!msg) return 'Datenbankfehler.';
   const m = msg.toLowerCase();
-  if (m.includes('jwt expired') || m.includes('not authenticated')) {
-    clearSession(); showScreen('auth');
-    return 'Sitzung abgelaufen. Bitte neu anmelden.';
-  }
-  if (m.includes('network') || m.includes('fetch')) return 'Keine Verbindung. Bitte Internet prüfen.';
-  if (m.includes('permission denied') || m.includes('policy')) return 'Keine Berechtigung. Bitte neu anmelden.';
-  if (m.includes('unique') || m.includes('duplicate')) return 'Eintrag existiert bereits.';
+  if (m.includes('jwt expired')||m.includes('not authenticated')) { clearSession(); showScreen('auth'); return 'Sitzung abgelaufen. Bitte neu anmelden.'; }
+  if (m.includes('network')||m.includes('fetch')) return 'Keine Verbindung.';
+  if (m.includes('permission denied')) return 'Keine Berechtigung. Bitte neu anmelden.';
   return msg;
 }
 
@@ -1172,20 +755,16 @@ function mapDbError(msg) {
 // ═══════════════════════════════════════
 function openSheet(type) {
   document.getElementById('sheet-overlay').classList.add('show');
-  if (type === 'add') {
+  if (type==='add') {
     editingShiftId = null;
     document.getElementById('sheet-add-title').textContent = 'Schicht hinzufügen';
-    // Set today's date
-    const today = new Date();
-    document.getElementById('form-date').value = today.toISOString().split('T')[0];
-    document.getElementById('form-tip').value = '';
+    document.getElementById('form-date').value    = new Date().toISOString().split('T')[0];
     document.getElementById('form-revenue').value = '';
-    document.getElementById('form-hours').value = '';
-    document.getElementById('form-note').value = '';
-    document.getElementById('sheet-add').classList.add('show');
+    document.getElementById('form-tip').value     = '';
     document.getElementById('form-submit-btn').textContent = 'Speichern';
-  } else if (type === 'scan') {
-    // Reset scan UI
+    document.getElementById('sheet-add').classList.add('show');
+    setTimeout(()=>document.getElementById('form-revenue').focus(), 350);
+  } else if (type==='scan') {
     resetScanUI();
     document.getElementById('sheet-scan').classList.add('show');
   }
@@ -1193,21 +772,17 @@ function openSheet(type) {
 
 function closeSheet() {
   document.getElementById('sheet-overlay').classList.remove('show');
-  document.querySelectorAll('.bottom-sheet').forEach(s => s.classList.remove('show'));
-  // Close any open dropdowns
-  document.querySelectorAll('.dropdown-menu.show').forEach(d => d.classList.remove('show'));
+  document.querySelectorAll('.bottom-sheet').forEach(s=>s.classList.remove('show'));
+  closeDropdowns();
 }
 
 function openEditSheet(id) {
-  const shift = shifts.find(s => s.id === id);
-  if (!shift) return;
+  const s = shifts.find(s=>s.id===id); if (!s) return;
   editingShiftId = id;
   document.getElementById('sheet-add-title').textContent = 'Schicht bearbeiten';
-  document.getElementById('form-date').value    = shift.date;
-  document.getElementById('form-tip').value     = shift.tip || '';
-  document.getElementById('form-revenue').value = shift.revenue || '';
-  document.getElementById('form-hours').value   = shift.hours || '';
-  document.getElementById('form-note').value    = shift.note || '';
+  document.getElementById('form-date').value    = s.date;
+  document.getElementById('form-revenue').value = s.revenue||'';
+  document.getElementById('form-tip').value     = s.tip||'';
   document.getElementById('form-submit-btn').textContent = 'Aktualisieren';
   document.getElementById('sheet-overlay').classList.add('show');
   document.getElementById('sheet-add').classList.add('show');
@@ -1218,37 +793,31 @@ function openEditSheet(id) {
 // ═══════════════════════════════════════
 async function submitShift() {
   const date    = document.getElementById('form-date').value;
-  const tip     = parseFloat(document.getElementById('form-tip').value) || 0;
-  const revenue = parseFloat(document.getElementById('form-revenue').value) || 0;
-  const hours   = parseFloat(document.getElementById('form-hours').value) || 0;
-  const note    = document.getElementById('form-note').value.trim();
+  const revenue = parseFloat(document.getElementById('form-revenue').value);
+  const tip     = parseFloat(document.getElementById('form-tip').value);
+  const btn     = document.getElementById('form-submit-btn');
 
-  if (!date) { showToast('error', 'Fehlende Angabe', 'Bitte ein Datum wählen.'); return; }
-  if (tip < 0 || revenue < 0 || hours < 0) {
-    showToast('error', 'Ungültige Werte', 'Keine negativen Zahlen erlaubt.'); return;
-  }
-  if (hours > 24) { showToast('error', 'Ungültige Stunden', 'Mehr als 24 Stunden pro Tag nicht möglich.'); return; }
+  if (!date) { showToast('error','Fehlende Angabe','Bitte ein Datum wählen.'); return; }
+  if (isNaN(revenue)||revenue<0) { showToast('error','Ungültig','Bitte einen gültigen Umsatz eingeben.'); return; }
+  if (isNaN(tip)||tip<0)         { showToast('error','Ungültig','Bitte ein gültiges Trinkgeld eingeben.'); return; }
 
-  const btn = document.getElementById('form-submit-btn');
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span>Wird gespeichert…';
-
   closeSheet();
-  await saveShift({ date, tip, revenue, hours, note });
-
+  await saveShift({ date, revenue, tip, hours: 0, note: '' });
   btn.disabled = false;
   btn.textContent = editingShiftId ? 'Aktualisieren' : 'Speichern';
 }
 
 // ═══════════════════════════════════════
-// BON SCAN
+// SCAN
 // ═══════════════════════════════════════
 function resetScanUI() {
   scanData = null;
   document.getElementById('scan-area').className = 'scan-area';
   document.getElementById('scan-icon').textContent = '📷';
   document.getElementById('scan-text').textContent = 'Bon-Foto aufnehmen oder auswählen';
-  document.getElementById('scan-hint').textContent = 'JPG, PNG • Max 10MB';
+  document.getElementById('scan-hint').textContent = 'JPG, PNG · Max 10MB';
   document.getElementById('scan-result').classList.remove('show');
   document.getElementById('scan-apply-btn').style.display = 'none';
   document.getElementById('scan-error-detail').style.display = 'none';
@@ -1256,20 +825,9 @@ function resetScanUI() {
 }
 
 async function handleScanFile(input) {
-  const file = input.files[0];
-  if (!file) return;
-
-  // File validation
-  if (file.size > 10 * 1024 * 1024) {
-    showScanError('Datei zu groß', 'Maximum 10MB erlaubt. Bitte ein kleineres Bild wählen oder die Auflösung verringern.');
-    return;
-  }
-  if (!file.type.startsWith('image/')) {
-    showScanError('Falsches Dateiformat', 'Nur Bilder (JPG, PNG, HEIC) werden unterstützt.');
-    return;
-  }
-
-  // Show scanning state
+  const file = input.files[0]; if (!file) return;
+  if (file.size > 10*1024*1024) { showScanError('Datei zu groß','Maximum 10MB. Bitte ein kleineres Bild wählen.'); return; }
+  if (!file.type.startsWith('image/')) { showScanError('Falsches Format','Nur Bilder (JPG, PNG, HEIC).'); return; }
   const area = document.getElementById('scan-area');
   area.classList.add('scanning');
   document.getElementById('scan-icon').textContent = '⏳';
@@ -1278,397 +836,228 @@ async function handleScanFile(input) {
   document.getElementById('scan-error-detail').style.display = 'none';
   document.getElementById('scan-result').classList.remove('show');
   document.getElementById('scan-apply-btn').style.display = 'none';
-
   try {
     const base64 = await fileToBase64(file);
-    const mediaType = file.type || 'image/jpeg';
-
-    const response = await fetch(WORKER_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'scan_receipt',
-        image: base64,
-        mediaType,
-        prompt: `Du bist ein Kassabon-Analyse-Experte für österreichische Restaurants.
-Analysiere dieses Bon-Bild und extrahiere:
-1. Gesamtumsatz (Endbetrag/Total/Summe in €)
-2. Datum der Transaktion
-3. Name des Restaurants/Lokals
-
-Antworte NUR mit JSON (kein Text davor/danach):
-{
-  "revenue": <Zahl oder null>,
-  "date": "<YYYY-MM-DD oder null>",
-  "restaurant": "<Name oder null>",
-  "confidence": "<hoch|mittel|niedrig>",
-  "raw_total": "<gefundener Text>",
-  "error": null
-}
-
-Falls kein Bon erkannt: setze error auf eine kurze deutsche Fehlermeldung.
-Falls einzelne Felder fehlen: setze sie auf null.`
-      })
-    });
-
-    if (!response.ok) {
-      const errText = await response.text();
-      throw new Error(`Worker HTTP ${response.status}: ${errText.substring(0,200)}`);
-    }
-
+    const response = await fetch(WORKER_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'scan_receipt', image:base64, mediaType:file.type||'image/jpeg', prompt:`Du bist ein Kassabon-Experte für österreichische Restaurants. Extrahiere: Gesamtumsatz, Datum, Restaurantname. Antworte NUR mit JSON: {"revenue":<Zahl oder null>,"date":"<YYYY-MM-DD oder null>","restaurant":"<Name oder null>","confidence":"<hoch|mittel|niedrig>","error":null}` }) });
+    if (!response.ok) throw new Error(`Worker HTTP ${response.status}`);
     const result = await response.json();
     handleScanResult(result);
-
   } catch(e) {
     area.classList.remove('scanning');
     document.getElementById('scan-icon').textContent = '📷';
-
-    const msg = e.message || '';
-    let title = 'Scan fehlgeschlagen';
-    let hint  = 'Bitte erneut versuchen.';
-
-    if (msg.includes('fetch') || msg.includes('network') || msg.includes('Failed to fetch')) {
-      title = 'Keine Verbindung';
-      hint  = 'Bitte Internetverbindung prüfen und erneut versuchen.';
-    } else if (msg.includes('413') || msg.includes('too large')) {
-      title = 'Bild zu groß';
-      hint  = 'Bitte ein kleineres Bild verwenden (max 10MB).';
-    } else if (msg.includes('timeout') || msg.includes('504')) {
-      title = 'Zeitüberschreitung';
-      hint  = 'Der Server hat zu lange gebraucht. Bitte erneut versuchen.';
-    } else if (msg.includes('Worker HTTP 5')) {
-      title = 'Server-Fehler';
-      hint  = 'Der Scan-Server hat einen Fehler gemeldet. Bitte später versuchen.';
-    }
-
-    showScanError(title, hint + (msg ? `\n\nTechnisch: ${msg.substring(0,150)}` : ''));
+    let title='Scan fehlgeschlagen', hint='Bitte erneut versuchen.';
+    const m = (e.message||'').toLowerCase();
+    if (m.includes('fetch')||m.includes('network')) { title='Keine Verbindung'; hint='Bitte Internet prüfen.'; }
+    else if (m.includes('timeout')||m.includes('504')) { title='Zeitüberschreitung'; hint='Bitte erneut versuchen.'; }
+    showScanError(title, hint);
   }
 }
 
 function handleScanResult(result) {
-  const area = document.getElementById('scan-area');
-  area.classList.remove('scanning');
-
+  document.getElementById('scan-area').classList.remove('scanning');
   if (result.error && !result.revenue) {
     document.getElementById('scan-icon').textContent = '⚠️';
     document.getElementById('scan-text').textContent = 'Kein Bon erkannt';
-    document.getElementById('scan-hint').textContent = 'Tippe um ein anderes Bild zu wählen';
-
-    let hint = 'Tipps für bessere Ergebnisse:\n• Gutes Licht, Bon gerade halten\n• Ganzen Bon im Bild\n• Höhere Auflösung wählen';
-    if (result.error.toLowerCase().includes('kein bon') || result.error.toLowerCase().includes('kein beleg')) {
-      hint = 'Auf dem Bild wurde kein Kassenbon erkannt. Bitte stelle sicher, dass der Bon vollständig und lesbar ist.';
-    }
-    showScanError(result.error, hint);
+    document.getElementById('scan-hint').textContent = 'Tippe um erneut zu versuchen';
+    showScanError(result.error, 'Tipps: Gutes Licht, ganzen Bon im Bild, höhere Auflösung.');
     return;
   }
-
-  // Success
   scanData = result;
   document.getElementById('scan-icon').textContent = '✅';
-  document.getElementById('scan-text').textContent = 'Bon erfolgreich gescannt';
-  document.getElementById('scan-hint').textContent = 'Daten erkannt';
-
+  document.getElementById('scan-text').textContent = 'Bon erkannt';
+  document.getElementById('scan-hint').textContent = '';
   document.getElementById('scan-res-rev').textContent  = result.revenue ? `€${fmt(result.revenue)}` : '–';
   document.getElementById('scan-res-date').textContent = result.date ? formatDate(result.date) : '–';
   document.getElementById('scan-res-rest').textContent = result.restaurant || '–';
-  document.getElementById('scan-res-conf').textContent = mapConf(result.confidence);
-
+  document.getElementById('scan-res-conf').textContent = result.confidence==='hoch'?'✅ Hoch':result.confidence==='mittel'?'⚠️ Mittel':'❌ Niedrig';
   document.getElementById('scan-result').classList.add('show');
   document.getElementById('scan-apply-btn').style.display = 'block';
-
-  if (result.confidence === 'niedrig') {
-    showToast('warning', 'Niedrige Konfidenz', 'Bitte erkannte Werte prüfen und ggf. korrigieren.');
-  }
-}
-
-function mapConf(c) {
-  if (c === 'hoch')   return '✅ Hoch';
-  if (c === 'mittel') return '⚠️ Mittel';
-  if (c === 'niedrig')return '❌ Niedrig';
-  return c || '–';
+  if (result.confidence==='niedrig') showToast('warning','Niedrige Konfidenz','Bitte erkannte Werte prüfen.');
 }
 
 function showScanError(title, detail) {
-  const errEl  = document.getElementById('scan-error-detail');
-  const msgEl  = document.getElementById('scan-error-msg');
-  const hintEl = document.getElementById('scan-error-hint');
-  msgEl.textContent  = title;
-  hintEl.textContent = detail;
-  errEl.style.display = 'block';
+  document.getElementById('scan-error-detail').style.display = 'block';
+  document.getElementById('scan-error-msg').textContent  = title;
+  document.getElementById('scan-error-hint').textContent = detail;
   document.getElementById('scan-text').textContent = 'Tippe um erneut zu versuchen';
-  document.getElementById('scan-hint').textContent = 'Oder Bild wechseln';
+  document.getElementById('scan-hint').textContent = '';
 }
 
 function applyScanResult() {
   if (!scanData) return;
   closeSheet();
-  setTimeout(() => {
+  setTimeout(()=>{
     openSheet('add');
     if (scanData.revenue) document.getElementById('form-revenue').value = scanData.revenue;
     if (scanData.date)    document.getElementById('form-date').value    = scanData.date;
-    if (scanData.restaurant) document.getElementById('form-note').value = scanData.restaurant;
   }, 300);
 }
 
 function fileToBase64(file) {
-  return new Promise((res, rej) => {
-    const r = new FileReader();
-    r.onload = () => res(r.result.split(',')[1]);
-    r.onerror = () => rej(new Error('Fehler beim Lesen der Datei'));
-    r.readAsDataURL(file);
-  });
+  return new Promise((res,rej) => { const r=new FileReader(); r.onload=()=>res(r.result.split(',')[1]); r.onerror=()=>rej(new Error('Lesefehler')); r.readAsDataURL(file); });
 }
 
 // ═══════════════════════════════════════
 // RENDER
 // ═══════════════════════════════════════
-function renderAll() {
-  renderStats();
-  renderTipAvg();
-  renderChart();
-  renderEntries();
-}
+function renderAll() { renderStats(); renderTipAvg(); renderChart(); renderEntries(); }
 
-function fmt(n) {
-  return Number(n).toLocaleString('de-AT', { minimumFractionDigits:2, maximumFractionDigits:2 });
-}
-
-function formatDate(dateStr) {
-  const d = new Date(dateStr + 'T12:00:00');
-  return d.toLocaleDateString('de-AT', { weekday:'short', day:'2-digit', month:'2-digit', year:'numeric' });
-}
-
-function dateInt(dateStr) {
-  const [y,m,d] = dateStr.split('-').map(Number);
-  return y*10000 + m*100 + d;
-}
-
-function todayInt() {
-  const n = new Date();
-  return n.getFullYear()*10000 + (n.getMonth()+1)*100 + n.getDate();
-}
+function fmt(n) { return Number(n).toLocaleString('de-AT',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function formatDate(s) { return new Date(s+'T12:00:00').toLocaleDateString('de-AT',{weekday:'short',day:'2-digit',month:'2-digit',year:'numeric'}); }
+function dateInt(s) { const [y,m,d]=s.split('-').map(Number); return y*10000+m*100+d; }
+function todayInt() { const n=new Date(); return n.getFullYear()*10000+(n.getMonth()+1)*100+n.getDate(); }
 
 function renderStats() {
-  const today = todayInt();
-  const now   = new Date();
-  const currMonth = now.getFullYear()*100 + (now.getMonth()+1);
-
-  let todayTip=0, todayRev=0, monthTip=0, monthShifts=0;
-  for (const s of shifts) {
-    const di = dateInt(s.date);
-    const sm = Math.floor(di/100);
-    if (di === today)      { todayTip += s.tip||0; todayRev += s.revenue||0; }
-    if (sm === currMonth)  { monthTip += s.tip||0; monthShifts++; }
-  }
-
-  document.getElementById('stat-today-tip').innerHTML  = `€${fmt(todayTip)}`;
-  document.getElementById('stat-today-rev').textContent = `€${fmt(todayRev)} Umsatz`;
-  document.getElementById('stat-month-tip').innerHTML  = `€${fmt(monthTip)}`;
-  document.getElementById('stat-month-shifts').textContent = `${monthShifts} Schicht${monthShifts!==1?'en':''}`;
+  const today=todayInt(), now=new Date(), cm=now.getFullYear()*100+(now.getMonth()+1);
+  let tt=0,tr=0,mt=0,ms=0;
+  for(const s of shifts){const di=dateInt(s.date);if(di===today){tt+=s.tip||0;tr+=s.revenue||0;}if(Math.floor(di/100)===cm){mt+=s.tip||0;ms++;}}
+  document.getElementById('stat-today-tip').textContent  = '€'+fmt(tt);
+  document.getElementById('stat-today-rev').textContent  = '€'+fmt(tr)+' Umsatz';
+  document.getElementById('stat-month-tip').textContent  = '€'+fmt(mt);
+  document.getElementById('stat-month-shifts').textContent = ms+' Schicht'+(ms!==1?'en':'');
 }
 
 function renderTipAvg() {
-  const today = todayInt();
-  const now   = new Date();
-  let filtered = [];
-
-  if (tipSegment === 'day') {
-    filtered = shifts.filter(s => dateInt(s.date) === today);
-  } else if (tipSegment === 'week') {
-    const cutoff = todayInt() - 7;
-    filtered = shifts.filter(s => dateInt(s.date) >= cutoff);
-  } else {
-    const currMonth = now.getFullYear()*100 + (now.getMonth()+1);
-    filtered = shifts.filter(s => Math.floor(dateInt(s.date)/100) === currMonth);
-  }
-
-  if (!filtered.length) {
-    document.getElementById('tip-avg-val').textContent = '€0';
-    document.getElementById('tip-avg-sub').textContent = 'Keine Einträge';
-    document.getElementById('tip-avg-pct').textContent = '0%';
-    return;
-  }
-
-  const totalTip = filtered.reduce((s,e) => s + (e.tip||0), 0);
-  const totalRev = filtered.reduce((s,e) => s + (e.revenue||0), 0);
-  const avg      = totalTip / filtered.length;
-  const pct      = totalRev > 0 ? (totalTip/totalRev*100) : 0;
-
-  document.getElementById('tip-avg-val').textContent = `€${fmt(avg)}`;
-  document.getElementById('tip-avg-sub').textContent = `${filtered.length} Schicht${filtered.length!==1?'en':''} · €${fmt(totalTip)} gesamt`;
-  document.getElementById('tip-avg-pct').textContent = pct > 0 ? `Ø ${pct.toFixed(1)}% vom Umsatz` : 'Kein Umsatz erfasst';
+  const today=todayInt(), now=new Date();
+  let f=[];
+  if(tipSegment==='day') f=shifts.filter(s=>dateInt(s.date)===today);
+  else if(tipSegment==='week') f=shifts.filter(s=>dateInt(s.date)>=todayInt()-7);
+  else { const cm=now.getFullYear()*100+(now.getMonth()+1); f=shifts.filter(s=>Math.floor(dateInt(s.date)/100)===cm); }
+  if(!f.length){document.getElementById('tip-avg-val').textContent='€0';document.getElementById('tip-avg-sub').textContent='Keine Einträge';document.getElementById('tip-avg-pct').textContent='0%';return;}
+  const tt=f.reduce((s,e)=>s+(e.tip||0),0), tr=f.reduce((s,e)=>s+(e.revenue||0),0), avg=tt/f.length, pct=tr>0?tt/tr*100:0;
+  document.getElementById('tip-avg-val').textContent = '€'+fmt(avg);
+  document.getElementById('tip-avg-sub').textContent = f.length+' Schicht'+(f.length!==1?'en':'')+' · €'+fmt(tt)+' gesamt';
+  document.getElementById('tip-avg-pct').textContent = pct>0?'Ø '+pct.toFixed(1)+'% vom Umsatz':'Kein Umsatz erfasst';
 }
 
-function switchTipSeg(seg, el) {
-  tipSegment = seg;
-  document.querySelectorAll('.tip-seg-tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  renderTipAvg();
-}
+function switchTipSeg(seg,el){tipSegment=seg;document.querySelectorAll('.tip-seg-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');renderTipAvg();}
 
 function renderEntries() {
-  const listEl  = document.getElementById('entries-list');
-  const emptyEl = document.getElementById('entries-empty');
-
-  if (!shifts.length) {
-    listEl.innerHTML = '';
-    emptyEl.style.display = 'flex';
-    return;
-  }
-  emptyEl.style.display = 'none';
-
-  // Show last 20
-  const recent = shifts.slice(0, 20);
-  listEl.innerHTML = recent.map(s => {
-    const pct = s.revenue > 0 ? ` · ${(s.tip/s.revenue*100).toFixed(1)}%` : '';
-    return `
-    <div class="entry-item" id="entry-${s.id}">
+  const listEl=document.getElementById('entries-list'), emptyEl=document.getElementById('entries-empty');
+  if(!shifts.length){listEl.innerHTML='';emptyEl.style.display='flex';return;}
+  emptyEl.style.display='none';
+  listEl.innerHTML = shifts.slice(0,20).map(s=>{
+    const pct=s.revenue>0?` · ${(s.tip/s.revenue*100).toFixed(1)}%`:'';
+    return `<div class="entry-item" id="entry-${s.id}">
       <div class="entry-dot"></div>
       <div class="entry-info">
         <div class="entry-date">${formatDate(s.date)}</div>
         <div class="entry-chips">
-          <span class="chip tip">💰 €${fmt(s.tip)}${pct}</span>
-          ${s.revenue > 0 ? `<span class="chip rev">📊 €${fmt(s.revenue)}</span>` : ''}
-          ${s.hours > 0   ? `<span class="chip hours">⏱ ${s.hours}h</span>` : ''}
-          ${s.note        ? `<span class="chip">📝 ${s.note.substring(0,20)}</span>` : ''}
+          <span class="chip tip">€${fmt(s.tip)} Tip${pct}</span>
+          ${s.revenue>0?`<span class="chip rev">€${fmt(s.revenue)} Umsatz</span>`:''}
         </div>
       </div>
       <button class="entry-menu-btn" onclick="toggleDropdown('${s.id}',event)">⋯</button>
       <div class="dropdown-menu" id="dd-${s.id}">
         <div class="dropdown-item" onclick="openEditSheet('${s.id}');closeDropdowns()">✏️ Bearbeiten</div>
-        <div class="divider"></div>
+        <div class="dd-divider"></div>
         <div class="dropdown-item danger" onclick="deleteShift('${s.id}')">🗑️ Löschen</div>
       </div>
     </div>`;
   }).join('');
 }
 
-function toggleDropdown(id, e) {
-  e.stopPropagation();
-  const dd = document.getElementById('dd-' + id);
-  const wasOpen = dd.classList.contains('show');
-  closeDropdowns();
-  if (!wasOpen) dd.classList.add('show');
+// ═══════════════════════════════════════
+// HISTORY
+// ═══════════════════════════════════════
+function setHistFilter(filter, el) {
+  histFilter = filter;
+  document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderHistory();
 }
 
-function closeDropdowns() {
-  document.querySelectorAll('.dropdown-menu.show').forEach(d => d.classList.remove('show'));
+function getFilteredShifts() {
+  const now=new Date(), today=todayInt();
+  if(histFilter==='all') return shifts;
+  if(histFilter==='month') { const cm=now.getFullYear()*100+(now.getMonth()+1); return shifts.filter(s=>Math.floor(dateInt(s.date)/100)===cm); }
+  if(histFilter==='last30') return shifts.filter(s=>dateInt(s.date)>=todayInt()-30);
+  if(histFilter==='last7')  return shifts.filter(s=>dateInt(s.date)>=todayInt()-7);
+  return shifts;
 }
 
-document.addEventListener('click', closeDropdowns);
+function renderHistory() {
+  const filtered = getFilteredShifts();
+  const listEl   = document.getElementById('hist-list');
+  const emptyEl  = document.getElementById('hist-empty');
+
+  const tt  = filtered.reduce((s,e)=>s+(e.tip||0),0);
+  const avg = filtered.length>0 ? tt/filtered.length : 0;
+  document.getElementById('hist-total-tip').textContent = '€'+fmt(tt);
+  document.getElementById('hist-avg-tip').textContent   = '€'+fmt(avg);
+  document.getElementById('hist-count').textContent     = filtered.length;
+
+  if(!filtered.length){listEl.innerHTML='';emptyEl.style.display='flex';return;}
+  emptyEl.style.display='none';
+
+  listEl.innerHTML = filtered.map(s=>{
+    const pct=s.revenue>0?` · ${(s.tip/s.revenue*100).toFixed(1)}%`:'';
+    return `<div class="entry-item" id="hist-entry-${s.id}">
+      <div class="entry-dot"></div>
+      <div class="entry-info">
+        <div class="entry-date">${formatDate(s.date)}</div>
+        <div class="entry-chips">
+          <span class="chip tip">€${fmt(s.tip)} Tip${pct}</span>
+          ${s.revenue>0?`<span class="chip rev">€${fmt(s.revenue)} Umsatz</span>`:''}
+        </div>
+      </div>
+      <button class="entry-menu-btn" onclick="toggleDropdown('hist-${s.id}',event)">⋯</button>
+      <div class="dropdown-menu" id="dd-hist-${s.id}">
+        <div class="dropdown-item" onclick="openEditSheet('${s.id}');closeDropdowns()">✏️ Bearbeiten</div>
+        <div class="dd-divider"></div>
+        <div class="dropdown-item danger" onclick="deleteShift('${s.id}')">🗑️ Löschen</div>
+      </div>
+    </div>`;
+  }).join('');
+}
 
 // ═══════════════════════════════════════
 // CHART
 // ═══════════════════════════════════════
 function renderChart() {
-  const canvas = document.getElementById('tip-chart');
-  const ctx    = canvas.getContext('2d');
-  const parent = canvas.parentElement;
-
-  canvas.width  = parent.offsetWidth * devicePixelRatio;
-  canvas.height = parent.offsetHeight * devicePixelRatio;
-  canvas.style.width  = parent.offsetWidth + 'px';
-  canvas.style.height = parent.offsetHeight + 'px';
-  ctx.scale(devicePixelRatio, devicePixelRatio);
-
-  const W = parent.offsetWidth;
-  const H = parent.offsetHeight;
-
-  // Last 14 days
-  const days = [];
-  const today = new Date();
-  for (let i = 13; i >= 0; i--) {
-    const d = new Date(today);
-    d.setDate(d.getDate() - i);
-    const key = d.toISOString().split('T')[0];
-    days.push({ key, label: d.toLocaleDateString('de-AT',{day:'2-digit',month:'2-digit'}), tip:0, revenue:0 });
-  }
-
-  for (const s of shifts) {
-    const day = days.find(d => d.key === s.date);
-    if (day) { day.tip += s.tip||0; day.revenue += s.revenue||0; }
-  }
-
-  const maxTip = Math.max(...days.map(d => d.tip), 1);
-  const barW   = Math.floor((W - 20) / days.length);
-  const barGap = 3;
-  const padB   = 20;
-  const padT   = 10;
-  const drawH  = H - padB - padT;
-
-  ctx.clearRect(0, 0, W, H);
-
-  chartBars = days.map((day, i) => {
-    const x  = 10 + i * barW;
-    const bH = day.tip > 0 ? Math.max(4, (day.tip / maxTip) * drawH) : 2;
-    const y  = padT + drawH - bH;
-    return { x, y, w: barW - barGap, h: bH, day, index: i };
+  const canvas=document.getElementById('tip-chart'); if(!canvas) return;
+  const ctx=canvas.getContext('2d'), parent=canvas.parentElement;
+  const W=parent.offsetWidth, H=parent.offsetHeight;
+  canvas.width=W*devicePixelRatio; canvas.height=H*devicePixelRatio;
+  canvas.style.width=W+'px'; canvas.style.height=H+'px';
+  ctx.scale(devicePixelRatio,devicePixelRatio);
+  const days=[];
+  for(let i=13;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const k=d.toISOString().split('T')[0];days.push({key:k,label:d.toLocaleDateString('de-AT',{day:'2-digit',month:'2-digit'}),tip:0,revenue:0});}
+  for(const s of shifts){const day=days.find(d=>d.key===s.date);if(day){day.tip+=s.tip||0;day.revenue+=s.revenue||0;}}
+  const maxTip=Math.max(...days.map(d=>d.tip),1);
+  const barW=Math.floor((W-20)/days.length), barGap=3, padB=20, padT=10, drawH=H-padB-padT;
+  ctx.clearRect(0,0,W,H);
+  chartBars=days.map((day,i)=>{const x=10+i*barW,bH=day.tip>0?Math.max(4,(day.tip/maxTip)*drawH):2,y=padT+drawH-bH;return{x,y,w:barW-barGap,h:bH,day,index:i};});
+  chartBars.forEach(bar=>{
+    ctx.fillStyle=bar.day.tip>0?'rgba(124,108,255,0.8)':'rgba(42,42,56,0.8)';
+    roundRect(ctx,bar.x,bar.y,bar.w,bar.h,4); ctx.fill();
+    if(bar.index%3===0||bar.index===13){ctx.fillStyle='rgba(90,90,114,0.9)';ctx.font=`10px -apple-system,sans-serif`;ctx.textAlign='center';ctx.fillText(bar.day.label,bar.x+bar.w/2,H-4);}
   });
-
-  // Draw bars
-  chartBars.forEach(bar => {
-    const alpha = bar.day.tip > 0 ? 1 : 0.2;
-    ctx.fillStyle = bar.day.tip > 0
-      ? `rgba(34,212,138,${alpha})`
-      : `rgba(42,42,56,1)`;
-    roundRect(ctx, bar.x, bar.y, bar.w, bar.h, 4);
-    ctx.fill();
-
-    // Label every 3rd
-    if (bar.index % 3 === 0 || bar.index === 13) {
-      ctx.fillStyle = 'rgba(90,90,114,0.9)';
-      ctx.font      = `${10 * devicePixelRatio / devicePixelRatio}px -apple-system,sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.fillText(bar.day.label, bar.x + bar.w/2, H - 4);
-    }
-  });
-
-  // Touch/click handler
-  canvas.onclick = (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const mx   = e.clientX - rect.left;
-    const my   = e.clientY - rect.top;
-    const hit  = chartBars.find(b => mx >= b.x && mx <= b.x+b.w && my >= b.y-8 && my <= b.y+b.h+8);
-    if (hit) showChartCallout(hit, rect);
-    else     hideChartCallout();
-  };
+  canvas.onclick=(e)=>{const rect=canvas.getBoundingClientRect(),mx=e.clientX-rect.left,my=e.clientY-rect.top;const hit=chartBars.find(b=>mx>=b.x&&mx<=b.x+b.w&&my>=b.y-8&&my<=b.y+b.h+8);hit?showChartCallout(hit):hideChartCallout();};
 }
 
-function roundRect(ctx, x, y, w, h, r) {
-  ctx.beginPath();
-  ctx.moveTo(x+r, y);
-  ctx.lineTo(x+w-r, y);
-  ctx.quadraticCurveTo(x+w, y, x+w, y+r);
-  ctx.lineTo(x+w, y+h-r);
-  ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
-  ctx.lineTo(x+r, y+h);
-  ctx.quadraticCurveTo(x, y+h, x, y+h-r);
-  ctx.lineTo(x, y+r);
-  ctx.quadraticCurveTo(x, y, x+r, y);
-  ctx.closePath();
+function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+
+function showChartCallout(bar) {
+  const callout=document.getElementById('chart-callout');
+  const pct=bar.day.revenue>0?`${(bar.day.tip/bar.day.revenue*100).toFixed(1)}% vom Umsatz`:'';
+  document.getElementById('cal-date').textContent=formatDate(bar.day.key);
+  document.getElementById('cal-tip').textContent=bar.day.tip>0?`€${fmt(bar.day.tip)} Trinkgeld`:'Keine Daten';
+  document.getElementById('cal-pct').textContent=pct;
+  callout.style.display='block';
+  const canvas=document.getElementById('tip-chart'), wrap=canvas.parentElement;
+  let left=bar.x+bar.w/2-60; left=Math.max(0,Math.min(left,wrap.offsetWidth-140));
+  callout.style.left=left+'px'; callout.style.top=Math.max(0,bar.y-70)+'px';
 }
+function hideChartCallout(){document.getElementById('chart-callout').style.display='none';}
 
-function showChartCallout(bar, canvasRect) {
-  const callout = document.getElementById('chart-callout');
-  const pct = bar.day.revenue > 0 ? `${(bar.day.tip/bar.day.revenue*100).toFixed(1)}% vom Umsatz` : '';
-  document.getElementById('cal-date').textContent = formatDate(bar.day.key);
-  document.getElementById('cal-tip').textContent  = bar.day.tip > 0 ? `€${fmt(bar.day.tip)} Trinkgeld` : 'Keine Daten';
-  document.getElementById('cal-pct').textContent  = pct;
-  callout.style.display = 'block';
-
-  const canvas = document.getElementById('tip-chart');
-  const wrap   = canvas.parentElement;
-  let left = bar.x + bar.w/2 - 60;
-  left = Math.max(0, Math.min(left, wrap.offsetWidth - 140));
-  callout.style.left = left + 'px';
-  callout.style.top  = Math.max(0, bar.y - 70) + 'px';
-}
-
-function hideChartCallout() {
-  document.getElementById('chart-callout').style.display = 'none';
-}
-
-window.addEventListener('resize', () => { if (shifts.length >= 0) renderChart(); });
+// ═══════════════════════════════════════
+// DROPDOWNS
+// ═══════════════════════════════════════
+function toggleDropdown(id,e){e.stopPropagation();const dd=document.getElementById('dd-'+id);const was=dd.classList.contains('show');closeDropdowns();if(!was)dd.classList.add('show');}
+function closeDropdowns(){document.querySelectorAll('.dropdown-menu.show').forEach(d=>d.classList.remove('show'));}
+document.addEventListener('click', closeDropdowns);
+window.addEventListener('resize', ()=>renderChart());
 </script>
 </body>
 </html>
