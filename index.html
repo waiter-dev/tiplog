@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="ShiftTrack">
+<meta name="apple-mobile-web-app-title" content="TipLog">
 <meta name="theme-color" content="#08080e">
-<title>ShiftTrack</title>
+<title>TipLog</title>
 <link rel="manifest" href="manifest.json">
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -65,8 +65,6 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 .topbar-sub{font-size:11px;color:var(--text3);font-weight:600;margin-top:1px;display:flex;align-items:center;gap:5px;}
 .topbar-right{display:flex;align-items:flex-end;gap:8px;}
 .topbar-avatar{width:32px;height:32px;background:linear-gradient(135deg,var(--accent),#a29bfe);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;cursor:pointer;}
-.topbar-scan-btn{width:32px;height:32px;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;transition:all .2s;}
-.topbar-scan-btn:active{background:var(--surface3);}
 .sync-dot{width:6px;height:6px;border-radius:50%;background:var(--green-b);display:inline-block;flex-shrink:0;}
 .sync-dot.syncing{background:var(--yellow);animation:blink 1s ease-in-out infinite;}
 .sync-dot.error{background:var(--red);}
@@ -169,20 +167,6 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 .form-submit:active{transform:scale(0.98);}
 .form-submit:disabled{opacity:0.5;pointer-events:none;}
 
-/* SCAN */
-.scan-upload-area{border:2px dashed rgba(162,155,254,0.3);border-radius:20px;padding:32px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;background:rgba(108,92,231,0.05);cursor:pointer;transition:all .2s;text-align:center;margin-bottom:14px;}
-.scan-upload-area:active{background:rgba(108,92,231,0.12);}
-.scan-result-card{background:var(--surface2);border:1px solid var(--border2);border-radius:14px;padding:14px;margin-bottom:12px;display:none;}
-.scan-result-card.show{display:block;}
-.scan-result-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);}
-.scan-result-row:last-child{border-bottom:none;}
-.scan-result-key{font-size:12px;color:var(--text2);font-weight:600;}
-.scan-result-val{font-size:13px;font-weight:700;color:var(--text);font-family:'DM Mono',monospace;}
-.scan-error-box{background:rgba(255,71,87,0.08);border:1px solid rgba(255,71,87,0.25);border-radius:12px;padding:14px;margin-bottom:14px;display:none;}
-.scan-error-box.show{display:block;}
-.scan-error-title{font-size:13px;font-weight:800;color:var(--red);margin-bottom:5px;}
-.scan-error-hint{font-size:12px;color:var(--text2);line-height:1.5;}
-
 /* PROFILE */
 .profile-wrap{padding:0 16px 16px;}
 .profile-header{display:flex;flex-direction:column;align-items:center;padding:20px 0 24px;}
@@ -233,14 +217,14 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 
 <!-- LOADING -->
 <div id="screen-loading">
-  <div class="loading-logo">⚡</div>
-  <div class="loading-text">ShiftTrack wird geladen…</div>
+  <div class="loading-logo">🍽️</div>
+  <div class="loading-text">TipLog wird geladen…</div>
 </div>
 
 <!-- AUTH -->
 <div id="screen-auth">
-  <div class="auth-logo">⚡</div>
-  <div class="auth-title">ShiftTrack</div>
+  <div class="auth-logo">🍽️</div>
+  <div class="auth-title">TipLog</div>
   <div class="auth-sub">Dein Schicht- & Trinkgeld-Tracker</div>
   <div class="auth-tabs">
     <button class="auth-tab active" onclick="switchAuthTab('login')">Anmelden</button>
@@ -250,7 +234,9 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
     <div id="auth-error" class="auth-error"></div>
     <input id="auth-email" class="auth-field" type="email" placeholder="E-Mail" autocomplete="email">
     <input id="auth-password" class="auth-field" type="password" placeholder="Passwort" autocomplete="current-password">
+    <input id="auth-password2" class="auth-field" type="password" placeholder="Passwort wiederholen" autocomplete="new-password" style="display:none">
     <input id="auth-name" class="auth-field" type="text" placeholder="Dein Name" autocomplete="name" style="display:none">
+    <div id="auth-hint" style="display:none;font-size:11px;color:var(--text3);text-align:left;margin:-4px 2px 2px;line-height:1.4;">Mindestens 6 Zeichen, mit mindestens einem Groß- und einem Kleinbuchstaben.</div>
     <button id="auth-submit" class="auth-btn" onclick="handleAuth()">Anmelden</button>
     <button id="auth-reset-btn" style="background:none;border:none;color:var(--text3);font-size:13px;font-family:'Figtree',sans-serif;cursor:pointer;padding:4px;text-decoration:underline;" onclick="handlePasswordReset()">Passwort vergessen?</button>
   </div>
@@ -265,11 +251,10 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 <!-- TOPBAR -->
 <div class="topbar" id="main-topbar" style="display:none;">
   <div class="topbar-left">
-    <div class="topbar-title">ShiftTrack 🍽️ <span style="font-size:11px;color:var(--accent-l);font-weight:600;">v1.0.2</span></div>
+    <div class="topbar-title">TipLog 🍽️ <span style="font-size:11px;color:var(--accent-l);font-weight:600;">v1.1.0</span></div>
     <div class="topbar-sub"><span id="sync-label">Bereit</span><span class="sync-dot" id="sync-dot"></span></div>
   </div>
   <div class="topbar-right">
-    <div class="topbar-scan-btn" onclick="openSheet('scan')">📷</div>
     <div class="topbar-avatar" id="topbar-avatar" onclick="showTab('profile')">?</div>
   </div>
 </div>
@@ -425,9 +410,6 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 <div class="bottom-sheet" id="sheet-add">
   <div class="sheet-handle"></div>
   <div class="sheet-title" id="sheet-add-title">Schicht hinzufügen</div>
-  <button onclick="closeSheet();setTimeout(()=>{openSheet('scan');setTimeout(()=>document.getElementById('scan-file').click(),350);},300);" style="width:100%;margin-bottom:16px;padding:11px;background:rgba(108,92,231,0.12);border:1px solid rgba(108,92,231,0.25);border-radius:12px;color:var(--accent-l);font-family:'Figtree',sans-serif;font-size:13px;font-weight:700;cursor:pointer;" id="scan-shortcut-btn">
-    📷 Bon scannen
-  </button>
   <div class="form-group">
     <label class="form-label">Datum</label>
     <input type="date" class="form-input" id="form-date">
@@ -450,39 +432,13 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
   <div style="height:16px;"></div>
 </div>
 
-<!-- SCAN SHEET -->
-<div class="bottom-sheet" id="sheet-scan">
-  <div class="sheet-handle"></div>
-  <div class="sheet-title">📷 Bon scannen</div>
-  <div class="scan-upload-area" id="scan-area" onclick="document.getElementById('scan-file').click()">
-    <input type="file" id="scan-file" accept="image/*" capture="environment" onchange="handleScanFile(this)">
-    <div style="font-size:44px;" id="scan-icon">📄</div>
-    <div style="font-size:15px;font-weight:800;" id="scan-text">Foto aufnehmen oder auswählen</div>
-    <div style="font-size:12px;color:var(--text2);" id="scan-hint">Bon der Z-Abrechnung · JPG, PNG</div>
-  </div>
-  <div class="scan-result-card" id="scan-result">
-    <div style="font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;">Erkannte Daten</div>
-    <div class="scan-result-row"><span class="scan-result-key">Umsatz</span><span class="scan-result-val" id="scan-res-rev">—</span></div>
-    <div class="scan-result-row"><span class="scan-result-key">Datum</span><span class="scan-result-val" id="scan-res-date">—</span></div>
-    <div class="scan-result-row"><span class="scan-result-key">Restaurant</span><span class="scan-result-val" id="scan-res-rest">—</span></div>
-    <div class="scan-result-row"><span class="scan-result-key">Konfidenz</span><span class="scan-result-val" id="scan-res-conf">—</span></div>
-  </div>
-  <div class="scan-error-box" id="scan-error-detail">
-    <div class="scan-error-title" id="scan-error-msg">Fehler</div>
-    <div class="scan-error-hint" id="scan-error-hint"></div>
-  </div>
-  <button class="form-submit" id="scan-apply-btn" onclick="applyScanResult()" style="display:none;">In Schicht übernehmen →</button>
-  <div style="height:16px;"></div>
-</div>
-
 <script>
 const SUPABASE_URL = 'https://qqninfkcgtbxbvjanage.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_cZ8QsDMvRW4sFCUCWVOUvA_EbPvr4qC';
-const WORKER_URL   = 'https://young-heart-e467.oleg-egorov-2002.workers.dev';
 
 let currentSession = JSON.parse(localStorage.getItem('st_session')||'null');
 let currentUser    = JSON.parse(localStorage.getItem('st_user')||'null');
-let shifts=[], editingShiftId=null, histFilter='all', scanData=null, authMode='login';
+let shifts=[], editingShiftId=null, histFilter='all', authMode='login';
 let _chartBars=[], _chartSelected=null, activeTab='home';
 
 async function sbFetch(path,options={}){
@@ -525,33 +481,61 @@ function showAuthScreen(){
 }
 
 function switchAuthTab(mode){
-  authMode=mode;
-  document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&mode==='login')||(i===1&&mode==='register')));
-  document.getElementById('auth-name').style.display=mode==='register'?'block':'none';
-  document.getElementById('auth-submit').textContent=mode==='login'?'Anmelden':'Konto erstellen';
-  document.getElementById('auth-reset-btn').style.display=mode==='login'?'block':'none';
+  authMode=mode;const reg=mode==='register';
+  document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&!reg)||(i===1&&reg)));
+  document.getElementById('auth-name').style.display=reg?'block':'none';
+  document.getElementById('auth-password2').style.display=reg?'block':'none';
+  document.getElementById('auth-hint').style.display=reg?'block':'none';
+  document.getElementById('auth-password').setAttribute('autocomplete',reg?'new-password':'current-password');
+  document.getElementById('auth-submit').textContent=reg?'Konto erstellen':'Anmelden';
+  document.getElementById('auth-reset-btn').style.display=reg?'none':'block';
   document.getElementById('auth-error').classList.remove('show');
 }
+
+const MAX_LOGIN_FAILS=5;
+function failStore(){try{return JSON.parse(localStorage.getItem('tiplog_fails')||'{}');}catch{return{};}}
+function getFailCount(email){const f=failStore()[email.toLowerCase()];return f?f.count:0;}
+function setFailCount(email,count){const s=failStore();s[email.toLowerCase()]={count};localStorage.setItem('tiplog_fails',JSON.stringify(s));}
+function clearFails(email){const s=failStore();delete s[email.toLowerCase()];localStorage.setItem('tiplog_fails',JSON.stringify(s));}
+function validPassword(pw){return pw.length>=6&&/[a-z]/.test(pw)&&/[A-Z]/.test(pw);}
 
 async function handleAuth(){
   const email=document.getElementById('auth-email').value.trim();
   const password=document.getElementById('auth-password').value;
+  const password2=document.getElementById('auth-password2').value;
   const name=document.getElementById('auth-name').value.trim();
   const btn=document.getElementById('auth-submit');
   document.getElementById('auth-error').classList.remove('show');
   if(!email)return showAuthError('Bitte E-Mail eingeben.');
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return showAuthError('Ungültige E-Mail-Adresse.');
   if(!password)return showAuthError('Bitte Passwort eingeben.');
-  if(password.length<6)return showAuthError('Passwort muss mindestens 6 Zeichen haben.');
-  if(authMode==='register'&&!name)return showAuthError('Bitte Name eingeben.');
+  if(authMode==='login'&&getFailCount(email)>=MAX_LOGIN_FAILS){
+    return showAuthError('Zu viele Fehlversuche. Bitte setze dein Passwort über „Passwort vergessen?" zurück.');
+  }
+  if(authMode==='register'){
+    if(!validPassword(password))return showAuthError('Passwort: mindestens 6 Zeichen, mit Groß- und Kleinbuchstabe.');
+    if(password!==password2)return showAuthError('Die Passwörter stimmen nicht überein.');
+    if(!name)return showAuthError('Bitte Name eingeben.');
+  }
   btn.disabled=true;
   btn.innerHTML=`<span class="spinner"></span>${authMode==='login'?'Wird angemeldet…':'Konto wird erstellt…'}`;
   try{
-    if(authMode==='login'){const d=await sbFetch('/auth/v1/token?grant_type=password',{method:'POST',body:JSON.stringify({email,password})});saveSession(d);await initApp();}
-    else{const d=await sbFetch('/auth/v1/signup',{method:'POST',body:JSON.stringify({email,password,data:{display_name:name}})});
+    if(authMode==='login'){
+      const d=await sbFetch('/auth/v1/token?grant_type=password',{method:'POST',body:JSON.stringify({email,password})});
+      clearFails(email);saveSession(d);await initApp();
+    }else{
+      const d=await sbFetch('/auth/v1/signup',{method:'POST',body:JSON.stringify({email,password,data:{display_name:name}})});
       if(d.session){saveSession(d.session);await initApp();}
-      else{showAuthError('Bestätigungs-E-Mail gesendet. Bitte E-Mail prüfen.');switchAuthTab('login');}}
-  }catch(e){showAuthError(mapAuthError(e.message));}
+      else{showAuthError('Fast geschafft! Wir haben dir eine Bestätigungs-E-Mail geschickt. Bitte bestätige deine Adresse und melde dich dann an.');switchAuthTab('login');}
+    }
+  }catch(e){
+    const m=(e.message||'').toLowerCase();
+    if(authMode==='login'&&(m.includes('invalid login')||m.includes('invalid credentials'))){
+      const c=getFailCount(email)+1;setFailCount(email,c);const left=MAX_LOGIN_FAILS-c;
+      if(left<=0)showAuthError('Zu viele Fehlversuche. Bitte setze dein Passwort über „Passwort vergessen?" zurück.');
+      else showAuthError(`E-Mail oder Passwort falsch. Noch ${left} Versuch${left===1?'':'e'}.`);
+    }else{showAuthError(mapAuthError(e.message));}
+  }
   finally{btn.disabled=false;btn.textContent=authMode==='login'?'Anmelden':'Konto erstellen';}
 }
 
@@ -569,8 +553,8 @@ function showAuthError(msg){const el=document.getElementById('auth-error');el.te
 async function handlePasswordReset(){
   const email=document.getElementById('auth-email').value.trim();
   if(!email){showAuthError('Bitte E-Mail eingeben.');return;}
-  try{await sbFetch('/auth/v1/recover',{method:'POST',body:JSON.stringify({email})});showToast('✉️ Reset-Link gesendet');}
-  catch(e){showAuthError(e.message);}
+  try{await sbFetch('/auth/v1/recover',{method:'POST',body:JSON.stringify({email})});clearFails(email);showToast('✉️ Reset-Link gesendet – bitte E-Mail prüfen');}
+  catch(e){showAuthError(mapAuthError(e.message));}
 }
 
 async function handleLogout(){
@@ -695,10 +679,9 @@ function openSheet(type){
     document.getElementById('form-date').value=new Date().toISOString().split('T')[0];
     document.getElementById('form-revenue').value='';document.getElementById('form-tip').value='';
     document.getElementById('form-submit-btn').textContent='Speichern ✓';
-    const sb=document.getElementById('scan-shortcut-btn');if(sb)sb.style.display='block';
     document.getElementById('sheet-add').classList.add('show');
     setTimeout(()=>document.getElementById('form-revenue').focus(),350);
-  }else if(type==='scan'){resetScanUI();document.getElementById('sheet-scan').classList.add('show');}
+  }
 }
 
 function closeSheet(){
@@ -716,7 +699,6 @@ function openEditSheet(id){
   document.getElementById('form-tip').value=s.tip||'';
   document.getElementById('form-note').value=s.note||'';
   document.getElementById('form-submit-btn').textContent='Aktualisieren ✓';
-  const sb=document.getElementById('scan-shortcut-btn');if(sb)sb.style.display='none';
   document.getElementById('sheet-overlay').classList.add('show');
   document.getElementById('sheet-add').classList.add('show');
 }
@@ -734,74 +716,6 @@ async function submitShift(){
   closeSheet();await saveShift({date,revenue,tip,hours:0,note});
   btn.disabled=false;btn.textContent=editingShiftId?'Aktualisieren ✓':'Speichern ✓';
 }
-
-function resetScanUI(){
-  scanData=null;
-  document.getElementById('scan-icon').textContent='📄';
-  document.getElementById('scan-text').textContent='Foto aufnehmen oder auswählen';
-  document.getElementById('scan-hint').textContent='Bon der Z-Abrechnung · JPG, PNG';
-  document.getElementById('scan-result').classList.remove('show');
-  document.getElementById('scan-apply-btn').style.display='none';
-  document.getElementById('scan-error-detail').classList.remove('show');
-  document.getElementById('scan-file').value='';
-}
-
-async function handleScanFile(input){
-  const file=input.files[0];if(!file)return;
-  if(file.size>10*1024*1024){showScanError('Datei zu groß','Maximum 10MB.');return;}
-  if(!file.type.startsWith('image/')){showScanError('Falsches Format','Nur JPG, PNG, HEIC.');return;}
-  document.getElementById('scan-icon').textContent='⏳';
-  document.getElementById('scan-text').textContent='Bon wird analysiert…';
-  document.getElementById('scan-hint').textContent='Bitte warten';
-  document.getElementById('scan-error-detail').classList.remove('show');
-  document.getElementById('scan-result').classList.remove('show');
-  document.getElementById('scan-apply-btn').style.display='none';
-  try{
-    const base64=await fileToBase64(file);
-    const response=await fetch(WORKER_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'scan_receipt',image:base64,mediaType:file.type||'image/jpeg',prompt:`Du bist ein Kassabon-Experte für österreichische Restaurants. Extrahiere: Gesamtumsatz, Datum, Restaurantname. Antworte NUR mit JSON: {"revenue":<Zahl oder null>,"date":"<YYYY-MM-DD oder null>","restaurant":"<Name oder null>","confidence":"<hoch|mittel|niedrig>","error":null}`})});
-    if(!response.ok)throw new Error(`Worker HTTP ${response.status}`);
-    handleScanResult(await response.json());
-  }catch(e){
-    document.getElementById('scan-icon').textContent='📄';
-    const m=(e.message||'').toLowerCase();
-    showScanError(m.includes('fetch')||m.includes('network')?'Keine Verbindung':'Scan fehlgeschlagen','Bitte erneut versuchen.');
-  }
-}
-
-function handleScanResult(result){
-  if(result.error&&!result.revenue){
-    document.getElementById('scan-icon').textContent='⚠️';
-    document.getElementById('scan-text').textContent='Kein Bon erkannt';
-    document.getElementById('scan-hint').textContent='Tippe für neues Foto';
-    showScanError(result.error,'Tipps: Gutes Licht · ganzen Bon im Bild · scharf stellen');return;
-  }
-  scanData=result;
-  document.getElementById('scan-icon').textContent='✅';
-  document.getElementById('scan-text').textContent='Bon erfolgreich erkannt';
-  document.getElementById('scan-hint').textContent='';
-  document.getElementById('scan-res-rev').textContent=result.revenue?fmtS(result.revenue):'—';
-  document.getElementById('scan-res-date').textContent=result.date?fmtDate(result.date):'—';
-  document.getElementById('scan-res-rest').textContent=result.restaurant||'—';
-  document.getElementById('scan-res-conf').textContent=result.confidence==='hoch'?'✅ Hoch':result.confidence==='mittel'?'⚠️ Mittel':'❌ Niedrig';
-  document.getElementById('scan-result').classList.add('show');
-  document.getElementById('scan-apply-btn').style.display='block';
-  if(result.confidence==='niedrig')showToast('⚠️ Niedrige Konfidenz — bitte prüfen');
-}
-
-function showScanError(title,hint){
-  document.getElementById('scan-error-msg').textContent=title;
-  document.getElementById('scan-error-hint').textContent=hint;
-  document.getElementById('scan-error-detail').classList.add('show');
-  document.getElementById('scan-text').textContent='Tippe um erneut zu versuchen';
-  document.getElementById('scan-hint').textContent='';
-}
-
-function applyScanResult(){
-  if(!scanData)return;closeSheet();
-  setTimeout(()=>{openSheet('add');if(scanData.revenue)document.getElementById('form-revenue').value=scanData.revenue;if(scanData.date)document.getElementById('form-date').value=scanData.date;},300);
-}
-
-function fileToBase64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=()=>rej(new Error('Lesefehler'));r.readAsDataURL(file);});}
 
 const fmtS=v=>'€'+Math.round(+v).toLocaleString('de-AT');
 const fmtF=v=>'€'+(+v).toFixed(2).replace('.',',');
@@ -895,6 +809,8 @@ function getFiltered(){
   return shifts;
 }
 
+function esc(t){return String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
 function renderLog(){
   const filtered=getFiltered(),tt=sumK(filtered,'tip'),avg=filtered.length?tt/filtered.length:0;
   document.getElementById('hist-total-tip').textContent=fmtS(tt);
@@ -908,7 +824,7 @@ function renderLog(){
       <div class="log-item-dot"></div>
       <div class="log-item-body">
         <div class="log-item-top"><span class="log-item-date">${fmtDateShort(s.date)}</span><span class="log-item-rev">${fmtS(s.revenue||0)}</span></div>
-        <div class="log-item-chips"><span class="log-chip chip-tip">Tip ${fmtF(s.tip||0)}${pct}</span>${s.note?`<span class="log-chip" style="background:rgba(255,255,255,.07);color:var(--text2);">📝 ${s.note.substring(0,20)}</span>`:''}</div>
+        <div class="log-item-chips"><span class="log-chip chip-tip">Tip ${fmtF(s.tip||0)}${pct}</span>${s.note?`<span class="log-chip" style="background:rgba(255,255,255,.07);color:var(--text2);">📝 ${esc(s.note.substring(0,20))}</span>`:''}</div>
       </div>
       <button class="log-item-menu" onclick="showEntryMenu(event,'${s.id}')">⋮</button>
     </div>`;
