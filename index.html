@@ -52,9 +52,9 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 .auth-btn:disabled{opacity:0.6;pointer-events:none;}
 .auth-error{background:rgba(255,71,87,0.1);border:1px solid rgba(255,71,87,0.25);border-radius:10px;padding:10px 14px;font-size:13px;font-weight:600;color:var(--red);display:none;}
 .auth-error.show{display:block;}
-.pw-wrap{position:relative;}
-.pw-eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;opacity:.65;padding:4px;line-height:1;}
-.pw-eye:active{opacity:1;}
+.pw-toggle{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text3);cursor:pointer;user-select:none;margin:-2px 2px 0;}
+.pw-toggle input{width:16px;height:16px;accent-color:var(--accent);cursor:pointer;margin:0;flex:none;}
+*{touch-action:manipulation;}
 @keyframes pop{0%{transform:scale(0);}70%{transform:scale(1.25);}100%{transform:scale(1);}}
 #screen-recovery{position:fixed;inset:0;z-index:101;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;}
 .auth-divider{display:flex;align-items:center;gap:10px;width:100%;max-width:360px;margin-top:6px;}
@@ -238,8 +238,9 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
   <div class="auth-form">
     <div id="auth-error" class="auth-error"></div>
     <input id="auth-email" class="auth-field" type="email" placeholder="E-Mail" autocomplete="email">
-    <div class="pw-wrap"><input id="auth-password" class="auth-field" type="password" placeholder="Passwort" autocomplete="current-password" style="padding-right:46px"><button type="button" class="pw-eye" onclick="togglePw('auth-password',this)" aria-label="Passwort anzeigen">👁</button></div>
-    <div class="pw-wrap" id="pw2-wrap" style="display:none"><input id="auth-password2" class="auth-field" type="password" placeholder="Passwort wiederholen" autocomplete="new-password" style="padding-right:46px"><button type="button" class="pw-eye" onclick="togglePw('auth-password2',this)" aria-label="Passwort anzeigen">👁</button></div>
+    <input id="auth-password" class="auth-field" type="password" placeholder="Passwort" autocomplete="current-password">
+    <input id="auth-password2" class="auth-field" type="password" placeholder="Passwort wiederholen" autocomplete="new-password" style="display:none">
+    <label class="pw-toggle"><input type="checkbox" onclick="toggleAllPw(this,'auth-password','auth-password2')"><span>Passwort anzeigen</span></label>
     <input id="auth-name" class="auth-field" type="text" placeholder="Dein Name" autocomplete="name" style="display:none">
     <div id="auth-hint" style="display:none;font-size:11px;color:var(--text3);text-align:left;margin:-4px 2px 2px;line-height:1.4;">Mindestens 6 Zeichen, mit mindestens einem Groß- und einem Kleinbuchstaben.</div>
     <button id="auth-submit" class="auth-btn" onclick="handleAuth()">Anmelden</button>
@@ -261,8 +262,9 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
   <div class="auth-sub">Wähle ein neues Passwort für dein Konto.</div>
   <div class="auth-form">
     <div id="rec-error" class="auth-error"></div>
-    <div class="pw-wrap"><input id="rec-password" class="auth-field" type="password" placeholder="Neues Passwort" autocomplete="new-password" style="padding-right:46px"><button type="button" class="pw-eye" onclick="togglePw('rec-password',this)">👁</button></div>
-    <div class="pw-wrap"><input id="rec-password2" class="auth-field" type="password" placeholder="Passwort wiederholen" autocomplete="new-password" style="padding-right:46px"><button type="button" class="pw-eye" onclick="togglePw('rec-password2',this)">👁</button></div>
+    <input id="rec-password" class="auth-field" type="password" placeholder="Neues Passwort" autocomplete="new-password">
+    <input id="rec-password2" class="auth-field" type="password" placeholder="Passwort wiederholen" autocomplete="new-password">
+    <label class="pw-toggle"><input type="checkbox" onclick="toggleAllPw(this,'rec-password','rec-password2')"><span>Passwort anzeigen</span></label>
     <div style="font-size:11px;color:var(--text3);text-align:left;margin:-4px 2px 2px;line-height:1.4;">Mindestens 6 Zeichen, mit Groß- und Kleinbuchstabe.</div>
     <button id="rec-submit" class="auth-btn" onclick="submitNewPassword()">Passwort speichern</button>
   </div>
@@ -503,7 +505,7 @@ async function submitNewPassword(){
   }catch(e){const f=friendlyAuthError(e);showRecError(f.text+(f.code?' (Code '+f.code+')':''));}
   finally{btn.disabled=false;btn.textContent='Passwort speichern';}
 }
-function togglePw(id,btn){const i=document.getElementById(id);if(!i)return;if(i.type==='password'){i.type='text';btn.textContent='🙈';}else{i.type='password';btn.textContent='👁';}}
+function toggleAllPw(cb){for(let k=1;k<arguments.length;k++){const i=document.getElementById(arguments[k]);if(i)i.type=cb.checked?'text':'password';}}
 
 async function refreshSession(){
   if(!currentSession?.refresh_token)return false;
@@ -534,7 +536,7 @@ function switchAuthTab(mode){
   authMode=mode;const reg=mode==='register';
   document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&!reg)||(i===1&&reg)));
   document.getElementById('auth-name').style.display=reg?'block':'none';
-  document.getElementById('pw2-wrap').style.display=reg?'block':'none';
+  document.getElementById('auth-password2').style.display=reg?'block':'none';
   document.getElementById('auth-resend-btn').style.display='none';
   document.getElementById('auth-reset-status').style.display='none';
   document.getElementById('auth-hint').style.display=reg?'block':'none';
@@ -617,7 +619,7 @@ async function resendConfirmation(){
   catch(e){const f=friendlyAuthError(e);showAuthError(f.text,f.code);}
 }
 
-let _resetTimer=null;
+let _resetTimer=null,_resetCooldownUntil=0;
 function startResetCountdown(sec){
   const b=document.getElementById('auth-resend-reset');if(!b)return;let n=sec;b.disabled=true;clearInterval(_resetTimer);
   b.textContent='E-Mail nicht bekommen? Erneut senden in '+n+'s';
@@ -633,9 +635,12 @@ async function handlePasswordReset(){
   const email=document.getElementById('auth-email').value.trim();
   if(!email)return showAuthError('Bitte zuerst deine E-Mail-Adresse oben eingeben.');
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return showAuthError('Bitte gib eine gültige E-Mail-Adresse ein.');
+  const now=Date.now();
+  if(now<_resetCooldownUntil){const left=Math.ceil((_resetCooldownUntil-now)/1000);return showAuthError('Bitte warte noch '+left+' Sekunden, bevor du eine neue E-Mail anforderst.');}
   const btn=document.getElementById('auth-reset-btn');btn.disabled=true;
   try{
     await sbFetch('/auth/v1/recover',{method:'POST',body:JSON.stringify({email})});
+    _resetCooldownUntil=Date.now()+60000;
     clearFails(email);document.getElementById('auth-error').classList.remove('show');showResetSent();
   }catch(e){const f=friendlyAuthError(e);showAuthError(f.text,f.code);}
   finally{btn.disabled=false;}
