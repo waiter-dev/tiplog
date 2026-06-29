@@ -52,6 +52,11 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 .auth-btn:disabled{opacity:0.6;pointer-events:none;}
 .auth-error{background:rgba(255,71,87,0.1);border:1px solid rgba(255,71,87,0.25);border-radius:10px;padding:10px 14px;font-size:13px;font-weight:600;color:var(--red);display:none;}
 .auth-error.show{display:block;}
+.pw-wrap{position:relative;}
+.pw-eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;opacity:.65;padding:4px;line-height:1;}
+.pw-eye:active{opacity:1;}
+@keyframes pop{0%{transform:scale(0);}70%{transform:scale(1.25);}100%{transform:scale(1);}}
+#screen-recovery{position:fixed;inset:0;z-index:101;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;}
 .auth-divider{display:flex;align-items:center;gap:10px;width:100%;max-width:360px;margin-top:6px;}
 .auth-divider-line{flex:1;height:1px;background:var(--border);}
 .auth-divider-text{font-size:12px;color:var(--text3);font-weight:600;}
@@ -233,12 +238,14 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
   <div class="auth-form">
     <div id="auth-error" class="auth-error"></div>
     <input id="auth-email" class="auth-field" type="email" placeholder="E-Mail" autocomplete="email">
-    <input id="auth-password" class="auth-field" type="password" placeholder="Passwort" autocomplete="current-password">
-    <input id="auth-password2" class="auth-field" type="password" placeholder="Passwort wiederholen" autocomplete="new-password" style="display:none">
+    <div class="pw-wrap"><input id="auth-password" class="auth-field" type="password" placeholder="Passwort" autocomplete="current-password" style="padding-right:46px"><button type="button" class="pw-eye" onclick="togglePw('auth-password',this)" aria-label="Passwort anzeigen">👁</button></div>
+    <div class="pw-wrap" id="pw2-wrap" style="display:none"><input id="auth-password2" class="auth-field" type="password" placeholder="Passwort wiederholen" autocomplete="new-password" style="padding-right:46px"><button type="button" class="pw-eye" onclick="togglePw('auth-password2',this)" aria-label="Passwort anzeigen">👁</button></div>
     <input id="auth-name" class="auth-field" type="text" placeholder="Dein Name" autocomplete="name" style="display:none">
     <div id="auth-hint" style="display:none;font-size:11px;color:var(--text3);text-align:left;margin:-4px 2px 2px;line-height:1.4;">Mindestens 6 Zeichen, mit mindestens einem Groß- und einem Kleinbuchstaben.</div>
     <button id="auth-submit" class="auth-btn" onclick="handleAuth()">Anmelden</button>
+    <button id="auth-resend-btn" style="display:none;background:none;border:1px solid var(--border2);color:var(--text2);font-size:13px;font-family:'Figtree',sans-serif;cursor:pointer;padding:9px;border-radius:10px;" onclick="resendConfirmation()">Bestätigungs-E-Mail erneut senden</button>
     <button id="auth-reset-btn" style="background:none;border:none;color:var(--text3);font-size:13px;font-family:'Figtree',sans-serif;cursor:pointer;padding:4px;text-decoration:underline;" onclick="handlePasswordReset()">Passwort vergessen?</button>
+    <div id="auth-reset-status" style="display:none;margin-top:4px;"></div>
   </div>
   <div class="auth-divider">
     <div class="auth-divider-line"></div>
@@ -246,6 +253,19 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
     <div class="auth-divider-line"></div>
   </div>
   <button class="auth-guest-btn" onclick="enterGuestMode()">Als Gast fortfahren</button>
+</div>
+
+<div id="screen-recovery">
+  <div class="auth-logo">🍽️</div>
+  <div class="auth-title">Neues Passwort</div>
+  <div class="auth-sub">Wähle ein neues Passwort für dein Konto.</div>
+  <div class="auth-form">
+    <div id="rec-error" class="auth-error"></div>
+    <div class="pw-wrap"><input id="rec-password" class="auth-field" type="password" placeholder="Neues Passwort" autocomplete="new-password" style="padding-right:46px"><button type="button" class="pw-eye" onclick="togglePw('rec-password',this)">👁</button></div>
+    <div class="pw-wrap"><input id="rec-password2" class="auth-field" type="password" placeholder="Passwort wiederholen" autocomplete="new-password" style="padding-right:46px"><button type="button" class="pw-eye" onclick="togglePw('rec-password2',this)">👁</button></div>
+    <div style="font-size:11px;color:var(--text3);text-align:left;margin:-4px 2px 2px;line-height:1.4;">Mindestens 6 Zeichen, mit Groß- und Kleinbuchstabe.</div>
+    <button id="rec-submit" class="auth-btn" onclick="submitNewPassword()">Passwort speichern</button>
+  </div>
 </div>
 
 <!-- TOPBAR -->
@@ -444,16 +464,46 @@ let _chartBars=[], _chartSelected=null, activeTab='home';
 async function sbFetch(path,options={}){
   const h={'apikey':SUPABASE_KEY,'Content-Type':'application/json',...options.headers};
   if(currentSession?.access_token) h['Authorization']=`Bearer ${currentSession.access_token}`;
-  const res=await fetch(`${SUPABASE_URL}${path}`,{...options,headers:h});
-  if(!res.ok){let m=`HTTP ${res.status}`;try{const e=await res.json();m=e.message||e.error_description||m;}catch{}throw new Error(m);}
+  let res;
+  try{res=await fetch(`${SUPABASE_URL}${path}`,{...options,headers:h});}
+  catch(netErr){const e=new Error('network');e.status=0;throw e;}
+  if(!res.ok){let body={};try{body=await res.json();}catch{}const e=new Error(body.msg||body.message||body.error_description||body.error||`HTTP ${res.status}`);e.status=res.status;e.code=(body.error_code||body.error||'').toString();throw e;}
   const t=await res.text();return t?JSON.parse(t):null;
 }
 
+function parseHash(){const h=(window.location.hash||'').replace(/^#/,'');if(!h)return{};try{return Object.fromEntries(new URLSearchParams(h).entries());}catch{return{};}}
+
 window.addEventListener('DOMContentLoaded',async()=>{
+  const hp=parseHash();
+  if(hp.error_description){history.replaceState(null,'',location.pathname+location.search);document.getElementById('screen-loading').style.display='none';showAuthScreen();showAuthError(decodeURIComponent((hp.error_description||'').replace(/\+/g,' ')));return;}
+  if(hp.type==='recovery'&&hp.access_token){history.replaceState(null,'',location.pathname+location.search);showRecoveryScreen(hp.access_token);return;}
+  if(hp.access_token&&(hp.type==='signup'||hp.type==='email'||hp.type==='magiclink')){
+    history.replaceState(null,'',location.pathname+location.search);
+    if(hp.refresh_token){currentSession={access_token:hp.access_token,refresh_token:hp.refresh_token};try{const ok=await refreshSession();if(ok){await initApp();return;}}catch{}}
+    document.getElementById('screen-loading').style.display='none';showAuthScreen();showToast('✅ E-Mail bestätigt – du kannst dich jetzt anmelden');return;
+  }
   if(currentSession){try{const ok=await refreshSession();if(ok){await initApp();return;}}catch{}}
   document.getElementById('screen-loading').style.display='none';
   showAuthScreen();
 });
+
+let _recoveryToken=null;
+function showRecoveryScreen(token){_recoveryToken=token;document.getElementById('screen-loading').style.display='none';document.getElementById('screen-auth').classList.remove('active');document.getElementById('screen-recovery').style.display='flex';}
+function showRecError(msg){const el=document.getElementById('rec-error');el.textContent=msg;el.classList.add('show');}
+async function submitNewPassword(){
+  const pw=document.getElementById('rec-password').value,pw2=document.getElementById('rec-password2').value;
+  document.getElementById('rec-error').classList.remove('show');
+  if(!validPassword(pw))return showRecError('Passwort: mindestens 6 Zeichen, mit Groß- und Kleinbuchstabe.');
+  if(pw!==pw2)return showRecError('Die Passwörter stimmen nicht überein.');
+  const btn=document.getElementById('rec-submit');btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Wird gespeichert…';
+  try{
+    const res=await fetch(SUPABASE_URL+'/auth/v1/user',{method:'PUT',headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json','Authorization':'Bearer '+_recoveryToken},body:JSON.stringify({password:pw})});
+    if(!res.ok){let b={};try{b=await res.json();}catch{}const e=new Error(b.msg||b.message||('HTTP '+res.status));e.status=res.status;e.code=b.error_code||'';throw e;}
+    document.getElementById('screen-recovery').style.display='none';showAuthScreen();showToast('✅ Passwort geändert – bitte neu anmelden');
+  }catch(e){const f=friendlyAuthError(e);showRecError(f.text+(f.code?' (Code '+f.code+')':''));}
+  finally{btn.disabled=false;btn.textContent='Passwort speichern';}
+}
+function togglePw(id,btn){const i=document.getElementById(id);if(!i)return;if(i.type==='password'){i.type='text';btn.textContent='🙈';}else{i.type='password';btn.textContent='👁';}}
 
 async function refreshSession(){
   if(!currentSession?.refresh_token)return false;
@@ -484,7 +534,9 @@ function switchAuthTab(mode){
   authMode=mode;const reg=mode==='register';
   document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&!reg)||(i===1&&reg)));
   document.getElementById('auth-name').style.display=reg?'block':'none';
-  document.getElementById('auth-password2').style.display=reg?'block':'none';
+  document.getElementById('pw2-wrap').style.display=reg?'block':'none';
+  document.getElementById('auth-resend-btn').style.display='none';
+  document.getElementById('auth-reset-status').style.display='none';
   document.getElementById('auth-hint').style.display=reg?'block':'none';
   document.getElementById('auth-password').setAttribute('autocomplete',reg?'new-password':'current-password');
   document.getElementById('auth-submit').textContent=reg?'Konto erstellen':'Anmelden';
@@ -529,32 +581,64 @@ async function handleAuth(){
       else{showAuthError('Fast geschafft! Wir haben dir eine Bestätigungs-E-Mail geschickt. Bitte bestätige deine Adresse und melde dich dann an.');switchAuthTab('login');}
     }
   }catch(e){
-    const m=(e.message||'').toLowerCase();
-    if(authMode==='login'&&(m.includes('invalid login')||m.includes('invalid credentials'))){
-      const c=getFailCount(email)+1;setFailCount(email,c);const left=MAX_LOGIN_FAILS-c;
-      if(left<=0)showAuthError('Zu viele Fehlversuche. Bitte setze dein Passwort über „Passwort vergessen?" zurück.');
-      else showAuthError(`E-Mail oder Passwort falsch. Noch ${left} Versuch${left===1?'':'e'}.`);
-    }else{showAuthError(mapAuthError(e.message));}
+    const m=(e.message||'').toLowerCase(),code=(e.code||'').toLowerCase(),C=e.status?String(e.status):'';
+    const notConfirmed=code==='email_not_confirmed'||m.includes('not confirmed');
+    const badCreds=code.includes('invalid')||m.includes('invalid login')||m.includes('invalid credentials');
+    if(authMode==='login'&&notConfirmed){
+      showAuthError('Bitte bestätige zuerst deine E-Mail-Adresse. Schau in dein Postfach (auch Spam-Ordner).',C);
+      document.getElementById('auth-resend-btn').style.display='block';
+    }else if(authMode==='login'&&badCreds){
+      const c=getFailCount(email)+1;setFailCount(email,c);
+      if(c>=MAX_LOGIN_FAILS)showAuthError('Zu viele Fehlversuche. Bitte setze dein Passwort über „Passwort vergessen?" zurück.',C);
+      else showAuthError('E-Mail oder Passwort ist falsch.',C);
+    }else{const f=friendlyAuthError(e);showAuthError(f.text,f.code);}
   }
   finally{btn.disabled=false;btn.textContent=authMode==='login'?'Anmelden':'Konto erstellen';}
 }
 
-function mapAuthError(msg){
-  if(!msg)return'Unbekannter Fehler.';const m=msg.toLowerCase();
-  if(m.includes('invalid login')||m.includes('invalid credentials'))return'E-Mail oder Passwort falsch.';
-  if(m.includes('email not confirmed'))return'E-Mail noch nicht bestätigt.';
-  if(m.includes('user already registered'))return'E-Mail bereits registriert.';
-  if(m.includes('rate limit'))return'Zu viele Versuche.';
-  if(m.includes('network')||m.includes('fetch'))return'Keine Verbindung.';
-  return msg;
+function friendlyAuthError(e){
+  const status=e&&e.status||0,code=((e&&e.code)||'').toLowerCase(),m=((e&&e.message)||'').toLowerCase();
+  const C=status?String(status):'';
+  if(status===0||m==='network'||m.includes('fetch'))return{text:'Keine Internetverbindung. Bitte prüfe deine Verbindung und versuch es erneut.',code:''};
+  if(code==='email_not_confirmed'||m.includes('not confirmed'))return{text:'Bitte bestätige zuerst deine E-Mail-Adresse.',code:C};
+  if(code.includes('invalid')||m.includes('invalid login')||m.includes('invalid credentials'))return{text:'E-Mail oder Passwort ist falsch.',code:C};
+  if(status===429||code.includes('rate')||code.includes('over_email')||m.includes('rate limit')||m.includes('too many'))return{text:'Zu viele Anfragen in kurzer Zeit. Bitte warte einen Moment und versuch es dann erneut.',code:C};
+  if(code.includes('already')||m.includes('already registered')||m.includes('already been registered'))return{text:'Diese E-Mail ist bereits registriert. Bitte melde dich an.',code:C};
+  if(code==='weak_password')return{text:'Das Passwort ist zu schwach (mind. 6 Zeichen, Groß- und Kleinbuchstabe).',code:C};
+  if(status===400)return{text:'Das hat nicht geklappt. Bitte prüfe deine Eingaben und versuch es erneut.',code:C};
+  return{text:'Etwas ist schiefgelaufen. Bitte versuch es erneut.',code:C};
 }
-function showAuthError(msg){const el=document.getElementById('auth-error');el.textContent=msg;el.classList.add('show');}
+function showAuthError(text,code){const el=document.getElementById('auth-error');el.innerHTML='<div>'+esc(text)+'</div>'+(code?'<div style="font-size:10px;opacity:.6;margin-top:3px;font-weight:500;">Fehlercode: '+esc(code)+'</div>':'');el.classList.add('show');}
 
+async function resendConfirmation(){
+  const email=document.getElementById('auth-email').value.trim();
+  if(!email)return showAuthError('Bitte zuerst deine E-Mail-Adresse oben eingeben.');
+  try{await sbFetch('/auth/v1/resend',{method:'POST',body:JSON.stringify({type:'signup',email})});showToast('✉️ Bestätigungs-E-Mail erneut gesendet');}
+  catch(e){const f=friendlyAuthError(e);showAuthError(f.text,f.code);}
+}
+
+let _resetTimer=null;
+function startResetCountdown(sec){
+  const b=document.getElementById('auth-resend-reset');if(!b)return;let n=sec;b.disabled=true;clearInterval(_resetTimer);
+  b.textContent='E-Mail nicht bekommen? Erneut senden in '+n+'s';
+  _resetTimer=setInterval(()=>{n--;if(n<=0){clearInterval(_resetTimer);b.disabled=false;b.textContent='E-Mail nicht bekommen? Jetzt erneut senden';}else{b.textContent='E-Mail nicht bekommen? Erneut senden in '+n+'s';}},1000);
+}
+function showResetSent(){
+  const s=document.getElementById('auth-reset-status');s.style.display='block';
+  s.innerHTML='<div style="display:flex;align-items:center;gap:8px;background:rgba(46,213,115,0.12);border:1px solid rgba(46,213,115,0.3);border-radius:10px;padding:10px 14px;"><span style="font-size:18px;display:inline-block;animation:pop .4s ease;">✅</span><span style="font-size:13px;font-weight:600;color:var(--text);">E-Mail gesendet! Schau in dein Postfach (auch Spam-Ordner).</span></div><button id="auth-resend-reset" style="margin-top:8px;width:100%;background:none;border:1px solid var(--border2);color:var(--text2);font-size:12px;font-family:Figtree,sans-serif;cursor:pointer;padding:8px;border-radius:9px;" disabled></button>';
+  document.getElementById('auth-resend-reset').onclick=()=>handlePasswordReset();
+  startResetCountdown(60);
+}
 async function handlePasswordReset(){
   const email=document.getElementById('auth-email').value.trim();
-  if(!email){showAuthError('Bitte E-Mail eingeben.');return;}
-  try{await sbFetch('/auth/v1/recover',{method:'POST',body:JSON.stringify({email})});clearFails(email);showToast('✉️ Reset-Link gesendet – bitte E-Mail prüfen');}
-  catch(e){showAuthError(mapAuthError(e.message));}
+  if(!email)return showAuthError('Bitte zuerst deine E-Mail-Adresse oben eingeben.');
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return showAuthError('Bitte gib eine gültige E-Mail-Adresse ein.');
+  const btn=document.getElementById('auth-reset-btn');btn.disabled=true;
+  try{
+    await sbFetch('/auth/v1/recover',{method:'POST',body:JSON.stringify({email})});
+    clearFails(email);document.getElementById('auth-error').classList.remove('show');showResetSent();
+  }catch(e){const f=friendlyAuthError(e);showAuthError(f.text,f.code);}
+  finally{btn.disabled=false;}
 }
 
 async function handleLogout(){
