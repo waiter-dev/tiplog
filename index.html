@@ -287,7 +287,7 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 <!-- TOPBAR -->
 <div class="topbar" id="main-topbar" style="display:none;">
   <div class="topbar-left">
-    <div class="topbar-title">TipLog 🍽️ <span style="font-size:11px;color:var(--accent-l);font-weight:600;">v1.1.5</span></div>
+    <div class="topbar-title">TipLog 🍽️ <span style="font-size:11px;color:var(--accent-l);font-weight:600;">v1.1.7</span></div>
     <div class="topbar-sub"><span id="sync-label">Bereit</span><span class="sync-dot" id="sync-dot"></span></div>
   </div>
   <div class="topbar-right">
@@ -486,17 +486,15 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 <!-- DELETE ACCOUNT SHEET -->
 <div class="bottom-sheet" id="sheet-delete">
   <div class="sheet-handle"></div>
-  <div class="sheet-title" style="color:var(--red);">Konto löschen</div>
-  <div style="font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:16px;">
+  <div class="sheet-title" style="color:var(--red);">Konto löschen?</div>
+  <div style="font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:20px;">
     Dein Konto und <strong style="color:var(--text);">alle deine Schichten, Trinkgeld-Daten und Statistiken</strong> werden
-    <strong style="color:var(--red);">unwiderruflich gelöscht.</strong> Das kann nicht rückgängig gemacht werden.
+    <strong style="color:var(--red);">unwiderruflich gelöscht.</strong> Das kann nicht rückgängig gemacht werden. Bist du sicher?
   </div>
-  <div style="font-size:13px;color:var(--text2);margin-bottom:8px;">Tippe zur Bestätigung <strong style="color:var(--text);">LÖSCHEN</strong> ein:</div>
-  <input type="text" class="form-input" id="delete-confirm-input" placeholder="LÖSCHEN" autocapitalize="characters" autocomplete="off" oninput="onDeleteConfirmInput()" style="margin-bottom:14px;">
   <div id="delete-error" class="auth-error" style="margin-bottom:12px;"></div>
-  <button id="delete-confirm-btn" onclick="confirmDeleteAccount()" disabled
-    style="width:100%;padding:16px;background:rgba(255,71,87,0.15);border:1px solid rgba(255,71,87,0.3);border-radius:14px;color:var(--red);font-family:'Figtree',sans-serif;font-size:16px;font-weight:800;cursor:pointer;opacity:0.5;transition:opacity .2s;">
-    Konto endgültig löschen
+  <button id="delete-confirm-btn" onclick="confirmDeleteAccount()"
+    style="width:100%;padding:16px;background:rgba(255,71,87,0.15);border:1px solid rgba(255,71,87,0.3);border-radius:14px;color:var(--red);font-family:'Figtree',sans-serif;font-size:16px;font-weight:800;cursor:pointer;transition:opacity .2s;">
+    Ja, Konto löschen
   </button>
   <button onclick="closeSheet()" style="width:100%;padding:14px;background:none;border:none;color:var(--text2);font-family:'Figtree',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-top:6px;">Abbrechen</button>
   <div style="height:16px;"></div>
@@ -649,16 +647,10 @@ function closeLegal(){document.getElementById('screen-legal').style.display='non
 
 function openDeleteAccount(){
   if(isGuest()){showToast('Im Gast-Modus gibt es kein Konto zum Löschen');return;}
-  const inp=document.getElementById('delete-confirm-input');inp.value='';
   document.getElementById('delete-error').classList.remove('show');
-  onDeleteConfirmInput();
+  const btn=document.getElementById('delete-confirm-btn');btn.innerHTML='Ja, Konto löschen';btn.disabled=false;
   document.getElementById('sheet-overlay').classList.add('show');
   document.getElementById('sheet-delete').classList.add('show');
-}
-function onDeleteConfirmInput(){
-  const ok=document.getElementById('delete-confirm-input').value.trim().toUpperCase()==='LÖSCHEN';
-  const btn=document.getElementById('delete-confirm-btn');
-  btn.disabled=!ok;btn.style.opacity=ok?'1':'0.5';
 }
 async function confirmDeleteAccount(){
   const btn=document.getElementById('delete-confirm-btn');
@@ -673,7 +665,7 @@ async function confirmDeleteAccount(){
   }catch(e){
     const f=friendlyAuthError(e);
     err.textContent=f.text+(f.code?' (Code '+f.code+')':'');err.classList.add('show');
-    btn.innerHTML='Konto endgültig löschen';onDeleteConfirmInput();
+    btn.disabled=false;btn.innerHTML='Ja, Konto löschen';
   }
 }
 
@@ -980,6 +972,7 @@ function renderHome(){
   document.getElementById('chart-total-val').textContent=fmtS(tipMonth);
   renderAvgCard();
   renderDetails();
+  if(activeTab==='home'){_chartSelected=null;requestAnimationFrame(()=>{drawChart(null);initChartInteraction();});}
 }
 
 function renderAvgCard(){
