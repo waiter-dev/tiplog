@@ -287,7 +287,7 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 <!-- TOPBAR -->
 <div class="topbar" id="main-topbar" style="display:none;">
   <div class="topbar-left">
-    <div class="topbar-title">TipLog 🍽️ <span style="font-size:11px;color:var(--accent-l);font-weight:600;">v1.1.7</span></div>
+    <div class="topbar-title">TipLog 🍽️ <span style="font-size:11px;color:var(--accent-l);font-weight:600;">v1.1.8</span></div>
     <div class="topbar-sub"><span id="sync-label">Bereit</span><span class="sync-dot" id="sync-dot"></span></div>
   </div>
   <div class="topbar-right">
@@ -764,17 +764,10 @@ async function resendConfirmation(){
   catch(e){const f=friendlyAuthError(e);showAuthError(f.text,f.code);}
 }
 
-let _resetTimer=null,_resetCooldownUntil=0;
-function startResetCountdown(sec){
-  const b=document.getElementById('auth-resend-reset');if(!b)return;let n=sec;b.disabled=true;clearInterval(_resetTimer);
-  b.textContent='E-Mail nicht bekommen? Erneut senden in '+n+'s';
-  _resetTimer=setInterval(()=>{n--;if(n<=0){clearInterval(_resetTimer);b.disabled=false;b.textContent='E-Mail nicht bekommen? Jetzt erneut senden';}else{b.textContent='E-Mail nicht bekommen? Erneut senden in '+n+'s';}},1000);
-}
+let _resetCooldownUntil=0;
 function showResetSent(){
   const s=document.getElementById('auth-reset-status');s.style.display='block';
-  s.innerHTML='<div style="display:flex;align-items:center;gap:8px;background:rgba(46,213,115,0.12);border:1px solid rgba(46,213,115,0.3);border-radius:10px;padding:10px 14px;"><span style="font-size:18px;display:inline-block;animation:pop .4s ease;">✅</span><span style="font-size:13px;font-weight:600;color:var(--text);">E-Mail gesendet! Schau in dein Postfach (auch Spam-Ordner).</span></div><button id="auth-resend-reset" style="margin-top:8px;width:100%;background:none;border:1px solid var(--border2);color:var(--text2);font-size:12px;font-family:Figtree,sans-serif;cursor:pointer;padding:8px;border-radius:9px;" disabled></button>';
-  document.getElementById('auth-resend-reset').onclick=()=>handlePasswordReset();
-  startResetCountdown(60);
+  s.innerHTML='<div style="display:flex;align-items:center;gap:8px;background:rgba(46,213,115,0.12);border:1px solid rgba(46,213,115,0.3);border-radius:10px;padding:10px 14px;"><span style="font-size:18px;display:inline-block;animation:pop .4s ease;">✅</span><span style="font-size:13px;font-weight:600;color:var(--text);">E-Mail gesendet! Schau in dein Postfach – auch im Spam-Ordner. Es kann ein paar Minuten dauern.</span></div>';
 }
 async function handlePasswordReset(){
   const email=document.getElementById('auth-email').value.trim();
@@ -786,7 +779,7 @@ async function handlePasswordReset(){
   try{
     await sbFetch('/auth/v1/recover',{method:'POST',body:JSON.stringify({email})});
     _resetCooldownUntil=Date.now()+60000;
-    btn.textContent='E-Mail gesendet ✅';btn.style.color='var(--green)';
+    btn.textContent='E-Mail gesendet ✅';btn.style.color='#2ed573';
     clearFails(email);document.getElementById('auth-error').classList.remove('show');showResetSent();
   }catch(e){const f=friendlyAuthError(e);showAuthError(f.text,f.code);btn.disabled=false;}
 }
