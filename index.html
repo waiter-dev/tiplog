@@ -30,7 +30,7 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 
 /* LOADING */
 #screen-loading{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
-.loading-logo{width:72px;height:72px;background:linear-gradient(135deg,var(--accent),#a29bfe);border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:0 12px 40px rgba(108,92,231,0.4);animation:pulse-logo 2s ease-in-out infinite;}
+.loading-logo{width:72px;height:72px;background:linear-gradient(135deg,var(--accent),#a29bfe);border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:54px;line-height:1;box-shadow:0 12px 40px rgba(108,92,231,0.4);animation:pulse-logo 2s ease-in-out infinite;}
 @keyframes pulse-logo{0%,100%{box-shadow:0 12px 40px rgba(108,92,231,0.4)}50%{box-shadow:0 12px 60px rgba(108,92,231,0.7)}}
 .loading-text{font-size:14px;color:var(--text2);font-weight:600;}
 
@@ -254,6 +254,12 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
     <div class="auth-divider-line"></div>
   </div>
   <button class="auth-guest-btn" onclick="enterGuestMode()">Als Gast fortfahren</button>
+  <div style="margin-top:18px;font-size:12px;color:var(--text3);text-align:center;line-height:1.6;">
+    Mit der Nutzung akzeptierst du unsere<br>
+    <a onclick="showLegal('agb')" style="color:var(--accent-l);text-decoration:underline;cursor:pointer;">Nutzungsbedingungen</a>
+    &nbsp;·&nbsp;
+    <a onclick="showLegal('datenschutz')" style="color:var(--accent-l);text-decoration:underline;cursor:pointer;">Datenschutz</a>
+  </div>
 </div>
 
 <div id="screen-recovery">
@@ -270,10 +276,18 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
   </div>
 </div>
 
+<div id="screen-legal" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:200;flex-direction:column;">
+  <div style="display:flex;align-items:center;gap:12px;padding:16px;border-bottom:1px solid var(--border);flex-shrink:0;">
+    <button onclick="closeLegal()" style="background:var(--surface2);border:none;color:var(--text);width:36px;height:36px;border-radius:10px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;">‹</button>
+    <div id="legal-title" style="font-size:17px;font-weight:700;color:var(--text);">Rechtliches</div>
+  </div>
+  <div id="legal-content" style="flex:1;overflow-y:auto;padding:20px;-webkit-overflow-scrolling:touch;"></div>
+</div>
+
 <!-- TOPBAR -->
 <div class="topbar" id="main-topbar" style="display:none;">
   <div class="topbar-left">
-    <div class="topbar-title">TipLog 🍽️ <span style="font-size:11px;color:var(--accent-l);font-weight:600;">v1.1.0</span></div>
+    <div class="topbar-title">TipLog 🍽️ <span style="font-size:11px;color:var(--accent-l);font-weight:600;">v1.1.5</span></div>
     <div class="topbar-sub"><span id="sync-label">Bereit</span><span class="sync-dot" id="sync-dot"></span></div>
   </div>
   <div class="topbar-right">
@@ -405,6 +419,21 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
           <div class="settings-row-left"><div class="settings-row-title">🔐 Passwort ändern</div><div class="settings-row-sub">Reset-Link per E-Mail</div></div>
           <button class="settings-btn" onclick="openChangePassword()">Senden</button>
         </div>
+        <div class="settings-row" onclick="openDeleteAccount()" style="cursor:pointer;">
+          <div class="settings-row-left"><div class="settings-row-title" style="color:var(--red);">🗑️ Konto löschen</div><div class="settings-row-sub">Alle Daten unwiderruflich entfernen</div></div>
+          <div style="color:var(--red);font-size:18px;">›</div>
+        </div>
+      </div>
+    </div>
+    <div class="settings-section-title">Rechtliches</div>
+    <div class="settings-card">
+      <div class="settings-row" onclick="showLegal('datenschutz')" style="cursor:pointer;">
+        <div class="settings-row-left"><div class="settings-row-title">🔒 Datenschutzerklärung</div><div class="settings-row-sub">Welche Daten wir verarbeiten</div></div>
+        <div style="color:var(--text3);font-size:18px;">›</div>
+      </div>
+      <div class="settings-row" onclick="showLegal('agb')" style="cursor:pointer;">
+        <div class="settings-row-left"><div class="settings-row-title">📄 Nutzungsbedingungen</div><div class="settings-row-sub">AGB für die App</div></div>
+        <div style="color:var(--text3);font-size:18px;">›</div>
       </div>
     </div>
     <button class="logout-btn" onclick="handleLogout()">Abmelden</button>
@@ -451,6 +480,25 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
     <input type="text" class="form-input" id="form-note" placeholder="z.B. Frühschicht, Sonderveranstaltung…" style="font-size:15px;font-weight:400;">
   </div>
   <button class="form-submit" id="form-submit-btn" onclick="submitShift()">Speichern ✓</button>
+  <div style="height:16px;"></div>
+</div>
+
+<!-- DELETE ACCOUNT SHEET -->
+<div class="bottom-sheet" id="sheet-delete">
+  <div class="sheet-handle"></div>
+  <div class="sheet-title" style="color:var(--red);">Konto löschen</div>
+  <div style="font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:16px;">
+    Dein Konto und <strong style="color:var(--text);">alle deine Schichten, Trinkgeld-Daten und Statistiken</strong> werden
+    <strong style="color:var(--red);">unwiderruflich gelöscht.</strong> Das kann nicht rückgängig gemacht werden.
+  </div>
+  <div style="font-size:13px;color:var(--text2);margin-bottom:8px;">Tippe zur Bestätigung <strong style="color:var(--text);">LÖSCHEN</strong> ein:</div>
+  <input type="text" class="form-input" id="delete-confirm-input" placeholder="LÖSCHEN" autocapitalize="characters" autocomplete="off" oninput="onDeleteConfirmInput()" style="margin-bottom:14px;">
+  <div id="delete-error" class="auth-error" style="margin-bottom:12px;"></div>
+  <button id="delete-confirm-btn" onclick="confirmDeleteAccount()" disabled
+    style="width:100%;padding:16px;background:rgba(255,71,87,0.15);border:1px solid rgba(255,71,87,0.3);border-radius:14px;color:var(--red);font-family:'Figtree',sans-serif;font-size:16px;font-weight:800;cursor:pointer;opacity:0.5;transition:opacity .2s;">
+    Konto endgültig löschen
+  </button>
+  <button onclick="closeSheet()" style="width:100%;padding:14px;background:none;border:none;color:var(--text2);font-family:'Figtree',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-top:6px;">Abbrechen</button>
   <div style="height:16px;"></div>
 </div>
 
@@ -521,7 +569,112 @@ async function initApp(){
   document.getElementById('main-topbar').style.display='flex';
   document.getElementById('main-tabs').style.display='flex';
   document.getElementById('main-fab').style.display='flex';
-  updateUserUI(); showTab('home'); await loadShifts();
+  updateUserUI(); showTab('home'); trackOpen(); await loadShifts();
+}
+
+async function trackOpen(){
+  if(!currentUser || isGuest()) return;
+  try{ await sbFetch('/rest/v1/rpc/track_open',{method:'POST',body:'{}'}); }catch{}
+}
+
+const _legalCSS={
+  h:'font-size:16px;font-weight:700;color:var(--text);margin:22px 0 8px;',
+  p:'font-size:14px;line-height:1.65;color:rgba(255,255,255,0.72);margin:0 0 10px;',
+  small:'font-size:12px;color:var(--text3);margin:4px 0 18px;'
+};
+function _lp(t){return `<p style="${_legalCSS.p}">${t}</p>`;}
+function _lh(t){return `<div style="${_legalCSS.h}">${t}</div>`;}
+
+const LEGAL={
+  datenschutz:{title:'Datenschutzerklärung',html:()=>
+    `<div style="${_legalCSS.small}">Stand: Juni 2026</div>`+
+    _lh('1. Verantwortlicher')+
+    _lp('Oleg Egorov, Van-der-Nüll-Gasse 18/39, 1100 Wien, Österreich. E-Mail: <a href="mailto:info@tiplog.at" style="color:var(--accent-l);">info@tiplog.at</a>')+
+    _lh('2. Welche Daten wir verarbeiten')+
+    _lp('<b>Kontodaten:</b> deine E-Mail-Adresse und der von dir gewählte Anzeigename.')+
+    _lp('<b>Inhaltsdaten:</b> die von dir erfassten Schichten – Datum, Umsatz, Trinkgeld und optionale Notizen.')+
+    _lp('<b>Nutzungsstatistik:</b> wie oft du die App pro Tag öffnest. Gespeichert werden dabei nur deine Nutzer-Kennung, das Datum und ein Zähler – keine IP-Adresse, kein Standort, keine Gerätedaten.')+
+    _lh('3. Zwecke und Rechtsgrundlagen')+
+    _lp('Wir verarbeiten Konto- und Inhaltsdaten, um dir die App bereitzustellen und deine Daten geräteübergreifend zu synchronisieren (Vertragserfüllung, Art. 6 Abs. 1 lit. b DSGVO). Die Nutzungsstatistik dient ausschließlich dazu, die Nutzung der App zu verstehen und sie zu verbessern (berechtigtes Interesse, Art. 6 Abs. 1 lit. f DSGVO).')+
+    _lh('4. Empfänger / Auftragsverarbeiter')+
+    _lp('<b>Supabase</b> (Hosting, Datenbank, Anmeldung): Die Daten liegen auf Servern in der EU (Region Frankfurt, Deutschland).')+
+    _lp('<b>World4You Internet Services GmbH</b> (Versand von System-E-Mails wie Bestätigung und Passwort-Reset), Österreich.')+
+    _lp('Mit beiden Anbietern bestehen bzw. werden Auftragsverarbeitungsverträge (AVV) gemäß Art. 28 DSGVO abgeschlossen. Wir verkaufen deine Daten nicht und nutzen keine Werbenetzwerke.')+
+    _lh('5. Speicherdauer')+
+    _lp('Deine Daten werden gespeichert, solange dein Konto besteht. Löschst du dein Konto, werden deine Konto- und Inhaltsdaten gelöscht. Statistik-Zeilen werden anonymisiert bzw. mitgelöscht.')+
+    _lh('6. Gast-Modus')+
+    _lp('Im Gast-Modus werden deine Schichten nur lokal auf deinem Gerät gespeichert und nicht an unsere Server übertragen.')+
+    _lh('7. Deine Rechte')+
+    _lp('Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit sowie Widerspruch. Eine erteilte Einwilligung kannst du jederzeit widerrufen. Außerdem kannst du dich bei der österreichischen Datenschutzbehörde (dsb.gv.at) beschweren.')+
+    _lh('8. Konto löschen')+
+    _lp('Du kannst dein Konto und alle zugehörigen Daten jederzeit selbst löschen: in der App unter <b>Profil → Konto → Konto löschen</b>. Die Löschung erfolgt sofort und unwiderruflich. Alternativ genügt eine E-Mail an <a href="mailto:info@tiplog.at" style="color:var(--accent-l);">info@tiplog.at</a>.')+
+    `<div style="height:24px;"></div>`
+  },
+  agb:{title:'Nutzungsbedingungen',html:()=>
+    `<div style="${_legalCSS.small}">Stand: Juni 2026</div>`+
+    _lh('1. Geltungsbereich und Anbieter')+
+    _lp('Diese Nutzungsbedingungen gelten für die Nutzung der App „TipLog", bereitgestellt von Oleg Egorov, Van-der-Nüll-Gasse 18/39, 1100 Wien (im Folgenden „wir").')+
+    _lh('2. Leistungsbeschreibung')+
+    _lp('TipLog ist ein Werkzeug zum persönlichen Erfassen von Arbeitsschichten, Umsätzen und Trinkgeld. Berechnungen und Auswertungen erfolgen automatisiert; wir übernehmen keine Gewähr für deren Richtigkeit oder Vollständigkeit. Du bist für die Richtigkeit deiner Eingaben selbst verantwortlich.')+
+    _lh('3. Kosten')+
+    _lp('Die App ist derzeit kostenlos nutzbar. Kostenpflichtige Funktionen behalten wir uns für die Zukunft vor; solche würden vorab klar gekennzeichnet und sind nie ohne deine ausdrückliche Zustimmung kostenpflichtig.')+
+    _lh('4. Konto und Sicherheit')+
+    _lp('Für die Cloud-Synchronisation ist ein Konto nötig. Du machst dabei wahrheitsgemäße Angaben und hältst dein Passwort geheim. Du bist für Aktivitäten unter deinem Konto verantwortlich.')+
+    _lh('5. Keine Steuer- oder Rechtsberatung')+
+    _lp('TipLog dient nur deiner persönlichen Übersicht und ersetzt keine Steuer- oder Rechtsberatung. Für die ordnungsgemäße Versteuerung deiner Einkünfte (z. B. Trinkgeld) bist allein du verantwortlich.')+
+    _lh('6. Verfügbarkeit')+
+    _lp('Wir bemühen uns um eine hohe Verfügbarkeit, können aber keine unterbrechungsfreie Nutzung garantieren (z. B. bei Wartung oder Störungen bei Drittanbietern).')+
+    _lh('7. Haftung')+
+    _lp('Wir haften nach den gesetzlichen Bestimmungen. Für leichte Fahrlässigkeit haften wir nur bei Verletzung wesentlicher Vertragspflichten und begrenzt auf den vorhersehbaren Schaden. Zwingende Rechte aus dem Konsumentenschutz bleiben unberührt. Sichere deine Daten regelmäßig (Export), um Datenverlust vorzubeugen.')+
+    _lh('8. Kündigung')+
+    _lp('Du kannst die Nutzung jederzeit beenden und dein Konto löschen lassen (siehe Datenschutzerklärung).')+
+    _lh('9. Änderungen')+
+    _lp('Wir können diese Bedingungen anpassen, etwa bei neuen Funktionen oder Rechtsänderungen. Wesentliche Änderungen teilen wir in geeigneter Weise mit.')+
+    _lh('10. Anwendbares Recht')+
+    _lp('Es gilt österreichisches Recht. Bist du Verbraucher, bleiben die zwingenden Verbraucherschutzbestimmungen deines Wohnsitzstaates unberührt.')+
+    _lh('11. App-Stores')+
+    _lp('Bei Installation über den Apple App Store oder Google Play gelten zusätzlich deren jeweilige Bedingungen. Für Apple gilt ergänzend die Standard-Lizenzvereinbarung für Endbenutzer (Standard EULA).')+
+    _lp('Kontakt: <a href="mailto:info@tiplog.at" style="color:var(--accent-l);">info@tiplog.at</a>')+
+    `<div style="height:24px;"></div>`
+  }
+};
+function showLegal(which){
+  const L=LEGAL[which];if(!L)return;
+  document.getElementById('legal-title').textContent=L.title;
+  document.getElementById('legal-content').innerHTML=L.html();
+  document.getElementById('legal-content').scrollTop=0;
+  document.getElementById('screen-legal').style.display='flex';
+}
+function closeLegal(){document.getElementById('screen-legal').style.display='none';}
+
+function openDeleteAccount(){
+  if(isGuest()){showToast('Im Gast-Modus gibt es kein Konto zum Löschen');return;}
+  const inp=document.getElementById('delete-confirm-input');inp.value='';
+  document.getElementById('delete-error').classList.remove('show');
+  onDeleteConfirmInput();
+  document.getElementById('sheet-overlay').classList.add('show');
+  document.getElementById('sheet-delete').classList.add('show');
+}
+function onDeleteConfirmInput(){
+  const ok=document.getElementById('delete-confirm-input').value.trim().toUpperCase()==='LÖSCHEN';
+  const btn=document.getElementById('delete-confirm-btn');
+  btn.disabled=!ok;btn.style.opacity=ok?'1':'0.5';
+}
+async function confirmDeleteAccount(){
+  const btn=document.getElementById('delete-confirm-btn');
+  const err=document.getElementById('delete-error');err.classList.remove('show');
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Wird gelöscht…';
+  try{
+    await sbFetch('/rest/v1/rpc/delete_account',{method:'POST',body:'{}'});
+    clearSession();shifts=[];
+    closeSheet();
+    showAuthScreen();
+    showToast('Dein Konto wurde gelöscht');
+  }catch(e){
+    const f=friendlyAuthError(e);
+    err.textContent=f.text+(f.code?' (Code '+f.code+')':'');err.classList.add('show');
+    btn.innerHTML='Konto endgültig löschen';onDeleteConfirmInput();
+  }
 }
 
 function showAuthScreen(){
@@ -641,9 +794,9 @@ async function handlePasswordReset(){
   try{
     await sbFetch('/auth/v1/recover',{method:'POST',body:JSON.stringify({email})});
     _resetCooldownUntil=Date.now()+60000;
+    btn.textContent='E-Mail gesendet ✅';btn.style.color='var(--green)';
     clearFails(email);document.getElementById('auth-error').classList.remove('show');showResetSent();
-  }catch(e){const f=friendlyAuthError(e);showAuthError(f.text,f.code);}
-  finally{btn.disabled=false;}
+  }catch(e){const f=friendlyAuthError(e);showAuthError(f.text,f.code);btn.disabled=false;}
 }
 
 async function handleLogout(){
