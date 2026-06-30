@@ -287,7 +287,7 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 <!-- TOPBAR -->
 <div class="topbar" id="main-topbar" style="display:none;">
   <div class="topbar-left">
-    <div class="topbar-title">TipLog 🍽️ <span style="font-size:11px;color:var(--accent-l);font-weight:600;">v1.1.8</span></div>
+    <div class="topbar-title">TipLog 🍽️ <span style="font-size:11px;color:var(--accent-l);font-weight:600;">v1.1.9</span></div>
     <div class="topbar-sub"><span id="sync-label">Bereit</span><span class="sync-dot" id="sync-dot"></span></div>
   </div>
   <div class="topbar-right">
@@ -417,7 +417,7 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
       <div class="settings-card">
         <div class="settings-row">
           <div class="settings-row-left"><div class="settings-row-title">🔐 Passwort ändern</div><div class="settings-row-sub">Reset-Link per E-Mail</div></div>
-          <button class="settings-btn" onclick="openChangePassword()">Senden</button>
+          <button class="settings-btn" onclick="openChangePassword(this)">Senden</button>
         </div>
         <div class="settings-row" onclick="openDeleteAccount()" style="cursor:pointer;">
           <div class="settings-row-left"><div class="settings-row-title" style="color:var(--red);">🗑️ Konto löschen</div><div class="settings-row-sub">Alle Daten unwiderruflich entfernen</div></div>
@@ -790,10 +790,20 @@ async function handleLogout(){
   clearSession();shifts=[];showAuthScreen();
 }
 
-async function openChangePassword(){
+let _pwChangeCooldownUntil=0;
+async function openChangePassword(btn){
   if(!currentUser?.email)return;
-  try{await sbFetch('/auth/v1/recover',{method:'POST',body:JSON.stringify({email:currentUser.email})});showToast('✉️ Reset-Link gesendet');}
-  catch(e){showToast('⚠️ '+e.message);}
+  if(Date.now()<_pwChangeCooldownUntil){showToast('Bitte warte kurz, bevor du erneut anforderst.');return;}
+  if(btn){btn.disabled=true;btn.textContent='Senden…';}
+  try{
+    await sbFetch('/auth/v1/recover',{method:'POST',body:JSON.stringify({email:currentUser.email})});
+    _pwChangeCooldownUntil=Date.now()+60000;
+    showToast('✉️ Reset-Link gesendet – schau in dein Postfach (auch im Spam-Ordner)');
+    if(btn){btn.textContent='Gesendet ✅';btn.style.opacity='0.6';}
+  }catch(e){
+    showToast('⚠️ '+mapDbError(e.message||''));
+    if(btn){btn.disabled=false;btn.textContent='Senden';}
+  }
 }
 
 function enterGuestMode(){
