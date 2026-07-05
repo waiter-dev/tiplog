@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self' https://qqninfkcgtbxbvjanage.supabase.co; img-src 'self' data:; font-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self' https://qqninfkcgtbxbvjanage.supabase.co; img-src 'self' data:; font-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'; worker-src 'self'">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="TipLog">
@@ -82,6 +82,7 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 .topbar-avatar{width:32px;height:32px;background:linear-gradient(135deg,var(--accent),#a29bfe);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;cursor:pointer;}
 .sync-dot{width:6px;height:6px;border-radius:50%;background:var(--green-b);display:inline-block;flex-shrink:0;}
 .sync-dot.syncing{background:var(--yellow);animation:blink 1s ease-in-out infinite;}
+.sync-dot.pending{background:var(--yellow);}
 .sync-dot.error{background:var(--red);}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
 
@@ -297,7 +298,7 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 <!-- TOPBAR -->
 <div class="topbar" id="main-topbar" style="display:none;">
   <div class="topbar-left">
-    <div class="topbar-title">TipLog 🍽️ <span style="font-size:11px;color:var(--accent-l);font-weight:600;">v1.1.13</span></div>
+    <div class="topbar-title">TipLog 🍽️ <span style="font-size:11px;color:var(--accent-l);font-weight:600;">v1.1.14</span></div>
     <div class="topbar-sub"><span id="sync-label">Bereit</span><span class="sync-dot" id="sync-dot"></span></div>
   </div>
   <div class="topbar-right">
@@ -520,12 +521,35 @@ let currentUser    = JSON.parse(localStorage.getItem('st_user')||'null');
 let shifts=[], editingShiftId=null, histFilter='all', authMode='login';
 let _chartBars=[], _chartSelected=null, activeTab='home';
 
+/* ---- v1.1.14: Offline-Queue & Session-Persistenz ---- */
+const REFRESH_MARGIN_S=120; // Token so viele Sekunden vor Ablauf proaktiv erneuern
+function loadQueue(){try{return JSON.parse(localStorage.getItem('st_queue')||'[]');}catch{return[];}}
+function saveQueue(q){try{localStorage.setItem('st_queue',JSON.stringify(q));}catch(e){console.error('Queue-Speicherfehler',e);}updateSyncUI();}
+function cacheShifts(){try{localStorage.setItem('st_shifts_cache',JSON.stringify(shifts));}catch{}}
+function loadCachedShifts(){try{return JSON.parse(localStorage.getItem('st_shifts_cache')||'[]');}catch{return[];}}
+/* Wartende Queue-Ops in eine Server-Liste einrechnen (verhindert Flackern, solange noch nicht alles gesynct ist) */
+function mergePending(list){
+  const byId=new Map((list||[]).map(s=>[s.id,s]));
+  for(const op of loadQueue()){
+    if(op.method==='POST'&&op.body&&!byId.has(op.body.id))byId.set(op.body.id,op.body);
+    else if(op.method==='PATCH'&&op.shiftId&&byId.has(op.shiftId))byId.set(op.shiftId,{...byId.get(op.shiftId),...op.body});
+    else if(op.method==='DELETE'&&op.shiftId)byId.delete(op.shiftId);
+  }
+  return[...byId.values()].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+}
+
 async function sbFetch(path,options={}){
+  // Proaktiv erneuern, wenn der Token in <2 Min abläuft (nicht für den Refresh-Call selbst)
+  if(!options._noAuthRetry&&currentSession?.refresh_token&&currentSession.expires_at&&(currentSession.expires_at-Date.now()/1000)<REFRESH_MARGIN_S){await refreshSession();}
   const h={'apikey':SUPABASE_KEY,'Content-Type':'application/json',...options.headers};
   if(currentSession?.access_token) h['Authorization']=`Bearer ${currentSession.access_token}`;
   let res;
   try{res=await fetch(`${SUPABASE_URL}${path}`,{...options,headers:h});}
   catch(netErr){const e=new Error('network');e.status=0;throw e;}
+  // Abgelaufener Token → einmal refreshen und denselben Request wiederholen
+  if(res.status===401&&!options._noAuthRetry&&currentSession?.refresh_token){
+    if(await refreshSession())return sbFetch(path,{...options,_noAuthRetry:true});
+  }
   if(!res.ok){let body={};try{body=await res.json();}catch{}const e=new Error(body.msg||body.message||body.error_description||body.error||`HTTP ${res.status}`);e.status=res.status;e.code=(body.error_code||body.error||'').toString();throw e;}
   const t=await res.text();return t?JSON.parse(t):null;
 }
@@ -564,12 +588,22 @@ async function submitNewPassword(){
 }
 function toggleAllPw(cb){for(let k=1;k<arguments.length;k++){const i=document.getElementById(arguments[k]);if(i)i.type=cb.checked?'text':'password';}}
 
-async function refreshSession(){
-  if(!currentSession?.refresh_token)return false;
-  try{const d=await sbFetch('/auth/v1/token?grant_type=refresh_token',{method:'POST',body:JSON.stringify({refresh_token:currentSession.refresh_token})});saveSession(d);return true;}
-  catch{clearSession();return false;}
+let _refreshPromise=null;
+function refreshSession(){
+  // Single-Flight: Supabase ROTIERT Refresh-Tokens – zwei parallele Refreshes
+  // entwerten sich gegenseitig und waren eine Hauptursache für "grundlos ausgeloggt".
+  if(_refreshPromise)return _refreshPromise;
+  _refreshPromise=(async()=>{
+    if(!currentSession?.refresh_token)return false;
+    try{const d=await sbFetch('/auth/v1/token?grant_type=refresh_token',{method:'POST',body:JSON.stringify({refresh_token:currentSession.refresh_token}),_noAuthRetry:true});saveSession(d);return true;}
+    catch(e){
+      if([400,401,403].includes(e.status)){clearSession();return false;} // Token endgültig ungültig → einziger echter Logout-Fall
+      return true; // Netzwerkfehler oder Server-5xx: Session bleibt bestehen!
+    }
+  })().finally(()=>{_refreshPromise=null;});
+  return _refreshPromise;
 }
-function saveSession(d){currentSession=d;currentUser=d.user;localStorage.setItem('st_session',JSON.stringify(d));localStorage.setItem('st_user',JSON.stringify(d.user));}
+function saveSession(d){d.expires_at=d.expires_at||Math.floor(Date.now()/1000)+(d.expires_in||3600);currentSession=d;currentUser=d.user||currentUser;localStorage.setItem('st_session',JSON.stringify(d));localStorage.setItem('st_user',JSON.stringify(currentUser));}
 function clearSession(){currentSession=null;currentUser=null;localStorage.removeItem('st_session');localStorage.removeItem('st_user');}
 
 async function initApp(){
@@ -579,6 +613,7 @@ async function initApp(){
   document.getElementById('main-tabs').style.display='flex';
   document.getElementById('main-fab').style.display='flex';
   updateUserUI(); showTab('home'); trackOpen(); await loadShifts();
+  updateSyncUI(); flushQueue();
 }
 
 async function trackOpen(){
@@ -797,8 +832,12 @@ async function handlePasswordReset(){
 
 async function handleLogout(){
   if(isGuest()){currentUser=null;shifts=[];showAuthScreen();return;}
+  const n=loadQueue().length;
+  if(n&&!confirm(n+(n===1?' Eintrag ist':' Einträge sind')+' noch nicht synchronisiert und gehen beim Abmelden verloren. Trotzdem abmelden?'))return;
   try{await sbFetch('/auth/v1/logout',{method:'POST'});}catch{}
-  clearSession();shifts=[];showAuthScreen();
+  clearSession();shifts=[];
+  localStorage.removeItem('st_queue');localStorage.removeItem('st_shifts_cache');
+  showAuthScreen();
 }
 
 let _pwChangeCooldownUntil=0;
@@ -862,13 +901,15 @@ function updateProfileUI(){
   document.getElementById('pw-section').style.display=isGuest()?'none':'block';
 }
 
-function setSyncStatus(state){
+function setSyncStatus(state,n){
   const dot=document.getElementById('sync-dot'),lbl=document.getElementById('sync-label');
   if(!dot)return;
   if(state==='syncing'){dot.className='sync-dot syncing';if(lbl)lbl.textContent='Synchronisiert';}
   else if(state==='error'){dot.className='sync-dot error';if(lbl)lbl.textContent='Sync-Fehler';}
+  else if(state==='pending'){dot.className='sync-dot pending';if(lbl)lbl.textContent=(n===1?'1 Eintrag wartet':n+' Einträge warten')+' auf Sync';}
   else{dot.className='sync-dot';if(lbl)lbl.textContent='Synchronisiert';}
 }
+function updateSyncUI(){if(isGuest())return;const n=loadQueue().length;if(n>0)setSyncStatus('pending',n);else setSyncStatus('ok');}
 
 let _toastTimer;
 function showToast(msg,duration=2200){
@@ -881,8 +922,12 @@ function showToast(msg,duration=2200){
 async function loadShifts(){
   if(isGuest()){shifts=JSON.parse(localStorage.getItem('st_guest_shifts')||'[]');renderHome();renderLog();return;}
   setSyncStatus('syncing');
-  try{const d=await sbFetch('/rest/v1/shifts?select=*&order=date.desc');shifts=d||[];renderHome();renderLog();setSyncStatus('ok');}
-  catch(e){setSyncStatus('error');showToast('⚠️ '+mapDbError(e.message));renderHome();renderLog();}
+  try{const d=await sbFetch('/rest/v1/shifts?select=*&order=date.desc');shifts=mergePending(d||[]);cacheShifts();renderHome();renderLog();updateSyncUI();}
+  catch(e){
+    shifts=loadCachedShifts();renderHome();renderLog();updateSyncUI();
+    if(e.status===0){showToast('📴 Offline – lokale Daten werden angezeigt');}
+    else{setSyncStatus('error');showToast('⚠️ '+mapDbError(e.message));}
+  }
 }
 
 async function saveShift(data){
@@ -893,12 +938,18 @@ async function saveShift(data){
     stored.sort((a,b)=>b.date.localeCompare(a.date));
     localStorage.setItem('st_guest_shifts',JSON.stringify(stored));await loadShifts();return;
   }
-  setSyncStatus('syncing');
-  try{
-    if(editingShiftId){await sbFetch(`/rest/v1/shifts?id=eq.${encodeURIComponent(editingShiftId)}`,{method:'PATCH',headers:{'Prefer':'return=representation'},body:JSON.stringify(data)});showToast('✅ Schicht aktualisiert!');}
-    else{await sbFetch('/rest/v1/shifts',{method:'POST',headers:{'Prefer':'return=representation'},body:JSON.stringify({...data,user_id:currentUser.id})});showToast('✅ Schicht gespeichert!');}
-    setSyncStatus('ok');await loadShifts();
-  }catch(e){setSyncStatus('error');showToast('⚠️ '+mapDbError(e.message));}
+  // Optimistisch: sofort lokal anzeigen & cachen, dann speichern (direkt oder via Queue)
+  if(editingShiftId){
+    const id=editingShiftId,i=shifts.findIndex(s=>s.id===id);
+    if(i>=0)shifts[i]={...shifts[i],...data};
+    shifts.sort((a,b)=>(b.date||'').localeCompare(a.date||''));cacheShifts();renderHome();renderLog();
+    await queueWrite({method:'PATCH',path:`/rest/v1/shifts?id=eq.${encodeURIComponent(id)}`,headers:{'Prefer':'return=minimal'},body:data,shiftId:id},'✅ Schicht aktualisiert!');
+  }else{
+    // Client-UUID als Primärschlüssel: macht Insert-Retries duplikatsicher (ignore-duplicates)
+    const row={...data,id:crypto.randomUUID(),user_id:currentUser.id,created_at:new Date().toISOString()};
+    shifts.unshift(row);shifts.sort((a,b)=>(b.date||'').localeCompare(a.date||''));cacheShifts();renderHome();renderLog();
+    await queueWrite({method:'POST',path:'/rest/v1/shifts',headers:{'Prefer':'resolution=ignore-duplicates,return=minimal'},body:row,shiftId:row.id},'✅ Schicht gespeichert!');
+  }
 }
 
 async function deleteShift(id){
@@ -907,14 +958,59 @@ async function deleteShift(id){
     const stored=JSON.parse(localStorage.getItem('st_guest_shifts')||'[]').filter(s=>s.id!==id);
     localStorage.setItem('st_guest_shifts',JSON.stringify(stored));showToast('🗑️ Schicht gelöscht');await loadShifts();return;
   }
+  shifts=shifts.filter(s=>s.id!==id);cacheShifts();renderHome();renderLog(); // optimistisch entfernen
+  await queueWrite({method:'DELETE',path:`/rest/v1/shifts?id=eq.${encodeURIComponent(id)}`,shiftId:id},'🗑️ Schicht gelöscht');
+}
+
+function enqueue(op){const q=loadQueue();q.push({qid:crypto.randomUUID(),ts:Date.now(),...op});saveQueue(q);}
+
+/* Schreibzugriff: direkt versuchen; bei fehlendem Netz, Server-5xx oder toter Session
+   in die Queue – es geht NIE ein Eintrag verloren. */
+async function queueWrite(op,okMsg){
+  // Sobald etwas in der Queue liegt, wird hinten angestellt (FIFO-Reihenfolge sichern)
+  if(loadQueue().length){enqueue(op);showToast('💾 Lokal gespeichert – wird automatisch synchronisiert');setTimeout(flushQueue,300);return;}
   setSyncStatus('syncing');
-  try{await sbFetch(`/rest/v1/shifts?id=eq.${encodeURIComponent(id)}`,{method:'DELETE'});showToast('🗑️ Schicht gelöscht');setSyncStatus('ok');await loadShifts();}
-  catch(e){setSyncStatus('error');showToast('⚠️ '+mapDbError(e.message));}
+  try{
+    await sbFetch(op.path,{method:op.method,headers:op.headers,body:op.body!=null?JSON.stringify(op.body):undefined});
+    showToast(okMsg);await loadShifts();
+  }catch(e){
+    if(e.status===0||e.status>=500||e.status===401){
+      enqueue(op);showToast('💾 Lokal gespeichert – wird automatisch synchronisiert');
+      if(!currentSession)showAuthScreen(); // 401 trotz Refresh-Versuch = Session endgültig ungültig
+      setTimeout(flushQueue,1500);
+    }else{setSyncStatus('error');showToast('⚠️ '+mapDbError(e.message));await loadShifts();} // 4xx: optimistische Änderung per Server-Reload zurückrollen
+  }
+}
+
+let _flushing=false;
+async function flushQueue(){
+  if(_flushing||isGuest()||!currentSession)return;
+  const q=loadQueue();if(!q.length)return;
+  _flushing=true;setSyncStatus('syncing');let synced=0;
+  try{
+    while(q.length){
+      const op=q[0];
+      try{
+        await sbFetch(op.path,{method:op.method,headers:op.headers,body:op.body!=null?JSON.stringify(op.body):undefined});
+        q.shift();saveQueue(q);synced++;
+      }catch(e){
+        if(e.status===409){q.shift();saveQueue(q);synced++;} // Duplikat = kam beim ersten Versuch schon an
+        else if(e.status===0||e.status>=500||e.status===401)break; // offline / Server down / Session tot → Rest bleibt liegen
+        else{
+          // dauerhafter 4xx-Fehler: aussortieren, damit die Queue nicht ewig blockiert
+          console.warn('Sync-Op verworfen (HTTP '+e.status+')',op);
+          try{const dead=JSON.parse(localStorage.getItem('st_dead')||'[]');dead.push({...op,error:e.status});localStorage.setItem('st_dead',JSON.stringify(dead.slice(-20)));}catch{}
+          q.shift();saveQueue(q);
+        }
+      }
+    }
+  }finally{_flushing=false;updateSyncUI();}
+  if(synced&&!loadQueue().length){showToast('✅ '+(synced===1?'1 Eintrag':synced+' Einträge')+' synchronisiert');await loadShifts();}
 }
 
 function mapDbError(msg){
   if(!msg)return'Datenbankfehler.';const m=msg.toLowerCase();
-  if(m.includes('jwt')||m.includes('not authenticated')){clearSession();showAuthScreen();return'Sitzung abgelaufen.';}
+  if(m.includes('jwt')||m.includes('not authenticated')){if(!currentSession)showAuthScreen();return'Sitzung abgelaufen – bitte neu anmelden.';}
   if(m.includes('network')||m.includes('fetch'))return'Keine Verbindung.';
   return msg;
 }
@@ -1122,6 +1218,14 @@ function renderDetails(){
 }
 
 window.addEventListener('resize',()=>{if(activeTab==='home')drawChart(_chartSelected);});
+
+/* ---- v1.1.14: Verbindungs- & Lebenszyklus-Hooks ---- */
+function maybeRefresh(){if(currentSession?.refresh_token&&currentSession.expires_at&&(currentSession.expires_at-Date.now()/1000)<REFRESH_MARGIN_S)refreshSession();}
+window.addEventListener('online',()=>{maybeRefresh();flushQueue();});
+window.addEventListener('pageshow',()=>{flushQueue();});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){maybeRefresh();flushQueue();}}); // PWA kommt in den Vordergrund (wichtig auf iOS)
+setInterval(()=>{if(!document.hidden){maybeRefresh();flushQueue();}},30000);
+if('serviceWorker'in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});});}
 </script>
 
 <!-- GUEST WARNING MODAL -->
