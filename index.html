@@ -208,7 +208,7 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 .empty{text-align:center;padding:40px 20px;color:var(--text3);}
 .empty-icon{font-size:40px;display:block;margin-bottom:12px;opacity:0.5;}
 .empty-txt{font-size:13px;font-weight:600;}
-.toast{position:fixed;bottom:calc(max(var(--sab),16px) + var(--tabh) + 12px);left:50%;transform:translateX(-50%) translateY(60px);opacity:0;background:var(--surface3);border:1px solid var(--border2);border-radius:14px;padding:10px 18px;font-size:13px;font-weight:700;z-index:300;transition:transform .3s cubic-bezier(.34,1.56,.64,1),opacity .25s ease;white-space:nowrap;pointer-events:none;}
+.toast{position:fixed;top:calc(var(--sat) + var(--topbh) + 12px);left:50%;transform:translateX(-50%) translateY(-60px);opacity:0;background:var(--surface3);border:1px solid var(--border2);border-radius:14px;padding:10px 18px;font-size:13px;font-weight:700;z-index:300;transition:transform .3s cubic-bezier(.34,1.56,.64,1),opacity .25s ease;white-space:nowrap;pointer-events:none;}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
 .spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,0.2);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block;vertical-align:middle;margin-right:8px;}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -298,7 +298,7 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 <!-- TOPBAR -->
 <div class="topbar" id="main-topbar" style="display:none;">
   <div class="topbar-left">
-    <div class="topbar-title">TipLog 🍽️ <span style="font-size:11px;color:var(--accent-l);font-weight:600;">v1.1.14</span></div>
+    <div class="topbar-title">TipLog 🍽️ <span style="font-size:11px;color:var(--accent-l);font-weight:600;">v1.1.15</span></div>
     <div class="topbar-sub"><span id="sync-label">Bereit</span><span class="sync-dot" id="sync-dot"></span></div>
   </div>
   <div class="topbar-right">
@@ -1066,6 +1066,7 @@ const fmtF=v=>'€'+(+v).toFixed(2).replace('.',',');
 function fmtDate(s){return new Date(s+'T12:00:00').toLocaleDateString('de-AT',{weekday:'short',day:'2-digit',month:'short',year:'numeric'});}
 function fmtDateShort(s){return new Date(s+'T12:00:00').toLocaleDateString('de-AT',{weekday:'short',day:'2-digit',month:'short'});}
 function dateInt(s){return s?parseInt(s.replace(/-/g,''),10):0;}
+function daysAgoInt(n){const d=new Date();d.setDate(d.getDate()-n);return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();}
 function todayStr(){const n=new Date();return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}`;}
 function sumK(arr,k){return arr.reduce((a,e)=>a+(+e[k]||0),0);}
 function getThisMonth(){const n=new Date(),start=`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-01`;return shifts.filter(s=>dateInt(s.date)>=dateInt(start));}
@@ -1146,11 +1147,11 @@ function initChartInteraction(){
 function setHistFilter(filter,el){histFilter=filter;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderLog();}
 
 function getFiltered(){
-  const now=new Date(),tStr=todayStr();
+  const now=new Date();
   if(histFilter==='all')return shifts;
   if(histFilter==='month'){const cm=now.getFullYear()*100+(now.getMonth()+1);return shifts.filter(s=>Math.floor(dateInt(s.date)/100)===cm);}
-  if(histFilter==='last30')return shifts.filter(s=>dateInt(s.date)>=dateInt(tStr)-30);
-  if(histFilter==='last7')return shifts.filter(s=>dateInt(s.date)>=dateInt(tStr)-7);
+  if(histFilter==='last30')return shifts.filter(s=>dateInt(s.date)>=daysAgoInt(29));
+  if(histFilter==='last7')return shifts.filter(s=>dateInt(s.date)>=daysAgoInt(6));
   return shifts;
 }
 
