@@ -2,8 +2,9 @@
 
 Trinkgeld- & Schicht-Tracker für Kellner:innen – als PWA.
 
-- App: https://waiter-dev.github.io/tiplog/
+- App: https://app.tiplog.at (Cloudflare Pages, deployt aus Branch `main`)
+- Alte URL: https://waiter-dev.github.io/tiplog/ → leitet um (Branch `legacy-redirect`)
 - Website: https://tiplog.at
 
-Hinweis: Die Datei `_headers` wirkt erst nach einem Umzug auf Cloudflare Pages
-(GitHub Pages unterstützt keine eigenen Response-Header).
+Hinweis: Response-Header (CSP etc.) kommen aus `_headers` und wirken nur auf
+Cloudflare Pages, nicht auf GitHub Pages.
