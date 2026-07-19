@@ -87,8 +87,10 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 .auth-divider{display:flex;align-items:center;gap:10px;width:100%;max-width:360px;margin-top:6px;}
 .auth-divider-line{flex:1;height:1px;background:var(--border);}
 .auth-divider-text{font-size:12px;color:var(--text3);font-weight:600;}
-.auth-guest-btn{width:100%;max-width:360px;padding:14px;background:transparent;border:1px solid var(--border2);border-radius:12px;color:var(--text2);font-family:'Figtree',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;margin-top:6px;}
-.auth-guest-btn:active{background:var(--surface2);}
+.auth-social-btn{width:100%;max-width:360px;padding:13px;border:1px solid var(--border2);border-radius:12px;background:var(--surface);color:var(--text);font-family:'Figtree',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:10px;margin-top:8px;}
+.auth-social-btn:active{background:var(--surface2);}
+.auth-social-btn svg{width:18px;height:18px;flex-shrink:0;}
+.auth-social-btn.apple{background:var(--text);color:var(--bg);border-color:var(--text);}
 
 /* TOPBAR */
 .topbar{position:fixed;top:0;left:0;right:0;z-index:60;height:calc(var(--sat) + var(--topbh));padding-top:var(--sat);padding-left:calc(20px + var(--sal));padding-right:calc(20px + var(--sar));padding-bottom:10px;background:var(--chrome-bg);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);display:flex;align-items:flex-end;justify-content:space-between;}
@@ -252,61 +254,68 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 <!-- LOADING -->
 <div id="screen-loading">
   <div class="loading-logo">🍽️</div>
-  <div class="loading-text">TipLog wird geladen…</div>
+  <div class="loading-text" data-i18n="loading">TipLog wird geladen…</div>
 </div>
 
 <!-- AUTH -->
 <div id="screen-auth">
   <div class="auth-logo">🍽️</div>
   <div class="auth-title">TipLog</div>
-  <div class="auth-sub">Dein Schicht- & Trinkgeld-Tracker</div>
+  <div class="auth-sub" data-i18n="authSub">Dein Schicht- & Trinkgeld-Tracker</div>
   <div class="auth-tabs">
-    <button class="auth-tab active" onclick="switchAuthTab('login')">Anmelden</button>
-    <button class="auth-tab" onclick="switchAuthTab('register')">Registrieren</button>
+    <button class="auth-tab active" data-i18n="tabLogin" onclick="switchAuthTab('login')">Anmelden</button>
+    <button class="auth-tab" data-i18n="tabRegister" onclick="switchAuthTab('register')">Registrieren</button>
   </div>
   <div class="auth-form">
     <div id="auth-error" class="auth-error"></div>
-    <input id="auth-email" class="auth-field" type="email" placeholder="E-Mail" autocomplete="email">
-    <input id="auth-password" class="auth-field" type="password" placeholder="Passwort" autocomplete="current-password">
-    <input id="auth-password2" class="auth-field" type="password" placeholder="Passwort wiederholen" autocomplete="new-password" style="display:none">
-    <label class="pw-toggle"><input type="checkbox" onclick="toggleAllPw(this,'auth-password','auth-password2')"><span>Passwort anzeigen</span></label>
-    <input id="auth-name" class="auth-field" type="text" placeholder="Dein Name" autocomplete="name" style="display:none">
-    <div id="auth-hint" style="display:none;font-size:11px;color:var(--text3);text-align:left;margin:-4px 2px 2px;line-height:1.4;">Mindestens 6 Zeichen, mit mindestens einem Groß- und einem Kleinbuchstaben.</div>
+    <input id="auth-email" class="auth-field" type="email" data-i18n-ph="phEmail" placeholder="E-Mail" autocomplete="email">
+    <input id="auth-password" class="auth-field" type="password" data-i18n-ph="phPassword" placeholder="Passwort" autocomplete="current-password">
+    <input id="auth-password2" class="auth-field" type="password" data-i18n-ph="phPassword2" placeholder="Passwort wiederholen" autocomplete="new-password" style="display:none">
+    <label class="pw-toggle"><input type="checkbox" onclick="toggleAllPw(this,'auth-password','auth-password2')"><span data-i18n="showPw">Passwort anzeigen</span></label>
+    <input id="auth-name" class="auth-field" type="text" data-i18n-ph="phName" placeholder="Dein Name" autocomplete="name" style="display:none">
+    <div id="auth-hint" data-i18n="pwHint" style="display:none;font-size:11px;color:var(--text3);text-align:left;margin:-4px 2px 2px;line-height:1.4;">Mindestens 6 Zeichen, mit mindestens einem Groß- und einem Kleinbuchstaben.</div>
     <button id="auth-submit" class="auth-btn" onclick="handleAuth()">Anmelden</button>
-    <button id="auth-resend-btn" style="display:none;background:none;border:1px solid var(--border2);color:var(--text2);font-size:13px;font-family:'Figtree',sans-serif;cursor:pointer;padding:9px;border-radius:10px;" onclick="resendConfirmation()">Bestätigungs-E-Mail erneut senden</button>
-    <button id="auth-reset-btn" style="background:none;border:none;color:var(--text3);font-size:13px;font-family:'Figtree',sans-serif;cursor:pointer;padding:4px;text-decoration:underline;" onclick="handlePasswordReset()">Passwort vergessen?</button>
+    <button id="auth-resend-btn" style="display:none;background:none;border:1px solid var(--border2);color:var(--text2);font-size:13px;font-family:'Figtree',sans-serif;cursor:pointer;padding:9px;border-radius:10px;" onclick="resendConfirmation()" data-i18n="resendBtn">Bestätigungs-E-Mail erneut senden</button>
+    <button id="auth-reset-btn" style="background:none;border:none;color:var(--text3);font-size:13px;font-family:'Figtree',sans-serif;cursor:pointer;padding:4px;text-decoration:underline;" onclick="handlePasswordReset()" data-i18n="forgotPw">Passwort vergessen?</button>
     <div id="auth-reset-status" style="display:none;margin-top:4px;"></div>
   </div>
-  <div class="auth-divider">
+  <div class="auth-divider" style="margin-top:16px;">
     <div class="auth-divider-line"></div>
-    <div class="auth-divider-text">oder</div>
+    <div class="auth-divider-text" data-i18n="or">oder</div>
     <div class="auth-divider-line"></div>
   </div>
-  <button class="auth-guest-btn" onclick="enterGuestMode()">Als Gast fortfahren</button>
+  <button class="auth-social-btn" onclick="signInWithProvider('google')">
+    <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+    <span data-i18n="googleBtn">Mit Google fortfahren</span>
+  </button>
+  <button class="auth-social-btn apple" onclick="signInWithProvider('apple')">
+    <svg viewBox="0 0 384 512" fill="currentColor" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+    <span data-i18n="appleBtn">Mit Apple fortfahren</span>
+  </button>
   <div style="margin-top:18px;font-size:12px;color:var(--text3);text-align:center;line-height:1.6;">
-    Mit der Nutzung akzeptierst du unsere<br>
-    <a onclick="showLegal('agb')" style="color:var(--accent-l);text-decoration:underline;cursor:pointer;">Nutzungsbedingungen</a>
+    <span data-i18n="acceptPre">Mit der Nutzung akzeptierst du unsere</span><br>
+    <a onclick="showLegal('agb')" data-i18n="terms" style="color:var(--accent-l);text-decoration:underline;cursor:pointer;">Nutzungsbedingungen</a>
     &nbsp;·&nbsp;
-    <a onclick="showLegal('datenschutz')" style="color:var(--accent-l);text-decoration:underline;cursor:pointer;">Datenschutz</a>
+    <a onclick="showLegal('datenschutz')" data-i18n="privacy" style="color:var(--accent-l);text-decoration:underline;cursor:pointer;">Datenschutz</a>
   </div>
 </div>
 
 <div id="screen-recovery">
   <div class="auth-logo">🍽️</div>
-  <div class="auth-title">Neues Passwort</div>
-  <div class="auth-sub">Wähle ein neues Passwort für dein Konto.</div>
+  <div class="auth-title" data-i18n="recTitle">Neues Passwort</div>
+  <div class="auth-sub" data-i18n="recSub">Wähle ein neues Passwort für dein Konto.</div>
   <div class="auth-form">
     <div id="rec-error" class="auth-error"></div>
-    <input id="rec-password" class="auth-field" type="password" placeholder="Neues Passwort" autocomplete="new-password">
-    <input id="rec-password2" class="auth-field" type="password" placeholder="Passwort wiederholen" autocomplete="new-password">
-    <label class="pw-toggle"><input type="checkbox" onclick="toggleAllPw(this,'rec-password','rec-password2')"><span>Passwort anzeigen</span></label>
-    <div style="font-size:11px;color:var(--text3);text-align:left;margin:-4px 2px 2px;line-height:1.4;">Mindestens 6 Zeichen, mit Groß- und Kleinbuchstabe.</div>
-    <button id="rec-submit" class="auth-btn" onclick="submitNewPassword()">Passwort speichern</button>
+    <input id="rec-password" class="auth-field" type="password" data-i18n-ph="phNewPw" placeholder="Neues Passwort" autocomplete="new-password">
+    <input id="rec-password2" class="auth-field" type="password" data-i18n-ph="phPassword2" placeholder="Passwort wiederholen" autocomplete="new-password">
+    <label class="pw-toggle"><input type="checkbox" onclick="toggleAllPw(this,'rec-password','rec-password2')"><span data-i18n="showPw">Passwort anzeigen</span></label>
+    <div data-i18n="recHint" style="font-size:11px;color:var(--text3);text-align:left;margin:-4px 2px 2px;line-height:1.4;">Mindestens 6 Zeichen, mit Groß- und Kleinbuchstabe.</div>
+    <button id="rec-submit" class="auth-btn" data-i18n="recSubmit" onclick="submitNewPassword()">Passwort speichern</button>
   </div>
 </div>
 
 <div id="screen-legal" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:200;flex-direction:column;">
-  <div style="display:flex;align-items:center;gap:12px;padding:16px;border-bottom:1px solid var(--border);flex-shrink:0;">
+  <div style="display:flex;align-items:center;gap:12px;padding:calc(var(--sat) + 10px) 16px 12px 16px;border-bottom:1px solid var(--border);flex-shrink:0;">
     <button onclick="closeLegal()" style="background:var(--surface2);border:none;color:var(--text);width:36px;height:36px;border-radius:10px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;">‹</button>
     <div id="legal-title" style="font-size:17px;font-weight:700;color:var(--text);">Rechtliches</div>
   </div>
@@ -316,8 +325,8 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 <!-- TOPBAR -->
 <div class="topbar" id="main-topbar" style="display:none;">
   <div class="topbar-left">
-    <div class="topbar-title">TipLog 🍽️ <span style="font-size:11px;color:var(--accent-l);font-weight:600;">v1.1.19</span></div>
-    <div class="topbar-sub"><span id="sync-label">Bereit</span><span class="sync-dot" id="sync-dot"></span></div>
+    <div class="topbar-title">TipLog 🍽️</div>
+    <div class="topbar-sub"><span id="sync-label" data-i18n="syncReady">Bereit</span><span class="sync-dot" id="sync-dot"></span></div>
   </div>
   <div class="topbar-right">
     <div class="topbar-avatar" id="topbar-avatar" onclick="showTab('profile')">?</div>
@@ -328,76 +337,76 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 <div class="screen" id="screen-home">
   <div class="dash-wrap">
     <div class="tip-hero">
-      <div class="tip-hero-eyebrow">⌀ Trinkgeld pro Schicht</div>
+      <div class="tip-hero-eyebrow" data-i18n="heroEyebrow">⌀ Trinkgeld pro Schicht</div>
       <div class="tip-hero-main">
         <div class="tip-hero-amount" id="h-avg-tip">€0</div>
         <div class="tip-hero-unit">avg</div>
       </div>
-      <div class="tip-pct-badge" id="h-tip-pct">0.0% vom Ø Umsatz</div>
-      <div class="tip-hero-sub" id="h-shifts-lbl">— Schichten diesen Monat</div>
+      <div class="tip-pct-badge" id="h-tip-pct" data-i18n="heroPctZero">0.0% vom Ø Umsatz</div>
+      <div class="tip-hero-sub" id="h-shifts-lbl" data-i18n="heroShiftsInit">— Schichten diesen Monat</div>
     </div>
     <div class="stat-row">
       <div class="stat-card">
         <div class="stat-card-icon">💜</div>
-        <div class="stat-card-label">Tip diesen Monat</div>
+        <div class="stat-card-label" data-i18n="tipThisMonth">Tip diesen Monat</div>
         <div class="stat-card-val col-purple" id="s-tip-month">€0</div>
-        <div class="stat-card-sub" id="s-tip-month-count">0 Schichten</div>
+        <div class="stat-card-sub" id="s-tip-month-count" data-i18n="zeroShifts">0 Schichten</div>
       </div>
       <div class="stat-card">
         <div class="stat-card-icon">📅</div>
-        <div class="stat-card-label">Schichten gesamt</div>
+        <div class="stat-card-label" data-i18n="shiftsTotal">Schichten gesamt</div>
         <div class="stat-card-val col-green" id="s-shifts-total">0</div>
-        <div class="stat-card-sub">alle Zeiten</div>
+        <div class="stat-card-sub" data-i18n="allTime">alle Zeiten</div>
       </div>
     </div>
     <div class="avg-card">
-      <div class="avg-card-title">⌀ Tip Durchschnitt</div>
+      <div class="avg-card-title" data-i18n="avgCardTitle">⌀ Tip Durchschnitt</div>
       <div class="avg-grid">
         <div class="avg-item">
-          <div class="avg-label">Letzter Tag</div>
+          <div class="avg-label" data-i18n="lastDay">Letzter Tag</div>
           <div class="avg-val col-purple" id="avg-day">—</div>
           <div class="avg-pct" id="avg-day-pct"></div>
-          <div class="avg-sub" id="avg-day-sub">kein Eintrag</div>
+          <div class="avg-sub" id="avg-day-sub" data-i18n="noEntry">kein Eintrag</div>
         </div>
         <div class="avg-item">
-          <div class="avg-label">7 Tage</div>
+          <div class="avg-label" data-i18n="days7">7 Tage</div>
           <div class="avg-val col-purple" id="avg-week">—</div>
           <div class="avg-pct" id="avg-week-pct"></div>
-          <div class="avg-sub" id="avg-week-sub">0 Schichten</div>
+          <div class="avg-sub" id="avg-week-sub" data-i18n="zeroShifts">0 Schichten</div>
         </div>
         <div class="avg-item">
-          <div class="avg-label">Monat</div>
+          <div class="avg-label" data-i18n="month">Monat</div>
           <div class="avg-val col-purple" id="avg-month">—</div>
           <div class="avg-pct" id="avg-month-pct"></div>
-          <div class="avg-sub" id="avg-month-sub">0 Schichten</div>
+          <div class="avg-sub" id="avg-month-sub" data-i18n="zeroShifts">0 Schichten</div>
         </div>
       </div>
     </div>
     <div class="chart-card">
       <div class="chart-head">
-        <div class="chart-title">Trinkgeld — dieser Monat</div>
+        <div class="chart-title" data-i18n="chartTitle">Trinkgeld — dieser Monat</div>
         <div class="chart-total" id="chart-total-val">€0</div>
       </div>
       <div class="chart-wrap"><canvas id="mainChart" style="cursor:pointer;"></canvas></div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--accent-l)"></div>Trinkgeld · antippen für Details</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent-l)"></div><span data-i18n="chartLegend">Trinkgeld · antippen für Details</span></div>
     </div>
     <div class="details-card">
       <div class="details-hdr">
-        <div class="details-hdr-title">📊 Details</div>
+        <div class="details-hdr-title" data-i18n="details">📊 Details</div>
         <div class="details-toggle">
-          <button class="dtoggle active" id="dtoggle-month" onclick="setDetailsPeriod('month')">Monat</button>
-          <button class="dtoggle" id="dtoggle-all" onclick="setDetailsPeriod('all')">Gesamt</button>
+          <button class="dtoggle active" id="dtoggle-month" data-i18n="dtMonth" onclick="setDetailsPeriod('month')">Monat</button>
+          <button class="dtoggle" id="dtoggle-all" data-i18n="dtAll" onclick="setDetailsPeriod('all')">Gesamt</button>
         </div>
       </div>
       <div class="details-grid">
-        <div class="detail-item"><div class="detail-item-label">Gesamtumsatz</div><div class="detail-item-val col-green" id="d-umsatz">€0</div></div>
-        <div class="detail-item"><div class="detail-item-label">Tip gesamt</div><div class="detail-item-val col-purple" id="d-tip">€0</div></div>
-        <div class="detail-item"><div class="detail-item-label">Ø Tip %</div><div class="detail-item-val col-purple" id="d-tip-pct">0.0%</div></div>
-        <div class="detail-item"><div class="detail-item-label">Bester Tip-Tag</div><div class="detail-item-val col-yellow" id="d-best-tip">—</div></div>
-        <div class="detail-item"><div class="detail-item-label">💜 Größter Tip</div><div class="detail-item-val col-purple" id="d-tip-max">—</div></div>
-        <div class="detail-item"><div class="detail-item-label"><span style="filter:hue-rotate(270deg) saturate(2) brightness(1.1);display:inline-block;">💔</span> Kleinster Tip</div><div class="detail-item-val col-purple" id="d-tip-min">—</div></div>
-        <div class="detail-item"><div class="detail-item-label">📈 Größter Umsatz</div><div class="detail-item-val col-green" id="d-umsatz-max">—</div></div>
-        <div class="detail-item"><div class="detail-item-label">📉 Kleinster Umsatz</div><div class="detail-item-val col-green" id="d-umsatz-min">—</div></div>
+        <div class="detail-item"><div class="detail-item-label" data-i18n="dTotalRev">Gesamtumsatz</div><div class="detail-item-val col-green" id="d-umsatz">€0</div></div>
+        <div class="detail-item"><div class="detail-item-label" data-i18n="dTipTotal">Tip gesamt</div><div class="detail-item-val col-purple" id="d-tip">€0</div></div>
+        <div class="detail-item"><div class="detail-item-label" data-i18n="dTipPct">Ø Tip %</div><div class="detail-item-val col-purple" id="d-tip-pct">0.0%</div></div>
+        <div class="detail-item"><div class="detail-item-label" data-i18n="dBestDay">Bester Tip-Tag</div><div class="detail-item-val col-yellow" id="d-best-tip">—</div></div>
+        <div class="detail-item"><div class="detail-item-label" data-i18n="dTipMax">💜 Größter Tip</div><div class="detail-item-val col-purple" id="d-tip-max">—</div></div>
+        <div class="detail-item"><div class="detail-item-label"><span style="filter:hue-rotate(270deg) saturate(2) brightness(1.1);display:inline-block;">💔</span> <span data-i18n="dTipMin">Kleinster Tip</span></div><div class="detail-item-val col-purple" id="d-tip-min">—</div></div>
+        <div class="detail-item"><div class="detail-item-label" data-i18n="dRevMax">📈 Größter Umsatz</div><div class="detail-item-val col-green" id="d-umsatz-max">—</div></div>
+        <div class="detail-item"><div class="detail-item-label" data-i18n="dRevMin">📉 Kleinster Umsatz</div><div class="detail-item-val col-green" id="d-umsatz-min">—</div></div>
       </div>
     </div>
   </div>
@@ -406,15 +415,15 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 <!-- VERLAUF -->
 <div class="screen" id="screen-log">
   <div class="filter-row">
-    <button class="filter-btn active" onclick="setHistFilter('all',this)">Alle</button>
-    <button class="filter-btn" onclick="setHistFilter('month',this)">Monat</button>
-    <button class="filter-btn" onclick="setHistFilter('last30',this)">30 Tage</button>
-    <button class="filter-btn" onclick="setHistFilter('last7',this)">7 Tage</button>
+    <button class="filter-btn active" data-i18n="fAll" onclick="setHistFilter('all',this)">Alle</button>
+    <button class="filter-btn" data-i18n="fMonth" onclick="setHistFilter('month',this)">Monat</button>
+    <button class="filter-btn" data-i18n="f30" onclick="setHistFilter('last30',this)">30 Tage</button>
+    <button class="filter-btn" data-i18n="f7" onclick="setHistFilter('last7',this)">7 Tage</button>
   </div>
   <div class="hist-summary">
-    <div class="hist-stat"><div class="hist-stat-val col-purple" id="hist-total-tip">€0</div><div class="hist-stat-label">Trinkgeld</div></div>
-    <div class="hist-stat"><div class="hist-stat-val col-purple" id="hist-avg-tip">€0</div><div class="hist-stat-label">Ø / Schicht</div></div>
-    <div class="hist-stat"><div class="hist-stat-val" id="hist-count">0</div><div class="hist-stat-label">Schichten</div></div>
+    <div class="hist-stat"><div class="hist-stat-val col-purple" id="hist-total-tip">€0</div><div class="hist-stat-label" data-i18n="histTip">Trinkgeld</div></div>
+    <div class="hist-stat"><div class="hist-stat-val col-purple" id="hist-avg-tip">€0</div><div class="hist-stat-label" data-i18n="histAvg">Ø / Schicht</div></div>
+    <div class="hist-stat"><div class="hist-stat-val" id="hist-count">0</div><div class="hist-stat-label" data-i18n="histCount">Schichten</div></div>
   </div>
   <div class="log-list" id="log-list"></div>
 </div>
@@ -428,61 +437,69 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
       <div class="profile-email" id="profile-email">—</div>
     </div>
     <div id="guest-banner" class="guest-banner" style="display:none;">
-      <div class="guest-banner-title">☁️ Daten nur lokal gespeichert</div>
-      <div class="guest-banner-sub">Im Gast-Modus werden Schichten nur auf diesem Gerät gespeichert. Erstelle ein Konto für sicheren Cloud-Sync.</div>
-      <button class="guest-banner-btn" onclick="showAuthScreen()">Jetzt Konto erstellen →</button>
+      <div class="guest-banner-title" data-i18n="guestTitle">☁️ Daten nur lokal gespeichert</div>
+      <div class="guest-banner-sub" data-i18n="guestSub">Im Gast-Modus werden Schichten nur auf diesem Gerät gespeichert. Erstelle ein Konto für sicheren Cloud-Sync.</div>
+      <button class="guest-banner-btn" data-i18n="guestBtn" onclick="showAuthScreen()">Jetzt Konto erstellen →</button>
     </div>
-    <div class="settings-section-title">Statistik</div>
+    <div class="settings-section-title" data-i18n="secStats">Statistik</div>
     <div class="settings-card">
       <div class="settings-row">
-        <div class="settings-row-left"><div class="settings-row-title">💰 Gesamt Trinkgeld</div><div class="settings-row-sub" id="profile-total-tip">—</div></div>
+        <div class="settings-row-left"><div class="settings-row-title" data-i18n="rowTotalTip">💰 Gesamt Trinkgeld</div><div class="settings-row-sub" id="profile-total-tip">—</div></div>
       </div>
       <div class="settings-row">
-        <div class="settings-row-left"><div class="settings-row-title">📅 Schichten gesamt</div><div class="settings-row-sub" id="profile-total-shifts">—</div></div>
+        <div class="settings-row-left"><div class="settings-row-title" data-i18n="rowTotalShifts">📅 Schichten gesamt</div><div class="settings-row-sub" id="profile-total-shifts">—</div></div>
       </div>
     </div>
     <div id="pw-section">
-      <div class="settings-section-title">Konto</div>
+      <div class="settings-section-title" data-i18n="secAccount">Konto</div>
       <div class="settings-card">
         <div class="settings-row">
-          <div class="settings-row-left"><div class="settings-row-title">🔐 Passwort ändern</div><div class="settings-row-sub">Reset-Link per E-Mail</div></div>
-          <button class="settings-btn" onclick="openChangePassword(this)">Senden</button>
+          <div class="settings-row-left"><div class="settings-row-title" data-i18n="rowChangePw">🔐 Passwort ändern</div><div class="settings-row-sub" data-i18n="rowChangePwSub">Reset-Link per E-Mail</div></div>
+          <button class="settings-btn" data-i18n="btnSend" onclick="openChangePassword(this)">Senden</button>
         </div>
         <div class="settings-row" onclick="openDeleteAccount()" style="cursor:pointer;">
-          <div class="settings-row-left"><div class="settings-row-title" style="color:var(--red);">🗑️ Konto löschen</div><div class="settings-row-sub">Alle Daten unwiderruflich entfernen</div></div>
+          <div class="settings-row-left"><div class="settings-row-title" data-i18n="rowDelete" style="color:var(--red);">🗑️ Konto löschen</div><div class="settings-row-sub" data-i18n="rowDeleteSub">Alle Daten unwiderruflich entfernen</div></div>
           <div style="color:var(--red);font-size:18px;">›</div>
         </div>
       </div>
     </div>
-    <div class="settings-section-title">Darstellung</div>
+    <div class="settings-section-title" data-i18n="secAppearance">Darstellung</div>
     <div class="settings-card" style="padding:14px 16px;">
-      <div class="settings-row-title" style="margin-bottom:10px;">Erscheinungsbild</div>
+      <div class="settings-row-title" data-i18n="appearance" style="margin-bottom:10px;">Erscheinungsbild</div>
       <div class="seg" id="theme-seg">
-        <button data-tm="light" onclick="setTheme(&quot;light&quot;)">Hell</button>
-        <button data-tm="dark" onclick="setTheme(&quot;dark&quot;)">Dunkel</button>
+        <button data-tm="light" data-i18n="light" onclick="setTheme(&quot;light&quot;)">Hell</button>
+        <button data-tm="dark" data-i18n="dark" onclick="setTheme(&quot;dark&quot;)">Dunkel</button>
       </div>
     </div>
-    <div class="settings-section-title">Rechtliches</div>
+    <div class="settings-section-title" data-i18n="secLanguage">Sprache</div>
+    <div class="settings-card" style="padding:14px 16px;">
+      <div class="seg" id="lang-seg">
+        <button data-lg="de" onclick="setLang(&quot;de&quot;)">Deutsch</button>
+        <button data-lg="en" onclick="setLang(&quot;en&quot;)">English</button>
+      </div>
+    </div>
+    <div class="settings-section-title" data-i18n="secLegal">Rechtliches</div>
     <div class="settings-card">
       <div class="settings-row" onclick="showLegal('datenschutz')" style="cursor:pointer;">
-        <div class="settings-row-left"><div class="settings-row-title">🔒 Datenschutzerklärung</div><div class="settings-row-sub">Welche Daten wir verarbeiten</div></div>
+        <div class="settings-row-left"><div class="settings-row-title" data-i18n="rowPrivacy">🔒 Datenschutzerklärung</div><div class="settings-row-sub" data-i18n="rowPrivacySub">Welche Daten wir verarbeiten</div></div>
         <div style="color:var(--text3);font-size:18px;">›</div>
       </div>
       <div class="settings-row" onclick="showLegal('agb')" style="cursor:pointer;">
-        <div class="settings-row-left"><div class="settings-row-title">📄 Nutzungsbedingungen</div><div class="settings-row-sub">AGB für die App</div></div>
+        <div class="settings-row-left"><div class="settings-row-title" data-i18n="rowTerms">📄 Nutzungsbedingungen</div><div class="settings-row-sub" data-i18n="rowTermsSub">AGB für die App</div></div>
         <div style="color:var(--text3);font-size:18px;">›</div>
       </div>
     </div>
-    <button class="logout-btn" onclick="handleLogout()">Abmelden</button>
+    <button class="logout-btn" data-i18n="logout" onclick="handleLogout()">Abmelden</button>
+    <div style="text-align:center;font-size:11px;font-weight:600;color:var(--text3);margin-top:18px;">TipLog v1.1.19.3</div>
     <div style="height:16px;"></div>
   </div>
 </div>
 
 <!-- TABS -->
 <div class="tabs" id="main-tabs" style="display:none;">
-  <button class="tab-btn active" id="tab-home" onclick="showTab('home')"><div class="tab-icon">📊</div><div class="tab-label">Dashboard</div></button>
-  <button class="tab-btn" id="tab-log" onclick="showTab('log')"><div class="tab-icon">📋</div><div class="tab-label">Verlauf</div></button>
-  <button class="tab-btn" id="tab-profile" onclick="showTab('profile')"><div class="tab-icon">👤</div><div class="tab-label">Profil</div></button>
+  <button class="tab-btn active" id="tab-home" onclick="showTab('home')"><div class="tab-icon">📊</div><div class="tab-label" data-i18n="tabDash">Dashboard</div></button>
+  <button class="tab-btn" id="tab-log" onclick="showTab('log')"><div class="tab-icon">📋</div><div class="tab-label" data-i18n="tabHist">Verlauf</div></button>
+  <button class="tab-btn" id="tab-profile" onclick="showTab('profile')"><div class="tab-icon">👤</div><div class="tab-label" data-i18n="tabProf">Profil</div></button>
 </div>
 
 <!-- FAB -->
@@ -497,34 +514,34 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 <!-- ADD SHEET -->
 <div class="bottom-sheet" id="sheet-add">
   <div class="sheet-handle"></div>
-  <div class="sheet-title" id="sheet-add-title">Schicht hinzufügen</div>
+  <div class="sheet-title" id="sheet-add-title" data-i18n="sheetAddTitle">Schicht hinzufügen</div>
   <div class="form-group">
-    <label class="form-label">Datum</label>
+    <label class="form-label" data-i18n="lblDate">Datum</label>
     <input type="date" class="form-input" id="form-date">
   </div>
   <div class="form-row">
     <div class="form-group">
-      <label class="form-label">Umsatz (€) *</label>
+      <label class="form-label" data-i18n="lblRevenue">Umsatz (€) *</label>
       <input type="number" inputmode="decimal" class="form-input" id="form-revenue" placeholder="0" step="0.50" min="0">
     </div>
     <div class="form-group">
-      <label class="form-label">Trinkgeld (€) *</label>
+      <label class="form-label" data-i18n="lblTip">Trinkgeld (€) *</label>
       <input type="number" inputmode="decimal" class="form-input" id="form-tip" placeholder="0" step="0.50" min="0">
     </div>
   </div>
   <div class="form-group">
-    <label class="form-label">Notiz (optional)</label>
-    <input type="text" class="form-input" id="form-note" placeholder="z.B. Frühschicht, Sonderveranstaltung…" style="font-size:15px;font-weight:400;">
+    <label class="form-label" data-i18n="lblNote">Notiz (optional)</label>
+    <input type="text" class="form-input" id="form-note" data-i18n-ph="phNote" placeholder="z.B. Frühschicht, Sonderveranstaltung…" style="font-size:15px;font-weight:400;">
   </div>
-  <button class="form-submit" id="form-submit-btn" onclick="submitShift()">Speichern ✓</button>
+  <button class="form-submit" id="form-submit-btn" data-i18n="btnSave" onclick="submitShift()">Speichern ✓</button>
   <div style="height:16px;"></div>
 </div>
 
 <!-- DELETE ACCOUNT SHEET -->
 <div class="bottom-sheet" id="sheet-delete">
   <div class="sheet-handle"></div>
-  <div class="sheet-title" style="color:var(--red);">Konto löschen?</div>
-  <div style="font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:20px;">
+  <div class="sheet-title" data-i18n="delSheetTitle" style="color:var(--red);">Konto löschen?</div>
+  <div data-i18n-html="delSheetBody" style="font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:20px;">
     Dein Konto und <strong style="color:var(--text);">alle deine Schichten, Trinkgeld-Daten und Statistiken</strong> werden
     <strong style="color:var(--red);">unwiderruflich gelöscht.</strong> Das kann nicht rückgängig gemacht werden. Bist du sicher?
   </div>
@@ -533,7 +550,7 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
     style="width:100%;padding:16px;background:rgba(255,71,87,0.15);border:1px solid rgba(255,71,87,0.3);border-radius:14px;color:var(--red);font-family:'Figtree',sans-serif;font-size:16px;font-weight:800;cursor:pointer;transition:opacity .2s;">
     Ja, Konto löschen
   </button>
-  <button onclick="closeSheet()" style="width:100%;padding:14px;background:none;border:none;color:var(--text2);font-family:'Figtree',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-top:6px;">Abbrechen</button>
+  <button onclick="closeSheet()" data-i18n="btnCancel" style="width:100%;padding:14px;background:none;border:none;color:var(--text2);font-family:'Figtree',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-top:6px;">Abbrechen</button>
   <div style="height:16px;"></div>
 </div>
 
@@ -546,6 +563,139 @@ let currentSession = JSON.parse(localStorage.getItem('st_session')||'null');
 let currentUser    = JSON.parse(localStorage.getItem('st_user')||'null');
 let shifts=[], editingShiftId=null, histFilter='all', authMode='login';
 let _chartBars=[], _chartSelected=null, activeTab='home';
+
+/* ---- v1.1.19.3: Sprache / Language (DE/EN) ---- */
+let LANG=(localStorage.getItem('st_lang')==='en')?'en':'de';
+const I18N={
+de:{
+loading:'TipLog wird geladen…',authSub:'Dein Schicht- & Trinkgeld-Tracker',tabLogin:'Anmelden',tabRegister:'Registrieren',
+phEmail:'E-Mail',phPassword:'Passwort',phPassword2:'Passwort wiederholen',phName:'Dein Name',phNewPw:'Neues Passwort',
+showPw:'Passwort anzeigen',pwHint:'Mindestens 6 Zeichen, mit mindestens einem Groß- und einem Kleinbuchstaben.',
+btnLogin:'Anmelden',btnRegister:'Konto erstellen',resendBtn:'Bestätigungs-E-Mail erneut senden',forgotPw:'Passwort vergessen?',
+or:'oder',googleBtn:'Mit Google fortfahren',appleBtn:'Mit Apple fortfahren',
+acceptPre:'Mit der Nutzung akzeptierst du unsere',terms:'Nutzungsbedingungen',privacy:'Datenschutz',
+recTitle:'Neues Passwort',recSub:'Wähle ein neues Passwort für dein Konto.',recHint:'Mindestens 6 Zeichen, mit Groß- und Kleinbuchstabe.',recSubmit:'Passwort speichern',
+legalTitle:'Rechtliches',syncReady:'Bereit',
+heroEyebrow:'⌀ Trinkgeld pro Schicht',heroPctZero:'0.0% vom Ø Umsatz',heroShiftsInit:'— Schichten diesen Monat',
+tipThisMonth:'Tip diesen Monat',zeroShifts:'0 Schichten',shiftsTotal:'Schichten gesamt',allTime:'alle Zeiten',
+avgCardTitle:'⌀ Tip Durchschnitt',lastDay:'Letzter Tag',days7:'7 Tage',month:'Monat',noEntry:'kein Eintrag',
+chartTitle:'Trinkgeld — dieser Monat',chartLegend:'Trinkgeld · antippen für Details',
+details:'📊 Details',dtMonth:'Monat',dtAll:'Gesamt',dTotalRev:'Gesamtumsatz',dTipTotal:'Tip gesamt',dTipPct:'Ø Tip %',
+dBestDay:'Bester Tip-Tag',dTipMax:'💜 Größter Tip',dTipMin:'Kleinster Tip',dRevMax:'📈 Größter Umsatz',dRevMin:'📉 Kleinster Umsatz',
+fAll:'Alle',fMonth:'Monat',f30:'30 Tage',f7:'7 Tage',histTip:'Trinkgeld',histAvg:'Ø / Schicht',histCount:'Schichten',
+guestTitle:'☁️ Daten nur lokal gespeichert',guestSub:'Im Gast-Modus werden Schichten nur auf diesem Gerät gespeichert. Erstelle ein Konto für sicheren Cloud-Sync.',guestBtn:'Jetzt Konto erstellen →',
+secStats:'Statistik',rowTotalTip:'💰 Gesamt Trinkgeld',rowTotalShifts:'📅 Schichten gesamt',secAccount:'Konto',
+rowChangePw:'🔐 Passwort ändern',rowChangePwSub:'Reset-Link per E-Mail',btnSend:'Senden',
+rowDelete:'🗑️ Konto löschen',rowDeleteSub:'Alle Daten unwiderruflich entfernen',
+secAppearance:'Darstellung',appearance:'Erscheinungsbild',light:'Hell',dark:'Dunkel',secLanguage:'Sprache',
+secLegal:'Rechtliches',rowPrivacy:'🔒 Datenschutzerklärung',rowPrivacySub:'Welche Daten wir verarbeiten',
+rowTerms:'📄 Nutzungsbedingungen',rowTermsSub:'AGB für die App',logout:'Abmelden',
+tabDash:'Dashboard',tabHist:'Verlauf',tabProf:'Profil',
+sheetAddTitle:'Schicht hinzufügen',sheetEditTitle:'Schicht bearbeiten',lblDate:'Datum',lblRevenue:'Umsatz (€) *',lblTip:'Trinkgeld (€) *',
+lblNote:'Notiz (optional)',phNote:'z.B. Frühschicht, Sonderveranstaltung…',btnSave:'Speichern ✓',btnUpdate:'Aktualisieren ✓',
+delSheetTitle:'Konto löschen?',
+delSheetBody:'Dein Konto und <strong style="color:var(--text);">alle deine Schichten, Trinkgeld-Daten und Statistiken</strong> werden <strong style="color:var(--red);">unwiderruflich gelöscht.</strong> Das kann nicht rückgängig gemacht werden. Bist du sicher?',
+btnDelConfirm:'Ja, Konto löschen',btnCancel:'Abbrechen',
+tSigningIn:'Wird angemeldet…',tCreating:'Konto wird erstellt…',tSaving:'Wird gespeichert…',tDeleting:'Wird gelöscht…',
+errEmail:'Bitte E-Mail eingeben.',errEmailInvalid:'Ungültige E-Mail-Adresse.',errPw:'Bitte Passwort eingeben.',
+errTooMany:'Zu viele Fehlversuche. Bitte setze dein Passwort über „Passwort vergessen?" zurück.',
+errPwWeakFull:'Passwort: mindestens 6 Zeichen, mit Groß- und Kleinbuchstabe.',errPwMismatch:'Die Passwörter stimmen nicht überein.',errName:'Bitte Name eingeben.',
+regAlmost:'Fast geschafft! Wir haben dir eine Bestätigungs-E-Mail geschickt. Bitte bestätige deine Adresse und melde dich dann an.',
+errConfirmFirst:'Bitte bestätige zuerst deine E-Mail-Adresse. Schau in dein Postfach (auch Spam-Ordner).',errBadCreds:'E-Mail oder Passwort ist falsch.',
+feNet:'Keine Internetverbindung. Bitte prüfe deine Verbindung und versuch es erneut.',feConfirm:'Bitte bestätige zuerst deine E-Mail-Adresse.',
+feRate:'Zu viele Anfragen in kurzer Zeit. Bitte warte einen Moment und versuch es dann erneut.',
+feExists:'Diese E-Mail ist bereits registriert. Bitte melde dich an.',feWeak:'Das Passwort ist zu schwach (mind. 6 Zeichen, Groß- und Kleinbuchstabe).',
+fe400:'Das hat nicht geklappt. Bitte prüfe deine Eingaben und versuch es erneut.',feGeneric:'Etwas ist schiefgelaufen. Bitte versuch es erneut.',errCode:'Fehlercode: ',
+toastResent:'✉️ Bestätigungs-E-Mail erneut gesendet',errEnterEmailFirst:'Bitte zuerst deine E-Mail-Adresse oben eingeben.',errEmailValid:'Bitte gib eine gültige E-Mail-Adresse ein.',
+waitPre:'Bitte warte noch ',waitPost:' Sekunden, bevor du eine neue E-Mail anforderst.',btnResetSent:'E-Mail gesendet ✅',
+resetSentMsg:'E-Mail gesendet! Schau in dein Postfach – auch im Spam-Ordner. Es kann ein paar Minuten dauern.',
+lg1:' Eintrag ist',lgN:' Einträge sind',lgTail:' noch nicht synchronisiert und gehen beim Abmelden verloren. Trotzdem abmelden?',
+toastWaitAgain:'Bitte warte kurz, bevor du erneut anforderst.',btnSending:'Senden…',
+toastResetLink:'✉️ Reset-Link gesendet – schau in dein Postfach (auch im Spam-Ordner)',btnSent:'Gesendet ✅',
+toastPwChanged:'✅ Passwort geändert – bitte neu anmelden',guestNoAccount:'Im Gast-Modus gibt es kein Konto zum Löschen',
+toastAccountDeleted:'Dein Konto wurde gelöscht',guestModeLocal:'Gast-Modus · nur lokal',suffixTotal:' gesamt',suffixShiftsLogged:' Schichten erfasst',
+syncSynced:'Synchronisiert',syncError:'Sync-Fehler',syncPend1:'1 Eintrag wartet auf Sync',syncPendN:' Einträge warten auf Sync',
+toastOffline:'📴 Offline – lokale Daten werden angezeigt',toastShiftSaved:'✅ Schicht gespeichert!',toastShiftUpdated:'✅ Schicht aktualisiert!',
+confirmDeleteShift:'Diese Schicht wirklich löschen?',toastShiftDeleted:'🗑️ Schicht gelöscht',
+toastLocalSaved:'💾 Lokal gespeichert – wird automatisch synchronisiert',synced1:'✅ 1 Eintrag synchronisiert',syncedN:' Einträge synchronisiert',
+dbError:'Datenbankfehler.',sessionExpired:'Sitzung abgelaufen – bitte neu anmelden.',noConnection:'Keine Verbindung.',
+toastPickDate:'⚠️ Bitte Datum wählen',toastValidRevenue:'⚠️ Bitte gültigen Umsatz eingeben',toastValidTip:'⚠️ Bitte gültiges Trinkgeld eingeben',
+pctOfAvg:'% vom Ø Umsatz',shift1:' Schicht',shiftN:' Schichten',thisMonthSuffix:' diesen Monat',pctOfMonth:'% des Monats',
+emptyLog:'Keine Einträge gefunden',menuEdit:'✏️ Bearbeiten',menuDelete:'🗑️ Löschen',
+authFailed:'Anmeldung fehlgeschlagen. Bitte erneut versuchen.',emailConfirmed:'✅ E-Mail bestätigt – du kannst dich jetzt anmelden'
+},
+en:{
+loading:'Loading TipLog…',authSub:'Your shift & tip tracker',tabLogin:'Sign in',tabRegister:'Sign up',
+phEmail:'Email',phPassword:'Password',phPassword2:'Repeat password',phName:'Your name',phNewPw:'New password',
+showPw:'Show password',pwHint:'At least 6 characters, with at least one uppercase and one lowercase letter.',
+btnLogin:'Sign in',btnRegister:'Create account',resendBtn:'Resend confirmation email',forgotPw:'Forgot password?',
+or:'or',googleBtn:'Continue with Google',appleBtn:'Continue with Apple',
+acceptPre:'By using the app you accept our',terms:'Terms of Use',privacy:'Privacy Policy',
+recTitle:'New password',recSub:'Choose a new password for your account.',recHint:'At least 6 characters, with uppercase and lowercase letters.',recSubmit:'Save password',
+legalTitle:'Legal',syncReady:'Ready',
+heroEyebrow:'⌀ Tips per shift',heroPctZero:'0.0% of Ø revenue',heroShiftsInit:'— shifts this month',
+tipThisMonth:'Tips this month',zeroShifts:'0 shifts',shiftsTotal:'Total shifts',allTime:'all time',
+avgCardTitle:'⌀ Tip average',lastDay:'Last day',days7:'7 days',month:'Month',noEntry:'no entry',
+chartTitle:'Tips — this month',chartLegend:'Tips · tap for details',
+details:'📊 Details',dtMonth:'Month',dtAll:'All time',dTotalRev:'Total revenue',dTipTotal:'Total tips',dTipPct:'Ø tip %',
+dBestDay:'Best tip day',dTipMax:'💜 Biggest tip',dTipMin:'Smallest tip',dRevMax:'📈 Biggest revenue',dRevMin:'📉 Smallest revenue',
+fAll:'All',fMonth:'Month',f30:'30 days',f7:'7 days',histTip:'Tips',histAvg:'Ø / shift',histCount:'Shifts',
+guestTitle:'☁️ Data stored locally only',guestSub:'In guest mode, shifts are only stored on this device. Create an account for secure cloud sync.',guestBtn:'Create an account →',
+secStats:'Statistics',rowTotalTip:'💰 Total tips',rowTotalShifts:'📅 Total shifts',secAccount:'Account',
+rowChangePw:'🔐 Change password',rowChangePwSub:'Reset link via email',btnSend:'Send',
+rowDelete:'🗑️ Delete account',rowDeleteSub:'Permanently remove all data',
+secAppearance:'Appearance',appearance:'Appearance',light:'Light',dark:'Dark',secLanguage:'Language',
+secLegal:'Legal',rowPrivacy:'🔒 Privacy Policy',rowPrivacySub:'What data we process',
+rowTerms:'📄 Terms of Use',rowTermsSub:'Terms for the app',logout:'Sign out',
+tabDash:'Dashboard',tabHist:'History',tabProf:'Profile',
+sheetAddTitle:'Add shift',sheetEditTitle:'Edit shift',lblDate:'Date',lblRevenue:'Revenue (€) *',lblTip:'Tip (€) *',
+lblNote:'Note (optional)',phNote:'e.g. morning shift, special event…',btnSave:'Save ✓',btnUpdate:'Update ✓',
+delSheetTitle:'Delete account?',
+delSheetBody:'Your account and <strong style="color:var(--text);">all your shifts, tip data and statistics</strong> will be <strong style="color:var(--red);">permanently deleted.</strong> This cannot be undone. Are you sure?',
+btnDelConfirm:'Yes, delete account',btnCancel:'Cancel',
+tSigningIn:'Signing in…',tCreating:'Creating account…',tSaving:'Saving…',tDeleting:'Deleting…',
+errEmail:'Please enter your email.',errEmailInvalid:'Invalid email address.',errPw:'Please enter your password.',
+errTooMany:'Too many failed attempts. Please reset your password via "Forgot password?".',
+errPwWeakFull:'Password: at least 6 characters, with uppercase and lowercase letters.',errPwMismatch:'The passwords do not match.',errName:'Please enter your name.',
+regAlmost:"Almost there! We've sent you a confirmation email. Please confirm your address, then sign in.",
+errConfirmFirst:'Please confirm your email address first. Check your inbox (and spam folder).',errBadCreds:'Email or password is incorrect.',
+feNet:'No internet connection. Please check your connection and try again.',feConfirm:'Please confirm your email address first.',
+feRate:'Too many requests. Please wait a moment and try again.',
+feExists:'This email is already registered. Please sign in.',feWeak:'The password is too weak (min. 6 characters, uppercase and lowercase).',
+fe400:"That didn't work. Please check your input and try again.",feGeneric:'Something went wrong. Please try again.',errCode:'Error code: ',
+toastResent:'✉️ Confirmation email sent again',errEnterEmailFirst:'Please enter your email address above first.',errEmailValid:'Please enter a valid email address.',
+waitPre:'Please wait another ',waitPost:' seconds before requesting a new email.',btnResetSent:'Email sent ✅',
+resetSentMsg:'Email sent! Check your inbox – including the spam folder. It may take a few minutes.',
+lg1:' entry has',lgN:' entries have',lgTail:' not been synced yet and will be lost if you sign out. Sign out anyway?',
+toastWaitAgain:'Please wait a moment before requesting again.',btnSending:'Sending…',
+toastResetLink:'✉️ Reset link sent – check your inbox (and spam folder)',btnSent:'Sent ✅',
+toastPwChanged:'✅ Password changed – please sign in again',guestNoAccount:'There is no account to delete in guest mode',
+toastAccountDeleted:'Your account has been deleted',guestModeLocal:'Guest mode · local only',suffixTotal:' total',suffixShiftsLogged:' shifts logged',
+syncSynced:'Synced',syncError:'Sync error',syncPend1:'1 entry waiting to sync',syncPendN:' entries waiting to sync',
+toastOffline:'📴 Offline – showing local data',toastShiftSaved:'✅ Shift saved!',toastShiftUpdated:'✅ Shift updated!',
+confirmDeleteShift:'Really delete this shift?',toastShiftDeleted:'🗑️ Shift deleted',
+toastLocalSaved:'💾 Saved locally – will sync automatically',synced1:'✅ 1 entry synced',syncedN:' entries synced',
+dbError:'Database error.',sessionExpired:'Session expired – please sign in again.',noConnection:'No connection.',
+toastPickDate:'⚠️ Please pick a date',toastValidRevenue:'⚠️ Please enter a valid revenue',toastValidTip:'⚠️ Please enter a valid tip',
+pctOfAvg:'% of Ø revenue',shift1:' shift',shiftN:' shifts',thisMonthSuffix:' this month',pctOfMonth:'% of month',
+emptyLog:'No entries found',menuEdit:'✏️ Edit',menuDelete:'🗑️ Delete',
+authFailed:'Sign-in failed. Please try again.',emailConfirmed:'✅ Email confirmed – you can sign in now'
+}};
+function t(k){const d=I18N[LANG]||I18N.de;return d[k]!==undefined?d[k]:(I18N.de[k]!==undefined?I18N.de[k]:k);}
+function DLOC(){return LANG==='de'?'de-AT':'en-GB';}
+function applyLang(){
+  document.documentElement.lang=LANG;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=t(el.getAttribute('data-i18n'));});
+  document.querySelectorAll('[data-i18n-html]').forEach(el=>{el.innerHTML=t(el.getAttribute('data-i18n-html'));});
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{el.placeholder=t(el.getAttribute('data-i18n-ph'));});
+  const sg=document.getElementById('lang-seg');if(sg)sg.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.getAttribute('data-lg')===LANG));
+  const asb=document.getElementById('auth-submit');if(asb)asb.textContent=authMode==='register'?t('btnRegister'):t('btnLogin');
+}
+function setLang(l){
+  localStorage.setItem('st_lang',l);LANG=l;applyLang();
+  if(currentUser){updateSyncUI();renderHome();renderLog();updateProfileUI();}
+}
+applyLang();
 
 /* ---- v1.1.14: Offline-Queue & Session-Persistenz ---- */
 const REFRESH_MARGIN_S=120; // Token so viele Sekunden vor Ablauf proaktiv erneuern
@@ -589,7 +739,12 @@ window.addEventListener('DOMContentLoaded',async()=>{
   if(hp.access_token&&(hp.type==='signup'||hp.type==='email'||hp.type==='magiclink')){
     history.replaceState(null,'',location.pathname+location.search);
     if(hp.refresh_token){currentSession={access_token:hp.access_token,refresh_token:hp.refresh_token};try{const ok=await refreshSession();if(ok){await initApp();return;}}catch{}}
-    document.getElementById('screen-loading').style.display='none';showAuthScreen();showToast('✅ E-Mail bestätigt – du kannst dich jetzt anmelden');return;
+    document.getElementById('screen-loading').style.display='none';showAuthScreen();showToast(t('emailConfirmed'));return;
+  }
+  if(hp.access_token&&hp.refresh_token&&!hp.type){
+    history.replaceState(null,'',location.pathname+location.search);
+    if(await handleOAuthTokens(hp))return;
+    document.getElementById('screen-loading').style.display='none';showAuthScreen();showAuthError(t('authFailed'));return;
   }
   if(currentSession){try{const ok=await refreshSession();if(ok){await initApp();return;}}catch{}}
   document.getElementById('screen-loading').style.display='none';
@@ -597,20 +752,47 @@ window.addEventListener('DOMContentLoaded',async()=>{
 });
 
 let _recoveryToken=null;
+
+/* ---- OAuth: Google & Apple über Supabase Authorize-Flow ---- */
+const IS_NATIVE=location.protocol==='capacitor:';
+const OAUTH_NATIVE_REDIRECT='at.tiplog.app://auth-callback';
+function signInWithProvider(provider){
+  const redirect=IS_NATIVE?OAUTH_NATIVE_REDIRECT:(location.origin+location.pathname);
+  const url=SUPABASE_URL+'/auth/v1/authorize?provider='+encodeURIComponent(provider)+'&redirect_to='+encodeURIComponent(redirect);
+  const B=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.Browser;
+  if(IS_NATIVE&&B){B.open({url});}else{location.href=url;}
+}
+async function handleOAuthTokens(p){
+  if(!(p&&p.access_token&&p.refresh_token))return false;
+  currentSession={access_token:p.access_token,refresh_token:p.refresh_token};
+  try{const ok=await refreshSession();if(ok){await initApp();return true;}}catch{}
+  return false;
+}
+if(IS_NATIVE&&window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.App){
+  window.Capacitor.Plugins.App.addListener('appUrlOpen',async({url})=>{
+    if(!url||url.indexOf(OAUTH_NATIVE_REDIRECT)!==0)return;
+    try{const B=window.Capacitor.Plugins.Browser;if(B)B.close();}catch{}
+    const frag=url.split('#')[1]||url.split('?')[1]||'';
+    const p=Object.fromEntries(new URLSearchParams(frag).entries());
+    if(p.error_description){showAuthScreen();showAuthError(decodeURIComponent((p.error_description||'').replace(/\+/g,' ')));return;}
+    const ok=await handleOAuthTokens(p);
+    if(!ok){showAuthScreen();showAuthError(t('authFailed'));}
+  });
+}
 function showRecoveryScreen(token){_recoveryToken=token;document.getElementById('screen-loading').style.display='none';document.getElementById('screen-auth').classList.remove('active');document.getElementById('screen-recovery').style.display='flex';}
 function showRecError(msg){const el=document.getElementById('rec-error');el.textContent=msg;el.classList.add('show');}
 async function submitNewPassword(){
   const pw=document.getElementById('rec-password').value,pw2=document.getElementById('rec-password2').value;
   document.getElementById('rec-error').classList.remove('show');
-  if(!validPassword(pw))return showRecError('Passwort: mindestens 6 Zeichen, mit Groß- und Kleinbuchstabe.');
-  if(pw!==pw2)return showRecError('Die Passwörter stimmen nicht überein.');
-  const btn=document.getElementById('rec-submit');btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Wird gespeichert…';
+  if(!validPassword(pw))return showRecError(t('errPwWeakFull'));
+  if(pw!==pw2)return showRecError(t('errPwMismatch'));
+  const btn=document.getElementById('rec-submit');btn.disabled=true;btn.innerHTML='<span class="spinner"></span>'+t('tSaving');
   try{
     const res=await fetch(SUPABASE_URL+'/auth/v1/user',{method:'PUT',headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json','Authorization':'Bearer '+_recoveryToken},body:JSON.stringify({password:pw})});
     if(!res.ok){let b={};try{b=await res.json();}catch{}const e=new Error(b.msg||b.message||('HTTP '+res.status));e.status=res.status;e.code=b.error_code||'';throw e;}
-    document.getElementById('screen-recovery').style.display='none';showAuthScreen();showToast('✅ Passwort geändert – bitte neu anmelden');
+    document.getElementById('screen-recovery').style.display='none';showAuthScreen();showToast(t('toastPwChanged'));
   }catch(e){const f=friendlyAuthError(e);showRecError(f.text+(f.code?' (Code '+f.code+')':''));}
-  finally{btn.disabled=false;btn.textContent='Passwort speichern';}
+  finally{btn.disabled=false;btn.textContent=t('recSubmit');}
 }
 function toggleAllPw(cb){for(let k=1;k<arguments.length;k++){const i=document.getElementById(arguments[k]);if(i)i.type=cb.checked?'text':'password';}}
 
@@ -655,7 +837,7 @@ const _legalCSS={
 function _lp(t){return `<p style="${_legalCSS.p}">${t}</p>`;}
 function _lh(t){return `<div style="${_legalCSS.h}">${t}</div>`;}
 
-const LEGAL={
+const LEGAL_DE={
   datenschutz:{title:'Datenschutzerklärung',html:()=>
     `<div style="${_legalCSS.small}">Stand: Juni 2026</div>`+
     _lh('1. Verantwortlicher')+
@@ -708,8 +890,61 @@ const LEGAL={
     `<div style="height:24px;"></div>`
   }
 };
+const LEGAL_EN={
+  datenschutz:{title:'Privacy Policy',html:()=>
+    `<div style="${_legalCSS.small}">Last updated: June 2026 · This English translation is provided for convenience; the German version is legally binding.</div>`+
+    _lh('1. Controller')+
+    _lp('Oleg Egorov, Van-der-Nüll-Gasse 18/39, 1100 Vienna, Austria. Email: <a href="mailto:info@tiplog.at" style="color:var(--accent-l);">info@tiplog.at</a>')+
+    _lh('2. What data we process')+
+    _lp('<b>Account data:</b> your email address and the display name you choose.')+
+    _lp('<b>Content data:</b> the shifts you log – date, revenue, tips and optional notes.')+
+    _lp('<b>Usage statistics:</b> how often you open the app per day. Only your user ID, the date and a counter are stored – no IP address, no location, no device data.')+
+    _lh('3. Purposes and legal bases')+
+    _lp('We process account and content data to provide the app and to sync your data across devices (performance of contract, Art. 6(1)(b) GDPR). Usage statistics serve solely to understand how the app is used and to improve it (legitimate interest, Art. 6(1)(f) GDPR).')+
+    _lh('4. Recipients / processors')+
+    _lp('<b>Supabase</b> (hosting, database, sign-in): data is stored on servers in the EU (Frankfurt, Germany region).')+
+    _lp('<b>World4You Internet Services GmbH</b> (sending system emails such as confirmation and password reset), Austria.')+
+    _lp('Data processing agreements (DPAs) pursuant to Art. 28 GDPR are or will be concluded with both providers. We do not sell your data and use no ad networks.')+
+    _lh('5. Storage period')+
+    _lp('Your data is stored for as long as your account exists. If you delete your account, your account and content data are deleted. Statistics rows are anonymised or deleted as well.')+
+    _lh('6. Guest mode')+
+    _lp('In guest mode your shifts are stored only locally on your device and are not transmitted to our servers.')+
+    _lh('7. Your rights')+
+    _lp('You have the right to access, rectification, erasure, restriction of processing, data portability and objection. You may withdraw any consent given at any time. You can also lodge a complaint with the Austrian Data Protection Authority (dsb.gv.at).')+
+    _lh('8. Delete your account')+
+    _lp('You can delete your account and all associated data yourself at any time: in the app under <b>Profile → Account → Delete account</b>. Deletion is immediate and irreversible. Alternatively, an email to <a href="mailto:info@tiplog.at" style="color:var(--accent-l);">info@tiplog.at</a> is sufficient.')+
+    `<div style="height:24px;"></div>`
+  },
+  agb:{title:'Terms of Use',html:()=>
+    `<div style="${_legalCSS.small}">Last updated: June 2026 · This English translation is provided for convenience; the German version is legally binding.</div>`+
+    _lh('1. Scope and provider')+
+    _lp('These Terms of Use govern the use of the "TipLog" app, provided by Oleg Egorov, Van-der-Nüll-Gasse 18/39, 1100 Vienna, Austria ("we").')+
+    _lh('2. Description of service')+
+    _lp('TipLog is a tool for personally recording work shifts, revenue and tips. Calculations and evaluations are automated; we accept no liability for their accuracy or completeness. You are responsible for the accuracy of your entries.')+
+    _lh('3. Costs')+
+    _lp('The app is currently free to use. We reserve the right to introduce paid features in the future; these would be clearly marked in advance and will never incur charges without your express consent.')+
+    _lh('4. Account and security')+
+    _lp('An account is required for cloud sync. You agree to provide truthful information and keep your password secret. You are responsible for activity under your account.')+
+    _lh('5. No tax or legal advice')+
+    _lp('TipLog serves only as your personal overview and does not replace tax or legal advice. You alone are responsible for the proper taxation of your income (e.g. tips).')+
+    _lh('6. Availability')+
+    _lp('We strive for high availability but cannot guarantee uninterrupted use (e.g. during maintenance or third-party outages).')+
+    _lh('7. Liability')+
+    _lp('We are liable in accordance with statutory provisions. In cases of slight negligence we are only liable for breaches of essential contractual obligations, limited to foreseeable damage. Mandatory consumer protection rights remain unaffected. Back up your data regularly (export) to prevent data loss.')+
+    _lh('8. Termination')+
+    _lp('You may stop using the app at any time and have your account deleted (see Privacy Policy).')+
+    _lh('9. Changes')+
+    _lp('We may amend these terms, for example due to new features or legal changes. We will communicate material changes in an appropriate manner.')+
+    _lh('10. Governing law')+
+    _lp('Austrian law applies. If you are a consumer, the mandatory consumer protection provisions of your country of residence remain unaffected.')+
+    _lh('11. App stores')+
+    _lp('If installed via the Apple App Store or Google Play, their respective terms also apply. For Apple, the Standard End User License Agreement (Standard EULA) additionally applies.')+
+    _lp('Contact: <a href="mailto:info@tiplog.at" style="color:var(--accent-l);">info@tiplog.at</a>')+
+    `<div style="height:24px;"></div>`
+  }
+};
 function showLegal(which){
-  const L=LEGAL[which];if(!L)return;
+  const L=(LANG==='en'?LEGAL_EN:LEGAL_DE)[which];if(!L)return;
   document.getElementById('legal-title').textContent=L.title;
   document.getElementById('legal-content').innerHTML=L.html();
   document.getElementById('legal-content').scrollTop=0;
@@ -718,26 +953,26 @@ function showLegal(which){
 function closeLegal(){document.getElementById('screen-legal').style.display='none';}
 
 function openDeleteAccount(){
-  if(isGuest()){showToast('Im Gast-Modus gibt es kein Konto zum Löschen');return;}
+  if(isGuest()){showToast(t('guestNoAccount'));return;}
   document.getElementById('delete-error').classList.remove('show');
-  const btn=document.getElementById('delete-confirm-btn');btn.innerHTML='Ja, Konto löschen';btn.disabled=false;
+  const btn=document.getElementById('delete-confirm-btn');btn.innerHTML=t('btnDelConfirm');btn.disabled=false;
   document.getElementById('sheet-overlay').classList.add('show');
   document.getElementById('sheet-delete').classList.add('show');
 }
 async function confirmDeleteAccount(){
   const btn=document.getElementById('delete-confirm-btn');
   const err=document.getElementById('delete-error');err.classList.remove('show');
-  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Wird gelöscht…';
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>'+t('tDeleting');
   try{
     await sbFetch('/rest/v1/rpc/delete_account',{method:'POST',body:'{}'});
     clearSession();shifts=[];
     closeSheet();
     showAuthScreen();
-    showToast('Dein Konto wurde gelöscht');
+    showToast(t('toastAccountDeleted'));
   }catch(e){
     const f=friendlyAuthError(e);
     err.textContent=f.text+(f.code?' (Code '+f.code+')':'');err.classList.add('show');
-    btn.disabled=false;btn.innerHTML='Ja, Konto löschen';
+    btn.disabled=false;btn.innerHTML=t('btnDelConfirm');
   }
 }
 
@@ -758,7 +993,7 @@ function switchAuthTab(mode){
   document.getElementById('auth-reset-status').style.display='none';
   document.getElementById('auth-hint').style.display=reg?'block':'none';
   document.getElementById('auth-password').setAttribute('autocomplete',reg?'new-password':'current-password');
-  document.getElementById('auth-submit').textContent=reg?'Konto erstellen':'Anmelden';
+  document.getElementById('auth-submit').textContent=reg?t('btnRegister'):t('btnLogin');
   document.getElementById('auth-reset-btn').style.display=reg?'none':'block';
   document.getElementById('auth-error').classList.remove('show');
 }
@@ -777,19 +1012,19 @@ async function handleAuth(){
   const name=document.getElementById('auth-name').value.trim();
   const btn=document.getElementById('auth-submit');
   document.getElementById('auth-error').classList.remove('show');
-  if(!email)return showAuthError('Bitte E-Mail eingeben.');
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return showAuthError('Ungültige E-Mail-Adresse.');
-  if(!password)return showAuthError('Bitte Passwort eingeben.');
+  if(!email)return showAuthError(t('errEmail'));
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return showAuthError(t('errEmailInvalid'));
+  if(!password)return showAuthError(t('errPw'));
   if(authMode==='login'&&getFailCount(email)>=MAX_LOGIN_FAILS){
-    return showAuthError('Zu viele Fehlversuche. Bitte setze dein Passwort über „Passwort vergessen?" zurück.');
+    return showAuthError(t('errTooMany'));
   }
   if(authMode==='register'){
-    if(!validPassword(password))return showAuthError('Passwort: mindestens 6 Zeichen, mit Groß- und Kleinbuchstabe.');
-    if(password!==password2)return showAuthError('Die Passwörter stimmen nicht überein.');
-    if(!name)return showAuthError('Bitte Name eingeben.');
+    if(!validPassword(password))return showAuthError(t('errPwWeakFull'));
+    if(password!==password2)return showAuthError(t('errPwMismatch'));
+    if(!name)return showAuthError(t('errName'));
   }
   btn.disabled=true;
-  btn.innerHTML=`<span class="spinner"></span>${authMode==='login'?'Wird angemeldet…':'Konto wird erstellt…'}`;
+  btn.innerHTML=`<span class="spinner"></span>${authMode==='login'?t('tSigningIn'):t('tCreating')}`;
   try{
     if(authMode==='login'){
       const d=await sbFetch('/auth/v1/token?grant_type=password',{method:'POST',body:JSON.stringify({email,password})});
@@ -797,61 +1032,61 @@ async function handleAuth(){
     }else{
       const d=await sbFetch('/auth/v1/signup',{method:'POST',body:JSON.stringify({email,password,data:{display_name:name}})});
       if(d.session){saveSession(d.session);await initApp();}
-      else{showAuthError('Fast geschafft! Wir haben dir eine Bestätigungs-E-Mail geschickt. Bitte bestätige deine Adresse und melde dich dann an.');switchAuthTab('login');}
+      else{showAuthError(t('regAlmost'));switchAuthTab('login');}
     }
   }catch(e){
     const m=(e.message||'').toLowerCase(),code=(e.code||'').toLowerCase(),C=e.status?String(e.status):'';
     const notConfirmed=code==='email_not_confirmed'||m.includes('not confirmed');
     const badCreds=code.includes('invalid')||m.includes('invalid login')||m.includes('invalid credentials');
     if(authMode==='login'&&notConfirmed){
-      showAuthError('Bitte bestätige zuerst deine E-Mail-Adresse. Schau in dein Postfach (auch Spam-Ordner).',C);
+      showAuthError(t('errConfirmFirst'),C);
       document.getElementById('auth-resend-btn').style.display='block';
     }else if(authMode==='login'&&badCreds){
       const c=getFailCount(email)+1;setFailCount(email,c);
-      if(c>=MAX_LOGIN_FAILS)showAuthError('Zu viele Fehlversuche. Bitte setze dein Passwort über „Passwort vergessen?" zurück.',C);
-      else showAuthError('E-Mail oder Passwort ist falsch.',C);
+      if(c>=MAX_LOGIN_FAILS)showAuthError(t('errTooMany'),C);
+      else showAuthError(t('errBadCreds'),C);
     }else{const f=friendlyAuthError(e);showAuthError(f.text,f.code);}
   }
-  finally{btn.disabled=false;btn.textContent=authMode==='login'?'Anmelden':'Konto erstellen';}
+  finally{btn.disabled=false;btn.textContent=authMode==='login'?t('btnLogin'):t('btnRegister');}
 }
 
 function friendlyAuthError(e){
   const status=e&&e.status||0,code=((e&&e.code)||'').toLowerCase(),m=((e&&e.message)||'').toLowerCase();
   const C=status?String(status):'';
-  if(status===0||m==='network'||m.includes('fetch'))return{text:'Keine Internetverbindung. Bitte prüfe deine Verbindung und versuch es erneut.',code:''};
-  if(code==='email_not_confirmed'||m.includes('not confirmed'))return{text:'Bitte bestätige zuerst deine E-Mail-Adresse.',code:C};
-  if(code.includes('invalid')||m.includes('invalid login')||m.includes('invalid credentials'))return{text:'E-Mail oder Passwort ist falsch.',code:C};
-  if(status===429||code.includes('rate')||code.includes('over_email')||m.includes('rate limit')||m.includes('too many'))return{text:'Zu viele Anfragen in kurzer Zeit. Bitte warte einen Moment und versuch es dann erneut.',code:C};
-  if(code.includes('already')||m.includes('already registered')||m.includes('already been registered'))return{text:'Diese E-Mail ist bereits registriert. Bitte melde dich an.',code:C};
-  if(code==='weak_password')return{text:'Das Passwort ist zu schwach (mind. 6 Zeichen, Groß- und Kleinbuchstabe).',code:C};
-  if(status===400)return{text:'Das hat nicht geklappt. Bitte prüfe deine Eingaben und versuch es erneut.',code:C};
-  return{text:'Etwas ist schiefgelaufen. Bitte versuch es erneut.',code:C};
+  if(status===0||m==='network'||m.includes('fetch'))return{text:t('feNet'),code:''};
+  if(code==='email_not_confirmed'||m.includes('not confirmed'))return{text:t('feConfirm'),code:C};
+  if(code.includes('invalid')||m.includes('invalid login')||m.includes('invalid credentials'))return{text:t('errBadCreds'),code:C};
+  if(status===429||code.includes('rate')||code.includes('over_email')||m.includes('rate limit')||m.includes('too many'))return{text:t('feRate'),code:C};
+  if(code.includes('already')||m.includes('already registered')||m.includes('already been registered'))return{text:t('feExists'),code:C};
+  if(code==='weak_password')return{text:t('feWeak'),code:C};
+  if(status===400)return{text:t('fe400'),code:C};
+  return{text:t('feGeneric'),code:C};
 }
-function showAuthError(text,code){const el=document.getElementById('auth-error');el.innerHTML='<div>'+esc(text)+'</div>'+(code?'<div style="font-size:10px;opacity:.6;margin-top:3px;font-weight:500;">Fehlercode: '+esc(code)+'</div>':'');el.classList.add('show');}
+function showAuthError(text,code){const el=document.getElementById('auth-error');el.innerHTML='<div>'+esc(text)+'</div>'+(code?'<div style="font-size:10px;opacity:.6;margin-top:3px;font-weight:500;">'+t('errCode')+esc(code)+'</div>':'');el.classList.add('show');}
 
 async function resendConfirmation(){
   const email=document.getElementById('auth-email').value.trim();
-  if(!email)return showAuthError('Bitte zuerst deine E-Mail-Adresse oben eingeben.');
-  try{await sbFetch('/auth/v1/resend',{method:'POST',body:JSON.stringify({type:'signup',email})});showToast('✉️ Bestätigungs-E-Mail erneut gesendet');}
+  if(!email)return showAuthError(t('errEnterEmailFirst'));
+  try{await sbFetch('/auth/v1/resend',{method:'POST',body:JSON.stringify({type:'signup',email})});showToast(t('toastResent'));}
   catch(e){const f=friendlyAuthError(e);showAuthError(f.text,f.code);}
 }
 
 let _resetCooldownUntil=0;
 function showResetSent(){
   const s=document.getElementById('auth-reset-status');s.style.display='block';
-  s.innerHTML='<div style="display:flex;align-items:center;gap:8px;background:rgba(46,213,115,0.12);border:1px solid rgba(46,213,115,0.3);border-radius:10px;padding:10px 14px;"><span style="font-size:18px;display:inline-block;animation:pop .4s ease;">✅</span><span style="font-size:13px;font-weight:600;color:var(--text);">E-Mail gesendet! Schau in dein Postfach – auch im Spam-Ordner. Es kann ein paar Minuten dauern.</span></div>';
+  s.innerHTML='<div style="display:flex;align-items:center;gap:8px;background:rgba(46,213,115,0.12);border:1px solid rgba(46,213,115,0.3);border-radius:10px;padding:10px 14px;"><span style="font-size:18px;display:inline-block;animation:pop .4s ease;">✅</span><span style="font-size:13px;font-weight:600;color:var(--text);">'+esc(t('resetSentMsg'))+'</span></div>';
 }
 async function handlePasswordReset(){
   const email=document.getElementById('auth-email').value.trim();
-  if(!email)return showAuthError('Bitte zuerst deine E-Mail-Adresse oben eingeben.');
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return showAuthError('Bitte gib eine gültige E-Mail-Adresse ein.');
+  if(!email)return showAuthError(t('errEnterEmailFirst'));
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return showAuthError(t('errEmailValid'));
   const now=Date.now();
-  if(now<_resetCooldownUntil){const left=Math.ceil((_resetCooldownUntil-now)/1000);return showAuthError('Bitte warte noch '+left+' Sekunden, bevor du eine neue E-Mail anforderst.');}
+  if(now<_resetCooldownUntil){const left=Math.ceil((_resetCooldownUntil-now)/1000);return showAuthError(t('waitPre')+left+t('waitPost'));}
   const btn=document.getElementById('auth-reset-btn');btn.disabled=true;
   try{
     await sbFetch('/auth/v1/recover',{method:'POST',body:JSON.stringify({email})});
     _resetCooldownUntil=Date.now()+60000;
-    btn.textContent='E-Mail gesendet ✅';btn.style.color='#2ed573';
+    btn.textContent=t('btnResetSent');btn.style.color='#2ed573';
     clearFails(email);document.getElementById('auth-error').classList.remove('show');showResetSent();
   }catch(e){const f=friendlyAuthError(e);showAuthError(f.text,f.code);btn.disabled=false;}
 }
@@ -859,7 +1094,7 @@ async function handlePasswordReset(){
 async function handleLogout(){
   if(isGuest()){currentUser=null;shifts=[];showAuthScreen();return;}
   const n=loadQueue().length;
-  if(n&&!confirm(n+(n===1?' Eintrag ist':' Einträge sind')+' noch nicht synchronisiert und gehen beim Abmelden verloren. Trotzdem abmelden?'))return;
+  if(n&&!confirm(n+(n===1?t('lg1'):t('lgN'))+t('lgTail')))return;
   try{await sbFetch('/auth/v1/logout',{method:'POST'});}catch{}
   clearSession();shifts=[];
   localStorage.removeItem('st_queue');localStorage.removeItem('st_shifts_cache');
@@ -869,31 +1104,19 @@ async function handleLogout(){
 let _pwChangeCooldownUntil=0;
 async function openChangePassword(btn){
   if(!currentUser?.email)return;
-  if(Date.now()<_pwChangeCooldownUntil){showToast('Bitte warte kurz, bevor du erneut anforderst.');return;}
-  if(btn){btn.disabled=true;btn.textContent='Senden…';}
+  if(Date.now()<_pwChangeCooldownUntil){showToast(t('toastWaitAgain'));return;}
+  if(btn){btn.disabled=true;btn.textContent=t('btnSending');}
   try{
     await sbFetch('/auth/v1/recover',{method:'POST',body:JSON.stringify({email:currentUser.email})});
     _pwChangeCooldownUntil=Date.now()+60000;
-    showToast('✉️ Reset-Link gesendet – schau in dein Postfach (auch im Spam-Ordner)');
-    if(btn){btn.textContent='Gesendet ✅';btn.style.opacity='0.6';}
+    showToast(t('toastResetLink'));
+    if(btn){btn.textContent=t('btnSent');btn.style.opacity='0.6';}
   }catch(e){
     showToast('⚠️ '+mapDbError(e.message||''));
-    if(btn){btn.disabled=false;btn.textContent='Senden';}
+    if(btn){btn.disabled=false;btn.textContent=t('btnSend');}
   }
 }
 
-function enterGuestMode(){
-  const overlay=document.getElementById('guest-modal-overlay');
-  overlay.style.display='flex';
-}
-function confirmGuestMode(){
-  document.getElementById('guest-modal-overlay').style.display='none';
-  currentSession=null;
-  currentUser={id:'guest',email:null,user_metadata:{display_name:'Gast'},isGuest:true};
-  shifts=JSON.parse(localStorage.getItem('st_guest_shifts')||'[]');
-  initApp();
-  setTimeout(()=>showToast('👤 Gast-Modus aktiv'),600);
-}
 function isGuest(){return currentUser?.isGuest===true;}
 
 function showTab(name){
@@ -919,10 +1142,10 @@ function updateProfileUI(){
   const name=currentUser.user_metadata?.display_name||currentUser.email?.split('@')[0]||'—';
   document.getElementById('profile-avatar-large').textContent=name.charAt(0).toUpperCase();
   document.getElementById('profile-name').textContent=name;
-  document.getElementById('profile-email').textContent=isGuest()?'Gast-Modus · nur lokal':(currentUser.email||'—');
+  document.getElementById('profile-email').textContent=isGuest()?t('guestModeLocal'):(currentUser.email||'—');
   const total=shifts.reduce((s,e)=>s+(+e.tip||0),0);
-  document.getElementById('profile-total-tip').textContent=fmtS(total)+' gesamt';
-  document.getElementById('profile-total-shifts').textContent=shifts.length+' Schichten erfasst';
+  document.getElementById('profile-total-tip').textContent=fmtS(total)+t('suffixTotal');
+  document.getElementById('profile-total-shifts').textContent=shifts.length+t('suffixShiftsLogged');
   document.getElementById('guest-banner').style.display=isGuest()?'block':'none';
   document.getElementById('pw-section').style.display=isGuest()?'none':'block';
 }
@@ -930,10 +1153,10 @@ function updateProfileUI(){
 function setSyncStatus(state,n){
   const dot=document.getElementById('sync-dot'),lbl=document.getElementById('sync-label');
   if(!dot)return;
-  if(state==='syncing'){dot.className='sync-dot syncing';if(lbl)lbl.textContent='Synchronisiert';}
-  else if(state==='error'){dot.className='sync-dot error';if(lbl)lbl.textContent='Sync-Fehler';}
-  else if(state==='pending'){dot.className='sync-dot pending';if(lbl)lbl.textContent=(n===1?'1 Eintrag wartet':n+' Einträge warten')+' auf Sync';}
-  else{dot.className='sync-dot';if(lbl)lbl.textContent='Synchronisiert';}
+  if(state==='syncing'){dot.className='sync-dot syncing';if(lbl)lbl.textContent=t('syncSynced');}
+  else if(state==='error'){dot.className='sync-dot error';if(lbl)lbl.textContent=t('syncError');}
+  else if(state==='pending'){dot.className='sync-dot pending';if(lbl)lbl.textContent=(n===1?t('syncPend1'):n+t('syncPendN'));}
+  else{dot.className='sync-dot';if(lbl)lbl.textContent=t('syncSynced');}
 }
 function updateSyncUI(){if(isGuest())return;const n=loadQueue().length;if(n>0)setSyncStatus('pending',n);else setSyncStatus('ok');}
 
@@ -951,7 +1174,7 @@ async function loadShifts(){
   try{const d=await sbFetch('/rest/v1/shifts?select=*&order=date.desc');shifts=mergePending(d||[]);cacheShifts();renderHome();renderLog();updateSyncUI();}
   catch(e){
     shifts=loadCachedShifts();renderHome();renderLog();updateSyncUI();
-    if(e.status===0){showToast('📴 Offline – lokale Daten werden angezeigt');}
+    if(e.status===0){showToast(t('toastOffline'));}
     else{setSyncStatus('error');showToast('⚠️ '+mapDbError(e.message));}
   }
 }
@@ -959,8 +1182,8 @@ async function loadShifts(){
 async function saveShift(data){
   if(isGuest()){
     const stored=JSON.parse(localStorage.getItem('st_guest_shifts')||'[]');
-    if(editingShiftId){const i=stored.findIndex(s=>s.id===editingShiftId);if(i>=0)stored[i]={...stored[i],...data};showToast('✅ Schicht aktualisiert!');}
-    else{stored.unshift({...data,id:'g_'+Date.now(),user_id:'guest',created_at:new Date().toISOString()});showToast('✅ Schicht gespeichert!');}
+    if(editingShiftId){const i=stored.findIndex(s=>s.id===editingShiftId);if(i>=0)stored[i]={...stored[i],...data};showToast(t('toastShiftUpdated'));}
+    else{stored.unshift({...data,id:'g_'+Date.now(),user_id:'guest',created_at:new Date().toISOString()});showToast(t('toastShiftSaved'));}
     stored.sort((a,b)=>b.date.localeCompare(a.date));
     localStorage.setItem('st_guest_shifts',JSON.stringify(stored));await loadShifts();return;
   }
@@ -969,23 +1192,23 @@ async function saveShift(data){
     const id=editingShiftId,i=shifts.findIndex(s=>s.id===id);
     if(i>=0)shifts[i]={...shifts[i],...data};
     shifts.sort((a,b)=>(b.date||'').localeCompare(a.date||''));cacheShifts();renderHome();renderLog();
-    await queueWrite({method:'PATCH',path:`/rest/v1/shifts?id=eq.${encodeURIComponent(id)}`,headers:{'Prefer':'return=minimal'},body:data,shiftId:id},'✅ Schicht aktualisiert!');
+    await queueWrite({method:'PATCH',path:`/rest/v1/shifts?id=eq.${encodeURIComponent(id)}`,headers:{'Prefer':'return=minimal'},body:data,shiftId:id},t('toastShiftUpdated'));
   }else{
     // Client-UUID als Primärschlüssel: macht Insert-Retries duplikatsicher (ignore-duplicates)
     const row={...data,id:crypto.randomUUID(),user_id:currentUser.id,created_at:new Date().toISOString()};
     shifts.unshift(row);shifts.sort((a,b)=>(b.date||'').localeCompare(a.date||''));cacheShifts();renderHome();renderLog();
-    await queueWrite({method:'POST',path:'/rest/v1/shifts',headers:{'Prefer':'resolution=ignore-duplicates,return=minimal'},body:row,shiftId:row.id},'✅ Schicht gespeichert!');
+    await queueWrite({method:'POST',path:'/rest/v1/shifts',headers:{'Prefer':'resolution=ignore-duplicates,return=minimal'},body:row,shiftId:row.id},t('toastShiftSaved'));
   }
 }
 
 async function deleteShift(id){
-  if(!confirm('Diese Schicht wirklich löschen?'))return;
+  if(!confirm(t('confirmDeleteShift')))return;
   if(isGuest()){
     const stored=JSON.parse(localStorage.getItem('st_guest_shifts')||'[]').filter(s=>s.id!==id);
-    localStorage.setItem('st_guest_shifts',JSON.stringify(stored));showToast('🗑️ Schicht gelöscht');await loadShifts();return;
+    localStorage.setItem('st_guest_shifts',JSON.stringify(stored));showToast(t('toastShiftDeleted'));await loadShifts();return;
   }
   shifts=shifts.filter(s=>s.id!==id);cacheShifts();renderHome();renderLog(); // optimistisch entfernen
-  await queueWrite({method:'DELETE',path:`/rest/v1/shifts?id=eq.${encodeURIComponent(id)}`,shiftId:id},'🗑️ Schicht gelöscht');
+  await queueWrite({method:'DELETE',path:`/rest/v1/shifts?id=eq.${encodeURIComponent(id)}`,shiftId:id},t('toastShiftDeleted'));
 }
 
 function enqueue(op){const q=loadQueue();q.push({qid:crypto.randomUUID(),ts:Date.now(),...op});saveQueue(q);}
@@ -994,14 +1217,14 @@ function enqueue(op){const q=loadQueue();q.push({qid:crypto.randomUUID(),ts:Date
    in die Queue – es geht NIE ein Eintrag verloren. */
 async function queueWrite(op,okMsg){
   // Sobald etwas in der Queue liegt, wird hinten angestellt (FIFO-Reihenfolge sichern)
-  if(loadQueue().length){enqueue(op);showToast('💾 Lokal gespeichert – wird automatisch synchronisiert');setTimeout(flushQueue,300);return;}
+  if(loadQueue().length){enqueue(op);showToast(t('toastLocalSaved'));setTimeout(flushQueue,300);return;}
   setSyncStatus('syncing');
   try{
     await sbFetch(op.path,{method:op.method,headers:op.headers,body:op.body!=null?JSON.stringify(op.body):undefined});
     showToast(okMsg);await loadShifts();
   }catch(e){
     if(e.status===0||e.status>=500||e.status===401){
-      enqueue(op);showToast('💾 Lokal gespeichert – wird automatisch synchronisiert');
+      enqueue(op);showToast(t('toastLocalSaved'));
       if(!currentSession)showAuthScreen(); // 401 trotz Refresh-Versuch = Session endgültig ungültig
       setTimeout(flushQueue,1500);
     }else{setSyncStatus('error');showToast('⚠️ '+mapDbError(e.message));await loadShifts();} // 4xx: optimistische Änderung per Server-Reload zurückrollen
@@ -1031,13 +1254,13 @@ async function flushQueue(){
       }
     }
   }finally{_flushing=false;updateSyncUI();}
-  if(synced&&!loadQueue().length){showToast('✅ '+(synced===1?'1 Eintrag':synced+' Einträge')+' synchronisiert');await loadShifts();}
+  if(synced&&!loadQueue().length){showToast(synced===1?t('synced1'):'✅ '+synced+t('syncedN'));await loadShifts();}
 }
 
 function mapDbError(msg){
-  if(!msg)return'Datenbankfehler.';const m=msg.toLowerCase();
-  if(m.includes('jwt')||m.includes('not authenticated')){if(!currentSession)showAuthScreen();return'Sitzung abgelaufen – bitte neu anmelden.';}
-  if(m.includes('network')||m.includes('fetch'))return'Keine Verbindung.';
+  if(!msg)return t('dbError');const m=msg.toLowerCase();
+  if(m.includes('jwt')||m.includes('not authenticated')){if(!currentSession)showAuthScreen();return t('sessionExpired');}
+  if(m.includes('network')||m.includes('fetch'))return t('noConnection');
   return msg;
 }
 
@@ -1045,10 +1268,10 @@ function openSheet(type){
   document.getElementById('sheet-overlay').classList.add('show');
   if(type==='add'){
     editingShiftId=null;
-    document.getElementById('sheet-add-title').textContent='Schicht hinzufügen';
+    document.getElementById('sheet-add-title').textContent=t('sheetAddTitle');
     document.getElementById('form-date').value=new Date().toISOString().split('T')[0];
     document.getElementById('form-revenue').value='';document.getElementById('form-tip').value='';
-    document.getElementById('form-submit-btn').textContent='Speichern ✓';
+    document.getElementById('form-submit-btn').textContent=t('btnSave');
     document.getElementById('sheet-add').classList.add('show');
     setTimeout(()=>document.getElementById('form-revenue').focus(),350);
   }
@@ -1063,12 +1286,12 @@ function closeSheet(){
 function openEditSheet(id){
   const s=shifts.find(s=>s.id===id);if(!s)return;
   editingShiftId=id;
-  document.getElementById('sheet-add-title').textContent='Schicht bearbeiten';
+  document.getElementById('sheet-add-title').textContent=t('sheetEditTitle');
   document.getElementById('form-date').value=s.date;
   document.getElementById('form-revenue').value=s.revenue||'';
   document.getElementById('form-tip').value=s.tip||'';
   document.getElementById('form-note').value=s.note||'';
-  document.getElementById('form-submit-btn').textContent='Aktualisieren ✓';
+  document.getElementById('form-submit-btn').textContent=t('btnUpdate');
   document.getElementById('sheet-overlay').classList.add('show');
   document.getElementById('sheet-add').classList.add('show');
 }
@@ -1079,18 +1302,18 @@ async function submitShift(){
   const tip=parseFloat(document.getElementById('form-tip').value);
   const note=document.getElementById('form-note')?.value.trim()||'';
   const btn=document.getElementById('form-submit-btn');
-  if(!date){showToast('⚠️ Bitte Datum wählen');return;}
-  if(isNaN(revenue)||revenue<0){showToast('⚠️ Bitte gültigen Umsatz eingeben');return;}
-  if(isNaN(tip)||tip<0){showToast('⚠️ Bitte gültiges Trinkgeld eingeben');return;}
-  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Wird gespeichert…';
+  if(!date){showToast(t('toastPickDate'));return;}
+  if(isNaN(revenue)||revenue<0){showToast(t('toastValidRevenue'));return;}
+  if(isNaN(tip)||tip<0){showToast(t('toastValidTip'));return;}
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>'+t('tSaving');
   closeSheet();await saveShift({date,revenue,tip,hours:0,note});
-  btn.disabled=false;btn.textContent=editingShiftId?'Aktualisieren ✓':'Speichern ✓';
+  btn.disabled=false;btn.textContent=editingShiftId?t('btnUpdate'):t('btnSave');
 }
 
-const fmtS=v=>'€'+Math.round(+v).toLocaleString('de-AT');
-const fmtF=v=>'€'+(+v).toFixed(2).replace('.',',');
-function fmtDate(s){return new Date(s+'T12:00:00').toLocaleDateString('de-AT',{weekday:'short',day:'2-digit',month:'short',year:'numeric'});}
-function fmtDateShort(s){return new Date(s+'T12:00:00').toLocaleDateString('de-AT',{weekday:'short',day:'2-digit',month:'short'});}
+const fmtS=v=>'€'+Math.round(+v).toLocaleString(DLOC());
+const fmtF=v=>LANG==='de'?'€'+(+v).toFixed(2).replace('.',','):'€'+(+v).toFixed(2);
+function fmtDate(s){return new Date(s+'T12:00:00').toLocaleDateString(DLOC(),{weekday:'short',day:'2-digit',month:'short',year:'numeric'});}
+function fmtDateShort(s){return new Date(s+'T12:00:00').toLocaleDateString(DLOC(),{weekday:'short',day:'2-digit',month:'short'});}
 function dateInt(s){return s?parseInt(s.replace(/-/g,''),10):0;}
 function daysAgoInt(n){const d=new Date();d.setDate(d.getDate()-n);return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();}
 function todayStr(){const n=new Date();return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}`;}
@@ -1101,10 +1324,10 @@ function renderHome(){
   const month=getThisMonth(),all=shifts,cnt=month.length,n=cnt||1;
   const tipMonth=sumK(month,'tip'),uMonth=sumK(month,'revenue'),avgTip=tipMonth/n;
   document.getElementById('h-avg-tip').textContent=fmtS(avgTip);
-  document.getElementById('h-tip-pct').textContent=uMonth>0?(avgTip/(uMonth/n)*100).toFixed(1)+'% vom Ø Umsatz':'0.0% vom Ø Umsatz';
-  document.getElementById('h-shifts-lbl').textContent=cnt+(cnt===1?' Schicht':' Schichten')+' diesen Monat';
+  document.getElementById('h-tip-pct').textContent=uMonth>0?(avgTip/(uMonth/n)*100).toFixed(1)+t('pctOfAvg'):'0.0'+t('pctOfAvg');
+  document.getElementById('h-shifts-lbl').textContent=cnt+(cnt===1?t('shift1'):t('shiftN'))+t('thisMonthSuffix');
   document.getElementById('s-tip-month').textContent=fmtS(tipMonth);
-  document.getElementById('s-tip-month-count').textContent=cnt+' Schichten';
+  document.getElementById('s-tip-month-count').textContent=cnt+(cnt===1?t('shift1'):t('shiftN'));
   document.getElementById('s-shifts-total').textContent=all.length;
   document.getElementById('chart-total-val').textContent=fmtS(tipMonth);
   renderAvgCard();
@@ -1119,12 +1342,12 @@ function renderAvgCard(){
   const w7=`${n7.getFullYear()}-${String(n7.getMonth()+1).padStart(2,'0')}-${String(n7.getDate()).padStart(2,'0')}`;
   const weekD=shifts.filter(s=>{const d=dateInt(s.date);return d>=dateInt(w7)&&d<=dateInt(tStr);});
   const monthD=getThisMonth();
-  if(last){document.getElementById('avg-day').textContent=fmtS(last.tip);document.getElementById('avg-day-pct').textContent=+last.revenue>0?(+last.tip/+last.revenue*100).toFixed(1)+'%':'';document.getElementById('avg-day-sub').textContent=new Date(last.date+'T12:00:00').toLocaleDateString('de-AT',{day:'2-digit',month:'short'});}
-  else{document.getElementById('avg-day').textContent='—';document.getElementById('avg-day-pct').textContent='';document.getElementById('avg-day-sub').textContent='kein Eintrag';}
-  if(weekD.length){const wt=sumK(weekD,'tip'),wu=sumK(weekD,'revenue');document.getElementById('avg-week').textContent=fmtS(wt/weekD.length);document.getElementById('avg-week-pct').textContent=wu>0?(wt/wu*100).toFixed(1)+'%':'';document.getElementById('avg-week-sub').textContent=weekD.length+' Schicht'+(weekD.length===1?'':'en');}
-  else{document.getElementById('avg-week').textContent='—';document.getElementById('avg-week-pct').textContent='';document.getElementById('avg-week-sub').textContent='0 Schichten';}
-  if(monthD.length){const mt=sumK(monthD,'tip'),mu=sumK(monthD,'revenue');document.getElementById('avg-month').textContent=fmtS(mt/monthD.length);document.getElementById('avg-month-pct').textContent=mu>0?(mt/mu*100).toFixed(1)+'%':'';document.getElementById('avg-month-sub').textContent=monthD.length+' Schicht'+(monthD.length===1?'':'en');}
-  else{document.getElementById('avg-month').textContent='—';document.getElementById('avg-month-pct').textContent='';document.getElementById('avg-month-sub').textContent='0 Schichten';}
+  if(last){document.getElementById('avg-day').textContent=fmtS(last.tip);document.getElementById('avg-day-pct').textContent=+last.revenue>0?(+last.tip/+last.revenue*100).toFixed(1)+'%':'';document.getElementById('avg-day-sub').textContent=new Date(last.date+'T12:00:00').toLocaleDateString(DLOC(),{day:'2-digit',month:'short'});}
+  else{document.getElementById('avg-day').textContent='—';document.getElementById('avg-day-pct').textContent='';document.getElementById('avg-day-sub').textContent=t('noEntry');}
+  if(weekD.length){const wt=sumK(weekD,'tip'),wu=sumK(weekD,'revenue');document.getElementById('avg-week').textContent=fmtS(wt/weekD.length);document.getElementById('avg-week-pct').textContent=wu>0?(wt/wu*100).toFixed(1)+'%':'';document.getElementById('avg-week-sub').textContent=weekD.length+(weekD.length===1?t('shift1'):t('shiftN'));}
+  else{document.getElementById('avg-week').textContent='—';document.getElementById('avg-week-pct').textContent='';document.getElementById('avg-week-sub').textContent='0'+t('shiftN');}
+  if(monthD.length){const mt=sumK(monthD,'tip'),mu=sumK(monthD,'revenue');document.getElementById('avg-month').textContent=fmtS(mt/monthD.length);document.getElementById('avg-month-pct').textContent=mu>0?(mt/mu*100).toFixed(1)+'%':'';document.getElementById('avg-month-sub').textContent=monthD.length+(monthD.length===1?t('shift1'):t('shiftN'));}
+  else{document.getElementById('avg-month').textContent='—';document.getElementById('avg-month-pct').textContent='';document.getElementById('avg-month-sub').textContent='0'+t('shiftN');}
 }
 
 function drawChart(selectedIdx){
@@ -1152,8 +1375,8 @@ function drawChart(selectedIdx){
     const bar=_chartBars[selectedIdx];
     if(bar&&bar.tip>0){
       const pct=totalMonth>0?(bar.tip/totalMonth*100).toFixed(1):'0.0';
-      const dateStr=new Date(bar.ds+'T12:00:00').toLocaleDateString('de-AT',{weekday:'short',day:'2-digit',month:'short'});
-      const line1=`${fmtS(bar.tip)}  ·  ${pct}% des Monats`;
+      const dateStr=new Date(bar.ds+'T12:00:00').toLocaleDateString(DLOC(),{weekday:'short',day:'2-digit',month:'short'});
+      const line1=`${fmtS(bar.tip)}  ·  ${pct}${t('pctOfMonth')}`;
       ctx.font='bold 11.5px Figtree';const lw=ctx.measureText(line1).width;ctx.font='10px Figtree';const sw=ctx.measureText(dateStr).width;
       const boxW=Math.max(lw,sw)+22,boxH=40;let bx=bar.cx-boxW/2;bx=Math.max(pad.l,Math.min(W-pad.r-boxW,bx));const boxY=Math.max(2,bar.by-boxH-10);
       ctx.fillStyle='rgba(108,92,231,0.96)';ctx.beginPath();ctx.roundRect(bx,boxY,boxW,boxH,9);ctx.fill();
@@ -1189,7 +1412,7 @@ function renderLog(){
   document.getElementById('hist-avg-tip').textContent=fmtS(avg);
   document.getElementById('hist-count').textContent=filtered.length;
   const list=document.getElementById('log-list');
-  if(!filtered.length){list.innerHTML='<div class="empty"><span class="empty-icon">📋</span><span class="empty-txt">Keine Einträge gefunden</span></div>';return;}
+  if(!filtered.length){list.innerHTML='<div class="empty"><span class="empty-icon">📋</span><span class="empty-txt">'+esc(t('emptyLog'))+'</span></div>';return;}
   list.innerHTML=filtered.map(s=>{
     const pct=+s.revenue>0?` · ${(+s.tip/+s.revenue*100).toFixed(1)}%`:'';
     return `<div class="log-item">
@@ -1209,7 +1432,7 @@ function showEntryMenu(event,id){
   const popup=document.createElement('div');popup.className='entry-menu-popup';
   const rect=event.currentTarget.getBoundingClientRect();
   popup.style.right=(window.innerWidth-rect.right)+'px';popup.style.top=(rect.bottom+8)+'px';
-  popup.innerHTML=`<div class="entry-menu-item" onclick="openEditSheet('${id}');document.getElementById('entry-menu-overlay')?.remove()">✏️ Bearbeiten</div><div class="entry-menu-item danger" onclick="deleteShift('${id}');document.getElementById('entry-menu-overlay')?.remove()">🗑️ Löschen</div>`;
+  popup.innerHTML=`<div class="entry-menu-item" onclick="openEditSheet('${id}');document.getElementById('entry-menu-overlay')?.remove()">${esc(t('menuEdit'))}</div><div class="entry-menu-item danger" onclick="deleteShift('${id}');document.getElementById('entry-menu-overlay')?.remove()">${esc(t('menuDelete'))}</div>`;
   overlay.appendChild(popup);document.body.appendChild(overlay);
 }
 
@@ -1231,7 +1454,7 @@ function renderDetails(){
   document.getElementById('d-tip').textContent=fmtS(tAll);
   document.getElementById('d-tip-pct').textContent=uAll>0?(tAll/uAll*100).toFixed(1)+'%':'0.0%';
   document.getElementById('d-best-tip').textContent=bestDay
-    ?fmtS(bestDay[1])+' ('+new Date(bestDay[0]+'T12:00:00').toLocaleDateString('de-AT',{day:'2-digit',month:'short'})+')'
+    ?fmtS(bestDay[1])+' ('+new Date(bestDay[0]+'T12:00:00').toLocaleDateString(DLOC(),{day:'2-digit',month:'short'})+')'
     :'—';
   if(data.length){
     const tips=data.map(e=>+e.tip||0), revs=data.map(e=>+e.revenue||0);
@@ -1253,25 +1476,8 @@ window.addEventListener('pageshow',()=>{flushQueue();});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){maybeRefresh();flushQueue();}}); // PWA kommt in den Vordergrund (wichtig auf iOS)
 setInterval(()=>{if(!document.hidden){maybeRefresh();flushQueue();}},30000);
 function _applyTheme(m){var sd=matchMedia("(prefers-color-scheme:dark)").matches;var d=m==="dark"||(m==="system"&&sd);document.documentElement.setAttribute("data-theme",d?"dark":"light");var mt=document.querySelector('meta[name="theme-color"]');if(mt)mt.setAttribute("content",d?"#08080e":"#f2f1eb");var sg=document.getElementById("theme-seg");if(sg){var bs=sg.querySelectorAll("button");for(var i=0;i<bs.length;i++){bs[i].classList.toggle("on",bs[i].getAttribute("data-tm")===m);}}try{if(typeof drawChart==="function"&&document.getElementById("mainChart"))drawChart();}catch(e){}}function setTheme(m){localStorage.setItem("st_theme",m);_applyTheme(m);}(function(){_applyTheme(localStorage.getItem("st_theme")==="dark"?"dark":"light");})();
-if('serviceWorker'in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});});}
+if('serviceWorker'in navigator&&location.protocol!=='capacitor:'){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});});}
 </script>
-
-<!-- GUEST WARNING MODAL -->
-<div id="guest-modal-overlay" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);align-items:flex-end;justify-content:center;padding-bottom:0;">
-  <div style="background:var(--surface);border:1px solid var(--border2);border-radius:24px 24px 0 0;padding:28px 24px;padding-bottom:max(var(--sab),28px);width:100%;max-width:480px;">
-    <div style="text-align:center;margin-bottom:20px;">
-      <div style="font-size:48px;margin-bottom:14px;">👤</div>
-      <div style="font-size:20px;font-weight:900;margin-bottom:8px;">Gast-Modus</div>
-      <div style="font-size:14px;color:var(--text2);line-height:1.6;">Im Gast-Modus werden deine Daten <strong style="color:var(--text);">nur auf diesem Gerät</strong> gespeichert.<br><br>Wenn du Safari verlässt, die App löschst oder den Browser-Cache leerst, <strong style="color:var(--red);">gehen alle Daten verloren.</strong><br><br>Für sicheren Cloud-Sync empfehlen wir ein kostenloses Konto.</div>
-    </div>
-    <button onclick="confirmGuestMode()" style="width:100%;padding:15px;background:var(--accent);border:none;border-radius:14px;color:#fff;font-family:'Figtree',sans-serif;font-size:16px;font-weight:800;cursor:pointer;margin-bottom:10px;box-shadow:0 6px 24px rgba(108,92,231,0.35);">
-      Verstanden — Als Gast fortfahren
-    </button>
-    <button onclick="document.getElementById('guest-modal-overlay').style.display='none';" style="width:100%;padding:14px;background:transparent;border:1px solid var(--border2);border-radius:14px;color:var(--text2);font-family:'Figtree',sans-serif;font-size:15px;font-weight:700;cursor:pointer;">
-      Zurück zur Anmeldung
-    </button>
-  </div>
-</div>
 
 </body>
 </html>
