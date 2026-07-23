@@ -247,6 +247,49 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 .detail-item-val{font-size:17px;font-weight:900;font-family:'DM Mono',monospace;}
 
 /* v1.1.19 Hell-Feinschliff */.tip-hero-amount,.chart-total,.avg-pct,.tip-pct-badge,.chip-tip,.log-item-rev,.col-purple,.col-green,.col-yellow{color:var(--text);}[data-theme="dark"] .tip-hero-amount,[data-theme="dark"] .chart-total,[data-theme="dark"] .avg-pct,[data-theme="dark"] .tip-pct-badge,[data-theme="dark"] .chip-tip,[data-theme="dark"] .col-purple{color:var(--accent-l);}[data-theme="dark"] .log-item-rev,[data-theme="dark"] .col-green{color:var(--green-b);}[data-theme="dark"] .col-yellow{color:var(--yellow);}.topbar-title{color:var(--accent-l);}[data-theme="dark"] .topbar-title{color:var(--text);}.seg{display:flex;gap:3px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:3px;}.seg button{flex:1;padding:9px 6px;border:none;background:transparent;color:var(--text2);font-family:'Figtree',sans-serif;font-size:12px;font-weight:700;border-radius:8px;cursor:pointer;transition:all .15s;letter-spacing:.3px;}.seg button.on{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.12);}
+/* Monatsvergleich */
+.cm-wrap{padding:0 16px;}
+.cm-page-title{font-size:20px;font-weight:900;margin:14px 2px 4px;}
+.cm-hint{font-size:12px;color:var(--text3);margin:2px 2px 12px;line-height:1.5;}
+.cm-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:border-color .15s,box-shadow .15s;}
+.cm-card.sel{border-color:var(--accent-l);box-shadow:0 0 0 1px var(--accent-l);}
+.cm-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.cm-title{font-size:15px;font-weight:800;flex:1;}
+.cm-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:99px;background:var(--surface2);color:var(--text2);border:1px solid var(--border2);white-space:nowrap;}
+.cm-badge.live{color:var(--accent-l);border-color:var(--accent-l);background:transparent;}
+.cm-check{width:18px;height:18px;border-radius:50%;border:2px solid var(--border2);flex-shrink:0;transition:all .15s;}
+.cm-card.sel .cm-check{border-color:var(--accent-l);background:var(--accent-l);}
+.cm-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px;}
+.cm-cell-label{font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px;}
+.cm-cell-val{font-size:15px;font-weight:800;}
+.cm-sub{font-size:11px;color:var(--text2);margin-bottom:8px;}
+.cm-delta{font-size:11px;font-weight:700;color:var(--text3);border-top:1px dashed var(--border);padding-top:8px;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:baseline;}
+.cm-up{color:var(--green);}
+.cm-down{color:var(--red);}
+.cm-panel{background:var(--surface);border:1px solid var(--accent-l);border-radius:16px;padding:14px 16px;margin-bottom:14px;}
+.cm-panel-head{display:flex;align-items:center;margin-bottom:8px;}
+.cm-panel-title{font-size:13px;font-weight:800;flex:1;}
+.cm-panel-close{background:none;border:none;color:var(--text3);font-size:16px;cursor:pointer;padding:2px 6px;font-family:inherit;}
+.cm-row{display:grid;grid-template-columns:1.2fr 1fr 1fr .7fr;gap:6px;font-size:12px;padding:5px 0;border-bottom:1px dashed var(--border);align-items:baseline;}
+.cm-row:last-child{border-bottom:none;}
+.cm-row-label{color:var(--text3);font-weight:700;font-size:11px;}
+.cm-row-val{font-weight:700;text-align:right;}
+.cm-row-delta{font-weight:800;text-align:right;font-size:11px;}
+.cm-col-head{font-size:10px;color:var(--text3);font-weight:800;text-transform:uppercase;letter-spacing:.4px;text-align:right;}
+.cm-chiprow{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 10px;-webkit-overflow-scrolling:touch;}
+.cm-chip{flex-shrink:0;padding:7px 14px;border-radius:99px;border:1px solid var(--border2);background:var(--surface);color:var(--text2);font-family:'Figtree',sans-serif;font-size:12px;font-weight:700;cursor:pointer;}
+.cm-chip.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.cm-jobs{font-size:11px;color:var(--text3);margin:-2px 0 8px;}
+.job-row{display:flex;align-items:flex-start;gap:10px;padding:12px 0;border-bottom:1px dashed var(--border);}
+.job-row:last-child{border-bottom:none;}
+.job-info{flex:1;min-width:0;}
+.job-name{font-size:14px;font-weight:800;}
+.job-meta{font-size:11px;color:var(--text3);margin-top:2px;}
+.job-bal{font-size:11px;color:var(--text2);margin-top:3px;line-height:1.5;}
+.job-btn{padding:8px 12px;border-radius:10px;border:1px solid var(--border2);background:transparent;color:var(--text2);font-family:'Figtree',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.job-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;}
+.job-form{display:flex;flex-direction:column;gap:8px;padding:10px 0 4px;}
+.job-check{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);line-height:1.4;}
 </style>
 </head>
 <body>
@@ -428,6 +471,17 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
   <div class="log-list" id="log-list"></div>
 </div>
 
+<!-- MONATSVERGLEICH -->
+<div class="screen" id="screen-months">
+  <div class="cm-wrap">
+    <div class="cm-page-title" data-i18n="cmTitle">Monatsvergleich</div>
+    <div class="cm-hint" data-i18n="cmHint">Jede Karte zeigt den Unterschied zum Vormonat. Tippe zwei Monate an, um sie direkt miteinander zu vergleichen.</div>
+    <div id="cm-jobchips"></div>
+    <div id="cm-panel"></div>
+    <div id="cm-list"></div>
+  </div>
+</div>
+
 <!-- PROFIL -->
 <div class="screen" id="screen-profile">
   <div class="profile-wrap">
@@ -449,6 +503,10 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
       <div class="settings-row">
         <div class="settings-row-left"><div class="settings-row-title" data-i18n="rowTotalShifts">📅 Schichten gesamt</div><div class="settings-row-sub" id="profile-total-shifts">—</div></div>
       </div>
+    </div>
+    <div id="jobs-section" style="display:none;">
+      <div class="settings-section-title" data-i18n="secJobs">Arbeitgeber</div>
+      <div class="settings-card" id="jobs-card"></div>
     </div>
     <div id="pw-section">
       <div class="settings-section-title" data-i18n="secAccount">Konto</div>
@@ -490,7 +548,7 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
       </div>
     </div>
     <button class="logout-btn" data-i18n="logout" onclick="handleLogout()">Abmelden</button>
-    <div style="text-align:center;font-size:11px;font-weight:600;color:var(--text3);margin-top:18px;">TipLog v1.1.19.3</div>
+    <div style="text-align:center;font-size:11px;font-weight:600;color:var(--text3);margin-top:18px;">TipLog v1.1.19.5</div>
     <div style="height:16px;"></div>
   </div>
 </div>
@@ -499,6 +557,7 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
 <div class="tabs" id="main-tabs" style="display:none;">
   <button class="tab-btn active" id="tab-home" onclick="showTab('home')"><div class="tab-icon">📊</div><div class="tab-label" data-i18n="tabDash">Dashboard</div></button>
   <button class="tab-btn" id="tab-log" onclick="showTab('log')"><div class="tab-icon">📋</div><div class="tab-label" data-i18n="tabHist">Verlauf</div></button>
+  <button class="tab-btn" id="tab-months" onclick="showTab('months')"><div class="tab-icon">📅</div><div class="tab-label" data-i18n="tabMonths">Monate</div></button>
   <button class="tab-btn" id="tab-profile" onclick="showTab('profile')"><div class="tab-icon">👤</div><div class="tab-label" data-i18n="tabProf">Profil</div></button>
 </div>
 
@@ -532,6 +591,10 @@ body{font-family:'Figtree',sans-serif;color:var(--text);overscroll-behavior:none
   <div class="form-group">
     <label class="form-label" data-i18n="lblNote">Notiz (optional)</label>
     <input type="text" class="form-input" id="form-note" data-i18n-ph="phNote" placeholder="z.B. Frühschicht, Sonderveranstaltung…" style="font-size:15px;font-weight:400;">
+    <div id="form-job-wrap" style="display:none;">
+      <div data-i18n="lblJob" style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin:10px 2px 6px;">Arbeitgeber</div>
+      <select class="form-input" id="form-job" style="font-size:15px;font-weight:600;"></select>
+    </div>
   </div>
   <button class="form-submit" id="form-submit-btn" data-i18n="btnSave" onclick="submitShift()">Speichern ✓</button>
   <div style="height:16px;"></div>
@@ -622,7 +685,17 @@ dbError:'Datenbankfehler.',sessionExpired:'Sitzung abgelaufen – bitte neu anme
 toastPickDate:'⚠️ Bitte Datum wählen',toastValidRevenue:'⚠️ Bitte gültigen Umsatz eingeben',toastValidTip:'⚠️ Bitte gültiges Trinkgeld eingeben',
 pctOfAvg:'% vom Ø Umsatz',shift1:' Schicht',shiftN:' Schichten',thisMonthSuffix:' diesen Monat',pctOfMonth:'% des Monats',
 emptyLog:'Keine Einträge gefunden',menuEdit:'✏️ Bearbeiten',menuDelete:'🗑️ Löschen',
-authFailed:'Anmeldung fehlgeschlagen. Bitte erneut versuchen.',emailConfirmed:'✅ E-Mail bestätigt – du kannst dich jetzt anmelden'
+authFailed:'Anmeldung fehlgeschlagen. Bitte erneut versuchen.',emailConfirmed:'✅ E-Mail bestätigt – du kannst dich jetzt anmelden',
+tabMonths:'Monate',secJobs:'Arbeitgeber',lblJob:'Arbeitgeber',
+cmTitle:'Monatsvergleich',cmHint:'Jede Karte zeigt den Unterschied zum Vormonat. Tippe zwei Monate an, um sie direkt miteinander zu vergleichen.',
+cmRevenue:'Umsatz',cmAvgPerShift:'Ø Tip/Schicht',cmAvgShort:'Ø/Schicht',cmTipQuote:'Tip-Quote',perShift:' / Schicht',pctOfRev:' % vom Umsatz',
+cmEmptyFilter:'Keine Schichten für diese Auswahl.',cmEmptyAll:'Noch keine Schichten eingetragen – ab der ersten Schicht erscheint hier dein Monatsüberblick.',
+cmOneSel:'1 Monat gewählt – tippe einen zweiten für den Direktvergleich.',badgeLive:'läuft',badgeBest:'🏆 Bester Monat',chipNone:'Ohne',cmUnassigned:'ohne Zuordnung',ariaCloseCmp:'Vergleich schließen',
+jobEnded:' (beendet)',jobNone:'Ohne Zuordnung',jobSince:'seit ',btnEndJob:'Job abschließen',lblLastDay:'Letzter Arbeitstag',btnEndConfirm:'Abschließen ✓',
+jobNoneActive:'Kein aktiver Arbeitgeber – neue Schichten bleiben ohne Zuordnung, bis du einen anlegst.',phCompany:'Firmenname, z.B. Plachutta',
+backfillPre:'Bisherige ',backfillPost:' Schichten diesem Arbeitgeber zuordnen',btnCreateJob:'Arbeitgeber anlegen',
+toastJobName:'⚠️ Bitte Firmennamen eingeben',toastBackfillFail:'⚠️ Zuordnung alter Schichten fehlgeschlagen – bitte später erneut',toastJobCreated:'✅ Arbeitgeber angelegt',toastJobNeedsNet:'⚠️ Anlegen nur mit Internetverbindung möglich',
+toastJobEnded:'🏁 Job abgeschlossen – Bilanz im Profil',toastJobEndNeedsNet:'⚠️ Abschließen nur mit Internetverbindung möglich'
 },
 en:{
 loading:'Loading TipLog…',authSub:'Your shift & tip tracker',tabLogin:'Sign in',tabRegister:'Sign up',
@@ -679,7 +752,17 @@ dbError:'Database error.',sessionExpired:'Session expired – please sign in aga
 toastPickDate:'⚠️ Please pick a date',toastValidRevenue:'⚠️ Please enter a valid revenue',toastValidTip:'⚠️ Please enter a valid tip',
 pctOfAvg:'% of Ø revenue',shift1:' shift',shiftN:' shifts',thisMonthSuffix:' this month',pctOfMonth:'% of month',
 emptyLog:'No entries found',menuEdit:'✏️ Edit',menuDelete:'🗑️ Delete',
-authFailed:'Sign-in failed. Please try again.',emailConfirmed:'✅ Email confirmed – you can sign in now'
+authFailed:'Sign-in failed. Please try again.',emailConfirmed:'✅ Email confirmed – you can sign in now',
+tabMonths:'Months',secJobs:'Employer',lblJob:'Employer',
+cmTitle:'Month comparison',cmHint:'Each card shows the change vs. the previous month. Tap two months to compare them directly.',
+cmRevenue:'Revenue',cmAvgPerShift:'Ø tip/shift',cmAvgShort:'Ø/shift',cmTipQuote:'Tip rate',perShift:' / shift',pctOfRev:' % of revenue',
+cmEmptyFilter:'No shifts for this selection.',cmEmptyAll:'No shifts logged yet – your monthly overview will appear here after your first shift.',
+cmOneSel:'1 month selected – tap a second one to compare.',badgeLive:'current',badgeBest:'🏆 Best month',chipNone:'None',cmUnassigned:'unassigned',ariaCloseCmp:'Close comparison',
+jobEnded:' (ended)',jobNone:'No employer',jobSince:'since ',btnEndJob:'Close job',lblLastDay:'Last working day',btnEndConfirm:'Close ✓',
+jobNoneActive:'No active employer – new shifts stay unassigned until you create one.',phCompany:'Company name, e.g. Plachutta',
+backfillPre:'Assign your existing ',backfillPost:' shifts to this employer',btnCreateJob:'Create employer',
+toastJobName:'⚠️ Please enter a company name',toastBackfillFail:'⚠️ Assigning old shifts failed – please try again later',toastJobCreated:'✅ Employer created',toastJobNeedsNet:'⚠️ Creating an employer requires an internet connection',
+toastJobEnded:'🏁 Job closed – summary in your profile',toastJobEndNeedsNet:'⚠️ Closing requires an internet connection'
 }};
 function t(k){const d=I18N[LANG]||I18N.de;return d[k]!==undefined?d[k]:(I18N.de[k]!==undefined?I18N.de[k]:k);}
 function DLOC(){return LANG==='de'?'de-AT':'en-GB';}
@@ -693,7 +776,7 @@ function applyLang(){
 }
 function setLang(l){
   localStorage.setItem('st_lang',l);LANG=l;applyLang();
-  if(currentUser){updateSyncUI();renderHome();renderLog();updateProfileUI();}
+  if(currentUser){updateSyncUI();renderHome();renderLog();updateProfileUI();if(activeTab==='months')renderMonths();}
 }
 applyLang();
 
@@ -820,7 +903,7 @@ async function initApp(){
   document.getElementById('main-topbar').style.display='flex';
   document.getElementById('main-tabs').style.display='flex';
   document.getElementById('main-fab').style.display='flex';
-  updateUserUI(); showTab('home'); trackOpen(); await loadShifts();
+  updateUserUI(); showTab('home'); trackOpen(); await loadJobs(); await loadShifts();
   updateSyncUI(); flushQueue();
 }
 
@@ -1119,15 +1202,178 @@ async function openChangePassword(btn){
 
 function isGuest(){return currentUser?.isGuest===true;}
 
+/* ---- v1.1.19.5: Arbeitgeber / Jobs (aus v1.1.19.4 gemergt, i18n-Fassung) ---- */
+let jobs=[],_jobsReady=false,_jobEndMode=false,_cmpJob='all';
+function activeJob(){return jobs.find(j=>!j.end_date)||null;}
+function _jobName(id){const j=jobs.find(x=>x.id===id);return j?j.name:null;}
+async function loadJobs(){
+  if(isGuest())return;
+  try{const d=await sbFetch('/rest/v1/jobs?select=*&order=created_at.asc');jobs=d||[];_jobsReady=true;localStorage.setItem('st_jobs',JSON.stringify(jobs));}
+  catch(e){try{const c=localStorage.getItem('st_jobs');if(c){jobs=JSON.parse(c)||[];_jobsReady=true;}}catch{}}
+}
+function _fillJobSelect(val){
+  const wrap=document.getElementById('form-job-wrap'),sel=document.getElementById('form-job');
+  if(!wrap||!sel)return;
+  if(!_jobsReady||!jobs.length){wrap.style.display='none';return;}
+  const sorted=[...jobs].sort((a,b)=>((a.end_date?1:0)-(b.end_date?1:0))||(b.created_at||'').localeCompare(a.created_at||''));
+  sel.innerHTML=sorted.map(j=>'<option value="'+j.id+'">'+esc(j.name)+(j.end_date?t('jobEnded'):'')+'</option>').join('')+'<option value="">'+t('jobNone')+'</option>';
+  sel.value=val||'';
+  wrap.style.display='block';
+}
+async function createJob(){
+  const nameEl=document.getElementById('job-new-name'),dateEl=document.getElementById('job-new-start'),chk=document.getElementById('job-backfill');
+  const name=(nameEl&&nameEl.value||'').trim();
+  if(!name){showToast(t('toastJobName'));return;}
+  const row={id:crypto.randomUUID(),user_id:currentUser.id,name:name,start_date:(dateEl&&dateEl.value)||todayStr()};
+  try{
+    await sbFetch('/rest/v1/jobs',{method:'POST',headers:{'Prefer':'return=minimal'},body:JSON.stringify(row)});
+    jobs.push({...row,end_date:null,created_at:new Date().toISOString()});
+    localStorage.setItem('st_jobs',JSON.stringify(jobs));
+    if(chk&&chk.checked){
+      try{
+        await sbFetch('/rest/v1/shifts?job_id=is.null',{method:'PATCH',headers:{'Prefer':'return=minimal'},body:JSON.stringify({job_id:row.id})});
+        shifts.forEach(s=>{if(!s.job_id)s.job_id=row.id;});cacheShifts();
+      }catch(e2){showToast(t('toastBackfillFail'));}
+    }
+    showToast(t('toastJobCreated'));
+    renderJobsUI();renderLog();if(activeTab==='months')renderMonths();
+  }catch(e){showToast(t('toastJobNeedsNet'));}
+}
+async function endJob(id){
+  const dEl=document.getElementById('job-end-date');
+  const end=(dEl&&dEl.value)||todayStr();
+  try{
+    await sbFetch('/rest/v1/jobs?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:{'Prefer':'return=minimal'},body:JSON.stringify({end_date:end})});
+    const j=jobs.find(x=>x.id===id);if(j)j.end_date=end;
+    localStorage.setItem('st_jobs',JSON.stringify(jobs));
+    _jobEndMode=false;showToast(t('toastJobEnded'));
+    renderJobsUI();if(activeTab==='months')renderMonths();
+  }catch(e){showToast(t('toastJobEndNeedsNet'));}
+}
+function _jobDateFmt(d){return d?new Date(d+'T12:00:00').toLocaleDateString(DLOC(),{day:'2-digit',month:'short',year:'numeric'}):'\u2014';}
+function renderJobsUI(){
+  const sec=document.getElementById('jobs-section'),card=document.getElementById('jobs-card');
+  if(!sec||!card)return;
+  if(!_jobsReady||isGuest()){sec.style.display='none';return;}
+  sec.style.display='block';
+  const act=activeJob();
+  let html='';
+  if(act){
+    const st=_mStats(shifts.filter(s=>s.job_id===act.id));
+    html+='<div class="job-row"><div class="job-info"><div class="job-name">'+esc(act.name)+'</div><div class="job-meta">'+t('jobSince')+_jobDateFmt(act.start_date)+'</div><div class="job-bal">'+st.n+(st.n===1?t('shift1'):t('shiftN'))+' \u00b7 Tip '+fmtS(st.tip)+' \u00b7 '+t('cmRevenue')+' '+fmtS(st.rev)+'</div></div>'
+      +(_jobEndMode?'':'<button class="job-btn" onclick="_jobEndMode=true;renderJobsUI()">'+t('btnEndJob')+'</button>')+'</div>';
+    if(_jobEndMode){
+      html+='<div class="job-form"><div style="font-size:11px;color:var(--text3);font-weight:700;">'+t('lblLastDay')+'</div><input type="date" class="form-input" id="job-end-date" value="'+todayStr()+'"><div style="display:flex;gap:8px;"><button class="job-btn primary" onclick="endJob(\''+act.id+'\')">'+t('btnEndConfirm')+'</button><button class="job-btn" onclick="_jobEndMode=false;renderJobsUI()">'+t('btnCancel')+'</button></div></div>';
+    }
+  }else{
+    const showBackfill=jobs.length===0&&shifts.some(s=>!s.job_id);
+    html+='<div class="job-form"><div style="font-size:11px;color:var(--text3);font-weight:700;">'+t('jobNoneActive')+'</div><input type="text" class="form-input" id="job-new-name" placeholder="'+t('phCompany')+'" maxlength="60"><input type="date" class="form-input" id="job-new-start" value="'+todayStr()+'">'
+      +(showBackfill?'<label class="job-check"><input type="checkbox" id="job-backfill" checked><span>'+t('backfillPre')+shifts.length+t('backfillPost')+'</span></label>':'')
+      +'<button class="job-btn primary" onclick="createJob()">'+t('btnCreateJob')+'</button></div>';
+  }
+  const done=jobs.filter(j=>j.end_date).sort((a,b)=>(b.end_date||'').localeCompare(a.end_date||''));
+  done.forEach(j=>{
+    const st=_mStats(shifts.filter(s=>s.job_id===j.id));
+    html+='<div class="job-row"><div class="job-info"><div class="job-name">'+esc(j.name)+'</div><div class="job-meta">'+_jobDateFmt(j.start_date)+' \u2013 '+_jobDateFmt(j.end_date)+'</div><div class="job-bal">'+st.n+(st.n===1?t('shift1'):t('shiftN'))+' \u00b7 Tip '+fmtS(st.tip)+' \u00b7 '+t('cmRevenue')+' '+fmtS(st.rev)+(st.n?' \u00b7 \u00d8 '+fmtS(st.avg)+t('perShift'):'')+'</div></div></div>';
+  });
+  card.innerHTML=html;
+}
+function _renderJobChips(){
+  const el=document.getElementById('cm-jobchips');
+  if(!el)return;
+  if(!_jobsReady||!jobs.length){el.innerHTML='';_cmpJob='all';return;}
+  if(_cmpJob!=='all'&&_cmpJob!=='none'&&!jobs.find(j=>j.id===_cmpJob))_cmpJob='all';
+  const hasNone=shifts.some(s=>!s.job_id);
+  if(_cmpJob==='none'&&!hasNone)_cmpJob='all';
+  let h='<div class="cm-chiprow"><button class="cm-chip'+(_cmpJob==='all'?' active':'')+'" onclick="setCmpJob(\'all\')">'+t('fAll')+'</button>';
+  jobs.forEach(j=>{h+='<button class="cm-chip'+(_cmpJob===j.id?' active':'')+'" onclick="setCmpJob(\''+j.id+'\')">'+esc(j.name)+'</button>';});
+  if(hasNone)h+='<button class="cm-chip'+(_cmpJob==='none'?' active':'')+'" onclick="setCmpJob(\'none\')">'+t('chipNone')+'</button>';
+  h+='</div>';
+  el.innerHTML=h;
+}
+function setCmpJob(v){_cmpJob=v;_cmpSel=[];renderMonths();}
+
+/* ---- v1.1.19.5: Monatsvergleich (aus v1.1.19.4 gemergt, i18n-Fassung) ---- */
+let _cmpSel=[];
+function _ymNow(){const n=new Date();return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0');}
+function _ymPrev(ym){const p=ym.split('-');const d=new Date(+p[0],+p[1]-2,15);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');}
+function _ymLabel(ym){return new Date(ym+'-15T12:00:00').toLocaleDateString(DLOC(),{month:'long',year:'numeric'});}
+function _ymShort(ym){return new Date(ym+'-15T12:00:00').toLocaleDateString(DLOC(),{month:'short',year:'2-digit'});}
+function _mStats(list){const n=list.length,tip=sumK(list,'tip'),rev=sumK(list,'revenue');return{n:n,tip:tip,rev:rev,avg:n?tip/n:0,quote:rev>0?tip/rev*100:null};}
+function _pctD(cur,prev){return prev>0?(cur-prev)/prev*100:null;}
+function _fmtD(d){if(d===null||!isFinite(d))return null;return (d>0?'+':'')+Math.round(d)+' %';}
+function _dCls(d){return d===null?'':d>0?'cm-up':d<0?'cm-down':'';}
+function _q1(v){return LANG==='de'?v.toFixed(1).replace('.',','):v.toFixed(1);}
+function toggleCmpSel(ym){const i=_cmpSel.indexOf(ym);if(i>=0)_cmpSel.splice(i,1);else{_cmpSel.push(ym);if(_cmpSel.length>2)_cmpSel.shift();}renderMonths();}
+function clearCmpSel(){_cmpSel=[];renderMonths();}
+function renderMonths(){
+  const list=document.getElementById('cm-list'),panel=document.getElementById('cm-panel');
+  if(!list)return;
+  _renderJobChips();
+  const base=(_cmpJob==='all')?shifts:(_cmpJob==='none'?shifts.filter(s=>!s.job_id):shifts.filter(s=>s.job_id===_cmpJob));
+  const byM={};
+  base.forEach(s=>{const k=(s.date||'').slice(0,7);if(k.length===7)(byM[k]=byM[k]||[]).push(s);});
+  const keys=Object.keys(byM).sort().reverse();
+  _cmpSel=_cmpSel.filter(k=>byM[k]);
+  if(!keys.length){panel.innerHTML='';list.innerHTML='<div class="cm-hint" style="margin-top:24px;text-align:center;">'+(shifts.length?t('cmEmptyFilter'):t('cmEmptyAll'))+'</div>';return;}
+  const nowYM=_ymNow();
+  let bestYM=null,bestTip=-1;
+  keys.forEach(k=>{const tp=sumK(byM[k],'tip');if(tp>bestTip){bestTip=tp;bestYM=k;}});
+  if(_cmpSel.length===2){
+    const srt=[..._cmpSel].sort(),a=srt[0],b=srt[1];
+    const A=_mStats(byM[a]),B=_mStats(byM[b]);
+    let html='<div class="cm-panel"><div class="cm-panel-head"><div class="cm-panel-title">'+_ymLabel(a)+' \u2194 '+_ymLabel(b)+'</div><button class="cm-panel-close" onclick="clearCmpSel()" aria-label="'+t('ariaCloseCmp')+'">\u2715</button></div>';
+    html+='<div class="cm-row"><div class="cm-row-label"></div><div class="cm-col-head">'+_ymShort(a)+'</div><div class="cm-col-head">'+_ymShort(b)+'</div><div class="cm-col-head">\u0394</div></div>';
+    const rows=[[t('histCount'),A.n,B.n,_pctD(B.n,A.n),false],[t('histTip'),fmtS(A.tip),fmtS(B.tip),_pctD(B.tip,A.tip),true],[t('cmRevenue'),fmtS(A.rev),fmtS(B.rev),_pctD(B.rev,A.rev),true],[t('cmAvgPerShift'),fmtS(A.avg),fmtS(B.avg),_pctD(B.avg,A.avg),true]];
+    rows.forEach(r=>{const d=r[3],cls=r[4]?_dCls(d):'';html+='<div class="cm-row"><div class="cm-row-label">'+r[0]+'</div><div class="cm-row-val">'+r[1]+'</div><div class="cm-row-val">'+r[2]+'</div><div class="cm-row-delta '+cls+'">'+(_fmtD(d)||'\u2014')+'</div></div>';});
+    if(A.quote!==null&&B.quote!==null){const dq=B.quote-A.quote,cls=dq>0?'cm-up':dq<0?'cm-down':'';html+='<div class="cm-row"><div class="cm-row-label">'+t('cmTipQuote')+'</div><div class="cm-row-val">'+_q1(A.quote)+' %</div><div class="cm-row-val">'+_q1(B.quote)+' %</div><div class="cm-row-delta '+cls+'">'+(dq>0?'+':'')+_q1(dq)+' pp</div></div>';}
+    html+='</div>';
+    panel.innerHTML=html;
+  }else{
+    panel.innerHTML=_cmpSel.length===1?'<div class="cm-hint" style="color:var(--accent-l);">'+t('cmOneSel')+'</div>':'';
+  }
+  let out='';
+  keys.forEach(k=>{
+    const st=_mStats(byM[k]),sel=_cmpSel.indexOf(k)>=0,live=k===nowYM,prevList=byM[_ymPrev(k)];
+    let badges='';
+    if(live)badges+='<span class="cm-badge live">'+t('badgeLive')+'</span>';
+    if(k===bestYM&&keys.length>1)badges+='<span class="cm-badge">'+t('badgeBest')+'</span>';
+    let deltaRow='';
+    if(prevList&&prevList.length){
+      const ps=_mStats(prevList),parts=[];
+      const dt=_pctD(st.tip,ps.tip),du=_pctD(st.rev,ps.rev),da=_pctD(st.avg,ps.avg);
+      if(_fmtD(dt)!==null)parts.push('Tip <span class="'+_dCls(dt)+'">'+_fmtD(dt)+'</span>');
+      if(_fmtD(du)!==null)parts.push(t('cmRevenue')+' <span class="'+_dCls(du)+'">'+_fmtD(du)+'</span>');
+      if(_fmtD(da)!==null)parts.push(t('cmAvgShort')+' <span class="'+_dCls(da)+'">'+_fmtD(da)+'</span>');
+      if(parts.length)deltaRow='<div class="cm-delta"><span>vs. '+_ymShort(_ymPrev(k))+':</span>'+parts.join('<span style="opacity:.4;">\u00b7</span>')+'</div>';
+    }
+    let jobsLine='';
+    if(jobs.length&&_cmpJob==='all'){const ns=[...new Set(byM[k].map(s=>s.job_id&&_jobName(s.job_id)).filter(Boolean))];const un=byM[k].some(s=>!s.job_id);if(ns.length)jobsLine='<div class="cm-jobs">\U0001f3e2 '+ns.map(esc).join(' \u00b7 ')+(un?' \u00b7 '+t('cmUnassigned'):'')+'</div>';}
+    out+='<div class="cm-card'+(sel?' sel':'')+'" onclick="toggleCmpSel(\''+k+'\')">'
+      +'<div class="cm-head"><div class="cm-title">'+_ymLabel(k)+'</div>'+badges+'<div class="cm-check"></div></div>'
+      +'<div class="cm-grid">'
+      +'<div><div class="cm-cell-label">'+t('histCount')+'</div><div class="cm-cell-val">'+st.n+'</div></div>'
+      +'<div><div class="cm-cell-label">'+t('histTip')+'</div><div class="cm-cell-val" style="color:var(--accent-l);">'+fmtS(st.tip)+'</div></div>'
+      +'<div><div class="cm-cell-label">'+t('cmRevenue')+'</div><div class="cm-cell-val" style="color:var(--green);">'+fmtS(st.rev)+'</div></div>'
+      +'</div>'
+      +'<div class="cm-sub">\u00d8 '+fmtS(st.avg)+t('perShift')+(st.quote!==null?' \u00b7 '+_q1(st.quote)+t('pctOfRev'):'')+'</div>'
+      +jobsLine
+      +deltaRow
+      +'</div>';
+  });
+  list.innerHTML=out;
+}
+
 function showTab(name){
   activeTab=name;
-  ['home','log','profile'].forEach(s=>{
+  ['home','log','months','profile'].forEach(s=>{
     document.getElementById('screen-'+s).classList.toggle('active',s===name);
     const t=document.getElementById('tab-'+s);if(t)t.classList.toggle('active',s===name);
   });
   document.getElementById('main-fab').style.display=name==='profile'?'none':'flex';
   if(name==='home'){renderHome();setTimeout(()=>{drawChart(_chartSelected);initChartInteraction();},80);}
   if(name==='log')renderLog();
+  if(name==='months')renderMonths();
   if(name==='profile')updateProfileUI();
 }
 
@@ -1148,6 +1394,7 @@ function updateProfileUI(){
   document.getElementById('profile-total-shifts').textContent=shifts.length+t('suffixShiftsLogged');
   document.getElementById('guest-banner').style.display=isGuest()?'block':'none';
   document.getElementById('pw-section').style.display=isGuest()?'none':'block';
+  renderJobsUI();
 }
 
 function setSyncStatus(state,n){
@@ -1169,11 +1416,11 @@ function showToast(msg,duration=2200){
 }
 
 async function loadShifts(){
-  if(isGuest()){shifts=JSON.parse(localStorage.getItem('st_guest_shifts')||'[]');renderHome();renderLog();return;}
+  if(isGuest()){shifts=JSON.parse(localStorage.getItem('st_guest_shifts')||'[]');renderHome();renderLog();if(activeTab==='months')renderMonths();return;}
   setSyncStatus('syncing');
-  try{const d=await sbFetch('/rest/v1/shifts?select=*&order=date.desc');shifts=mergePending(d||[]);cacheShifts();renderHome();renderLog();updateSyncUI();}
+  try{const d=await sbFetch('/rest/v1/shifts?select=*&order=date.desc');shifts=mergePending(d||[]);cacheShifts();renderHome();renderLog();if(activeTab==='months')renderMonths();updateSyncUI();}
   catch(e){
-    shifts=loadCachedShifts();renderHome();renderLog();updateSyncUI();
+    shifts=loadCachedShifts();renderHome();renderLog();if(activeTab==='months')renderMonths();updateSyncUI();
     if(e.status===0){showToast(t('toastOffline'));}
     else{setSyncStatus('error');showToast('⚠️ '+mapDbError(e.message));}
   }
@@ -1191,12 +1438,12 @@ async function saveShift(data){
   if(editingShiftId){
     const id=editingShiftId,i=shifts.findIndex(s=>s.id===id);
     if(i>=0)shifts[i]={...shifts[i],...data};
-    shifts.sort((a,b)=>(b.date||'').localeCompare(a.date||''));cacheShifts();renderHome();renderLog();
+    shifts.sort((a,b)=>(b.date||'').localeCompare(a.date||''));cacheShifts();renderHome();renderLog();if(activeTab==='months')renderMonths();
     await queueWrite({method:'PATCH',path:`/rest/v1/shifts?id=eq.${encodeURIComponent(id)}`,headers:{'Prefer':'return=minimal'},body:data,shiftId:id},t('toastShiftUpdated'));
   }else{
     // Client-UUID als Primärschlüssel: macht Insert-Retries duplikatsicher (ignore-duplicates)
     const row={...data,id:crypto.randomUUID(),user_id:currentUser.id,created_at:new Date().toISOString()};
-    shifts.unshift(row);shifts.sort((a,b)=>(b.date||'').localeCompare(a.date||''));cacheShifts();renderHome();renderLog();
+    shifts.unshift(row);shifts.sort((a,b)=>(b.date||'').localeCompare(a.date||''));cacheShifts();renderHome();renderLog();if(activeTab==='months')renderMonths();
     await queueWrite({method:'POST',path:'/rest/v1/shifts',headers:{'Prefer':'resolution=ignore-duplicates,return=minimal'},body:row,shiftId:row.id},t('toastShiftSaved'));
   }
 }
@@ -1207,7 +1454,7 @@ async function deleteShift(id){
     const stored=JSON.parse(localStorage.getItem('st_guest_shifts')||'[]').filter(s=>s.id!==id);
     localStorage.setItem('st_guest_shifts',JSON.stringify(stored));showToast(t('toastShiftDeleted'));await loadShifts();return;
   }
-  shifts=shifts.filter(s=>s.id!==id);cacheShifts();renderHome();renderLog(); // optimistisch entfernen
+  shifts=shifts.filter(s=>s.id!==id);cacheShifts();renderHome();renderLog();if(activeTab==='months')renderMonths(); // optimistisch entfernen
   await queueWrite({method:'DELETE',path:`/rest/v1/shifts?id=eq.${encodeURIComponent(id)}`,shiftId:id},t('toastShiftDeleted'));
 }
 
@@ -1271,6 +1518,8 @@ function openSheet(type){
     document.getElementById('sheet-add-title').textContent=t('sheetAddTitle');
     document.getElementById('form-date').value=new Date().toISOString().split('T')[0];
     document.getElementById('form-revenue').value='';document.getElementById('form-tip').value='';
+    document.getElementById('form-note').value='';
+    _fillJobSelect((activeJob()&&activeJob().id)||'');
     document.getElementById('form-submit-btn').textContent=t('btnSave');
     document.getElementById('sheet-add').classList.add('show');
     setTimeout(()=>document.getElementById('form-revenue').focus(),350);
@@ -1291,6 +1540,7 @@ function openEditSheet(id){
   document.getElementById('form-revenue').value=s.revenue||'';
   document.getElementById('form-tip').value=s.tip||'';
   document.getElementById('form-note').value=s.note||'';
+  _fillJobSelect(s.job_id||'');
   document.getElementById('form-submit-btn').textContent=t('btnUpdate');
   document.getElementById('sheet-overlay').classList.add('show');
   document.getElementById('sheet-add').classList.add('show');
@@ -1306,7 +1556,12 @@ async function submitShift(){
   if(isNaN(revenue)||revenue<0){showToast(t('toastValidRevenue'));return;}
   if(isNaN(tip)||tip<0){showToast(t('toastValidTip'));return;}
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span>'+t('tSaving');
-  closeSheet();await saveShift({date,revenue,tip,hours:0,note});
+  const payload={date,revenue,tip,hours:0,note};
+  if(_jobsReady){
+    const w=document.getElementById('form-job-wrap'),sel=document.getElementById('form-job');
+    payload.job_id=(w&&w.style.display!=='none'&&sel)?(sel.value||null):((activeJob()&&activeJob().id)||null);
+  }
+  closeSheet();await saveShift(payload);
   btn.disabled=false;btn.textContent=editingShiftId?t('btnUpdate'):t('btnSave');
 }
 
@@ -1419,7 +1674,7 @@ function renderLog(){
       <div class="log-item-dot"></div>
       <div class="log-item-body">
         <div class="log-item-top"><span class="log-item-date">${fmtDateShort(s.date)}</span><span class="log-item-rev">${fmtS(s.revenue||0)}</span></div>
-        <div class="log-item-chips"><span class="log-chip chip-tip">Tip ${fmtF(s.tip||0)}${pct}</span>${s.note?`<span class="log-chip" style="background:rgba(255,255,255,.07);color:var(--text2);">📝 ${esc(s.note.substring(0,20))}</span>`:''}</div>
+        <div class="log-item-chips"><span class="log-chip chip-tip">Tip ${fmtF(s.tip||0)}${pct}</span>${(jobs.length&&s.job_id&&_jobName(s.job_id))?`<span class="log-chip" style="background:rgba(255,255,255,.07);color:var(--text2);">🏢 ${esc(_jobName(s.job_id))}</span>`:''}${s.note?`<span class="log-chip" style="background:rgba(255,255,255,.07);color:var(--text2);">📝 ${esc(s.note.substring(0,20))}</span>`:''}</div>
       </div>
       <button class="log-item-menu" onclick="showEntryMenu(event,'${s.id}')">⋮</button>
     </div>`;
